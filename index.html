@@ -7,8 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <style>
         :root {
             --bg-color: #0d0f18;
@@ -68,7 +66,6 @@
             padding: 0 20px;
         }
 
-        /* App Seiten-Steuerung */
         .page {
             display: none;
             animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -114,19 +111,12 @@
         .nav-card.card-next:hover { border-color: var(--accent-purple); box-shadow: 0 10px 20px rgba(138, 43, 226, 0.12); }
         .nav-card.card-watchlist:hover { border-color: var(--accent-blue); box-shadow: 0 10px 20px rgba(58, 134, 255, 0.12); }
         .nav-card.card-current:hover { border-color: var(--accent-orange); box-shadow: 0 10px 20px rgba(255, 0, 127, 0.12); }
-
         .nav-card:hover { transform: translateY(-6px); }
-
-        .nav-card i {
-            font-size: 2.3rem;
-            margin-bottom: 12px;
-            transition: transform 0.3s ease;
-        }
+        .nav-card i { font-size: 2.3rem; margin-bottom: 12px; transition: transform 0.3s ease; }
         .nav-card.card-watched i { color: var(--accent-neon); }
         .nav-card.card-next i { color: var(--accent-purple); }
         .nav-card.card-watchlist i { color: var(--accent-blue); }
         .nav-card.card-current i { color: var(--accent-orange); }
-
         .nav-card:hover i { transform: scale(1.15); }
         .nav-card h3 { font-size: 1.05rem; font-weight: 600; }
 
@@ -149,152 +139,57 @@
             background: linear-gradient(90deg, rgba(0, 245, 212, 0.03) 0%, rgba(22, 25, 43, 0.7) 100%);
         }
 
-        .homepage-section h2 {
-            font-size: 1.25rem;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .homepage-section h2 { font-size: 1.25rem; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
 
         /* --- UNTERSEITEN STYLING --- */
         .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            background: rgba(22, 25, 43, 0.4);
-            padding: 15px 20px;
-            border-radius: 12px;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;
+            background: rgba(22, 25, 43, 0.4); padding: 15px 20px; border-radius: 12px;
         }
-
-        .btn-back {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 1rem;
-            transition: color 0.3s;
-        }
-
+        .btn-back { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; transition: color 0.3s; }
         .btn-back:hover { color: white; }
-
         .btn-add {
-            background: linear-gradient(45deg, var(--accent-purple), #a04ef6);
-            color: white;
-            border: none;
-            padding: 10px 22px;
-            border-radius: 30px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
-            transition: all 0.2s ease;
+            background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; border: none;
+            padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); transition: all 0.2s ease;
         }
+        .btn-add:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
 
-        .btn-add:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5);
-        }
-
-        /* --- LEBENDIGES ANIME LISTEN DESIGN --- */
-        .anime-list {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
+        /* --- LISTEN DESIGN --- */
+        .anime-list { display: flex; flex-direction: column; gap: 14px; }
         .anime-item {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-            transition: all 0.25s ease;
+            background: var(--card-bg); border-radius: 12px; padding: 16px 20px; display: flex;
+            justify-content: space-between; align-items: center; position: relative; transition: all 0.25s ease;
             border: 1px solid rgba(255,255,255,0.01);
         }
-
-        .anime-item:hover {
-            transform: translateX(4px);
-            background: #1d213a;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
+        .anime-item:hover { transform: translateX(4px); background: #1d213a; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .list-type-watched .anime-item { border-left: 4px solid var(--accent-neon); }
         .list-type-waiting .anime-item { border-left: 4px solid var(--accent-purple); }
         .list-type-released .anime-item { border-left: 4px solid #b55fe6; }
         .list-type-watchlist .anime-item { border-left: 4px solid var(--accent-blue); }
         .list-type-current .anime-item { border-left: 4px solid var(--accent-orange); }
 
-        .anime-item.deleting {
-            opacity: 0;
-            transform: scale(0.9) translateX(50px);
-        }
-
-        .anime-info-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
+        .anime-item.deleting { opacity: 0; transform: scale(0.9) translateX(50px); }
+        .anime-info-wrapper { display: flex; align-items: center; gap: 15px; }
         .anime-number {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--accent-neon);
-            background: rgba(0, 245, 212, 0.08);
-            min-width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-weight: 700; font-size: 1.1rem; color: var(--accent-neon); background: rgba(0, 245, 212, 0.08);
+            min-width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
             border: 1px solid rgba(0, 245, 212, 0.2);
         }
-
-        .anime-decor-icon {
-            font-size: 1.1rem;
-            opacity: 0.8;
-        }
+        .anime-decor-icon { font-size: 1.1rem; opacity: 0.8; }
         .list-type-waiting .anime-decor-icon { color: var(--accent-purple); }
         .list-type-released .anime-decor-icon { color: #b55fe6; }
         .list-type-watchlist .anime-decor-icon { color: var(--accent-blue); }
         .list-type-current .anime-decor-icon { color: var(--accent-orange); }
+        .anime-info h4 { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.3px; }
+        .anime-meta { font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; display: flex; align-items: center; gap: 6px; }
 
-        .anime-info h4 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-        }
-
-        .anime-meta {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .status-badge {
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
+        .status-badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5px; }
         .status-badge.alert {
-            background: rgba(138, 43, 226, 0.15);
-            color: #d19fff;
-            border: 1px solid rgba(138, 43, 226, 0.4);
+            background: rgba(138, 43, 226, 0.15); color: #d19fff; border: 1px solid rgba(138, 43, 226, 0.4);
             animation: pulse 2s infinite;
         }
-
-        .status-badge.current-badge {
-            background: rgba(255, 0, 127, 0.1);
-            color: #ff55aa;
-        }
+        .status-badge.current-badge { background: rgba(255, 0, 127, 0.1); color: #ff55aa; }
 
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.4); }
@@ -302,86 +197,36 @@
             100% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0); }
         }
 
-        .action-btns {
-            display: flex;
-            gap: 14px;
-            align-items: center;
-        }
-
-        .btn-action {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 1.15rem;
-            transition: all 0.2s;
-        }
-
+        .action-btns { display: flex; gap: 14px; align-items: center; }
+        .btn-action { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.15rem; transition: all 0.2s; }
         .btn-action.delete:hover { color: var(--danger); transform: scale(1.1); }
         .btn-action.check:hover { color: var(--accent-purple); transform: scale(1.1); }
-
         .sub-section-title {
-            margin: 35px 0 15px 0;
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            margin: 35px 0 15px 0; font-size: 0.95rem; color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 1.5px; font-weight: 600; display: flex; align-items: center; gap: 8px;
         }
 
         /* --- MODAL STYLING --- */
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 11, 18, 0.85);
-            backdrop-filter: blur(6px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 100;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 18, 0.85);
+            backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 100;
         }
-
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-
         .modal {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 30px;
-            width: 90%;
-            max-width: 450px;
-            border: 1px solid rgba(138, 43, 226, 0.25);
-            transform: scale(0.9);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: var(--card-bg); border-radius: 20px; padding: 30px; width: 90%; max-width: 450px;
+            border: 1px solid rgba(138, 43, 226, 0.25); transform: scale(0.9); transition: transform 0.3s ease;
             box-shadow: 0 15px 35px rgba(0,0,0,0.4);
         }
-
         .modal-overlay.active .modal { transform: scale(1); }
         .modal h3 { margin-bottom: 20px; font-size: 1.35rem; font-weight: 700; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
-        
         .form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            background: var(--bg-color);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.3s;
+            width: 100%; padding: 12px 15px; background: var(--bg-color); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px; color: white; font-size: 1rem; outline: none; transition: all 0.3s;
         }
-
-        .form-group input:focus {
-            border-color: var(--accent-purple);
-            box-shadow: 0 0 10px rgba(138, 43, 226, 0.2);
-        }
-
+        .form-group input:focus { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(138, 43, 226, 0.2); }
         .checkbox-group { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
         .checkbox-group input { width: auto; accent-color: var(--accent-purple); transform: scale(1.2); }
         .modal-footer { display: flex; justify-content: flex-end; gap: 15px; margin-top: 25px; }
@@ -389,24 +234,10 @@
         .btn-cancel:hover { color: white; }
 
         .empty-state {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 25px;
-            font-style: italic;
-            font-size: 0.9rem;
-            background: rgba(255,255,255,0.01);
-            border-radius: 10px;
-            border: 1px dashed rgba(255,255,255,0.05);
+            text-align: center; color: var(--text-muted); padding: 25px; font-style: italic; font-size: 0.9rem;
+            background: rgba(255,255,255,0.01); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.05);
         }
-
-        /* Lade-Indikator */
-        .loading-notice {
-            text-align: center;
-            padding: 40px;
-            color: var(--accent-neon);
-            font-weight: 600;
-            font-size: 1.2rem;
-        }
+        .loading-notice { text-align: center; padding: 40px; color: var(--accent-neon); font-weight: 600; font-size: 1.2rem; }
     </style>
 </head>
 <body>
@@ -416,26 +247,21 @@
     </header>
 
     <div class="container">
-
         <div id="page-home" class="page active">
             <h1 class="welcome-text">Hey, deine Anime-Zentrale ist startklar! 🚀</h1>
             
             <div class="grid-navigation">
                 <div class="nav-card card-watched" onclick="showPage('watched')">
-                    <i class="fa-solid fa-square-check"></i>
-                    <h3>Geschaut</h3>
+                    <i class="fa-solid fa-square-check"></i><h3>Geschaut</h3>
                 </div>
                 <div class="nav-card card-next" onclick="showPage('next-season')">
-                    <i class="fa-solid fa-calendar-plus"></i>
-                    <h3>Neue Staffel</h3>
+                    <i class="fa-solid fa-calendar-plus"></i><h3>Neue Staffel</h3>
                 </div>
                 <div class="nav-card card-watchlist" onclick="showPage('watchlist')">
-                    <i class="fa-solid fa-hourglass-start"></i>
-                    <h3>Watchlist</h3>
+                    <i class="fa-solid fa-hourglass-start"></i><h3>Watchlist</h3>
                 </div>
                 <div class="nav-card card-current" onclick="showPage('current')">
-                    <i class="fa-solid fa-play"></i>
-                    <h3>Currently Watching</h3>
+                    <i class="fa-solid fa-play"></i><h3>Currently Watching</h3>
                 </div>
             </div>
 
@@ -465,10 +291,8 @@
                 <h2><i class="fa-solid fa-calendar-plus" style="color: var(--accent-purple);"></i> Folgestaffeln</h2>
                 <button class="btn-add" onclick="openModal('next-season')">+ Hinzufügen</button>
             </div>
-            
             <div class="sub-section-title"><i class="fa-solid fa-hourglass"></i> In Warteschleife (Zukünftige Staffeln)</div>
             <div id="list-next-waiting" class="list-type-waiting anime-list"></div>
-
             <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: #b55fe6;"></i> Neue Staffel verfügbar!</div>
             <div id="list-next-released" class="list-type-released anime-list"></div>
         </div>
@@ -490,29 +314,24 @@
             </div>
             <div id="list-current" class="list-type-current anime-list"></div>
         </div>
-
     </div>
 
     <div id="modal" class="modal-overlay">
         <div class="modal">
             <h3 id="modal-title">Anime hinzufügen</h3>
             <input type="hidden" id="modal-page-context">
-            
             <div class="form-group">
                 <label for="anime-title">Anime Name</label>
                 <input type="text" id="anime-title" placeholder="z.B. Demon Slayer...">
             </div>
-
             <div id="meta-field-group" class="form-group" style="display: none;">
                 <label id="meta-label" for="anime-meta-input">Wann kommt die nächste Staffel? (Text/Datum)</label>
                 <input type="text" id="anime-meta-input" placeholder="z.B. Winter 2027 oder unangekündigt">
             </div>
-
             <div id="released-field-group" class="form-group checkbox-group" style="display: none;">
                 <input type="checkbox" id="anime-is-released">
                 <label for="anime-is-released">Die neue Staffel ist ab jetzt draußen!</label>
             </div>
-
             <div class="modal-footer">
                 <button class="btn-cancel" onclick="closeModal()">Abbrechen</button>
                 <button class="btn-add" onclick="saveAnime()">Speichern</button>
@@ -521,109 +340,198 @@
     </div>
 
     <script>
-        // === SUPABASE INITIALISIERUNG (SICHER FÜR GITHUB PAGES) ===
-        const SUPABASE_URL = "https://anyvdbweojvaztyiacwb.supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_6A73CDl65UrCWWVbTz9z7A_nu3cIWME"; 
+        // === NATIVER DATENBANK-ZUGRIFF (Bypass für GitHub Pages & Adblocker) ===
+        const API_URL = "https://anyvdbweojvaztyiacwb.supabase.co/rest/v1/animes";
+        const API_KEY = "sb_publishable_6A73CDl65UrCWWVbTz9z7A_nu3cIWME";
         
-        let supabase;
+        const reqHeaders = {
+            'apikey': API_KEY,
+            'Authorization': 'Bearer ' + API_KEY,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+        };
 
-        function initSupabaseClient() {
-            try {
-                if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
-                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                } else if (typeof supabasejs !== 'undefined') {
-                    supabase = supabasejs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                } else if (window.Supabase && window.Supabase.createClient) {
-                    supabase = window.Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                } else {
-                    supabase = window['@supabase/supabase-js'].createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                }
-            } catch(e) {
-                console.error("Supabase-Init Error, versuche Fallback:", e);
-                supabase = null;
-            }
-        }
-
-        // Lokaler Cache, der mit der Cloud synchronisiert wird
         let animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
 
-        // === DATEN AUS CLOUD LADEN ===
-        async function loadDataFromCloud() {
-            if (!supabase) {
-                initSupabaseClient();
-            }
-            if (!supabase) {
-                console.error("Supabase Client konnte nicht geladen werden.");
-                return;
-            }
-            
-            showLoadingStates();
-            
-            try {
-                const { data, error } = await supabase
-                    .from('animes')
-                    .select('*')
-                    .order('created_at', { ascending: true });
-
-                if (error) {
-                    console.error("Fehler beim Cloud-Load:", error);
-                    alert("Cloud-Fehler beim Laden der Daten. Vergewissere dich, dass SQL ausgeführt wurde.");
-                    return;
-                }
-
-                // Lokalen Speicher resetten
-                animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
-
-                // Daten in Kategorien einsortieren
-                data.forEach(item => {
-                    const formatted = {
-                        id: item.id,
-                        title: item.title,
-                        meta: item.meta,
-                        isReleased: item.is_released
-                    };
-                    if(animeData[item.category]) {
-                        animeData[item.category].push(formatted);
-                    }
-                });
-
-                renderAll();
-            } catch (err) {
-                console.error("Kritischer Fehler beim Abrufen:", err);
-            }
-        }
-
-        function showLoadingStates() {
-            const loading = '<div class="loading-notice"><i class="fa-solid fa-spinner fa-spin"></i> Lade Daten aus der Cloud...</div>';
-            document.getElementById('list-watched').innerHTML = loading;
-            document.getElementById('list-next-waiting').innerHTML = loading;
-            document.getElementById('list-next-released').innerHTML = loading;
-            document.getElementById('list-watchlist').innerHTML = loading;
-            document.getElementById('list-current').innerHTML = loading;
-        }
-
-        // === SEITENNAVIGATION ===
+        // Globale UI Funktionen
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(`page-${pageId}`).classList.add('active');
+            document.getElementById('page-' + pageId).classList.add('active');
             window.scrollTo(0,0);
         }
 
-        // === MODAL DIALOG ===
         function openModal(pageContext) {
-            const modal = document.getElementById('modal');
-            const title = document.getElementById('modal-title');
-            const contextInput = document.getElementById('modal-page-context');
-            
-            contextInput.value = pageContext;
+            document.getElementById('modal-page-context').value = pageContext;
             document.getElementById('anime-title').value = '';
             document.getElementById('anime-meta-input').value = '';
             document.getElementById('anime-is-released').checked = false;
 
             if(pageContext === 'next-season') {
-                title.innerText = 'Anime mit Folgestaffel eintragen';
+                document.getElementById('modal-title').innerText = 'Anime mit Folgestaffel eintragen';
                 document.getElementById('meta-field-group').style.display = 'block';
                 document.getElementById('released-field-group').style.display = 'flex';
             } else {
-                title.innerText = 'Neuen Anime hinzufügen';
+                document.getElementById('modal-title').innerText = 'Neuen Anime hinzufügen';
                 document.getElementById('meta-field-group').style.display = 'none';
+                document.getElementById('released-field-group').style.display = 'none';
+            }
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        function showLoadingStates() {
+            const loading = '<div class="loading-notice"><i class="fa-solid fa-spinner fa-spin"></i> Verbinde mit Cloud...</div>';
+            ['list-watched', 'list-next-waiting', 'list-next-released', 'list-watchlist', 'list-current'].forEach(id => {
+                document.getElementById(id).innerHTML = loading;
+            });
+        }
+
+        // === DATENBANK LOGIK ===
+        async function loadDataFromCloud() {
+            showLoadingStates();
+            try {
+                const response = await fetch(API_URL + "?select=*&order=created_at.asc", {
+                    method: 'GET',
+                    headers: reqHeaders
+                });
+                
+                if (!response.ok) throw new Error("HTTP Status " + response.status);
+                
+                const data = await response.json();
+                animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
+
+                data.forEach(item => {
+                    const formatted = { id: item.id, title: item.title, meta: item.meta, isReleased: item.is_released };
+                    if(animeData[item.category]) animeData[item.category].push(formatted);
+                });
+                renderAll();
+            } catch (err) {
+                console.error("Fetch Fehler:", err);
+                alert("Datenbank nicht erreichbar. Bitte lade die Seite neu.");
+            }
+        }
+
+        async function saveAnime() {
+            const title = document.getElementById('anime-title').value.trim();
+            const context = document.getElementById('modal-page-context').value;
+            if(!title) return alert('Bitte gib einen Namen ein!');
+
+            const payload = {
+                title: title,
+                category: context,
+                meta: context === 'next-season' ? (document.getElementById('anime-meta-input').value.trim() || 'Keine Info') : 'Keine Info',
+                is_released: context === 'next-season' ? document.getElementById('anime-is-released').checked : false
+            };
+
+            try {
+                const res = await fetch(API_URL, { method: 'POST', headers: reqHeaders, body: JSON.stringify(payload) });
+                if (!res.ok) throw new Error("Speichern fehlgeschlagen");
+                closeModal();
+                await loadDataFromCloud();
+            } catch(e) { alert(e.message); }
+        }
+
+        async function deleteAnime(context, id, elementId) {
+            const element = document.getElementById(elementId);
+            if(element) {
+                element.classList.add('deleting');
+                setTimeout(async () => {
+                    try {
+                        await fetch(API_URL + "?id=eq." + id, { method: 'DELETE', headers: reqHeaders });
+                        await loadDataFromCloud();
+                    } catch(e) { alert("Fehler beim Löschen"); }
+                }, 250);
+            }
+        }
+
+        async function toggleRelease(id, currentStatus) {
+            try {
+                await fetch(API_URL + "?id=eq." + id, {
+                    method: 'PATCH',
+                    headers: reqHeaders,
+                    body: JSON.stringify({ is_released: !currentStatus })
+                });
+                await loadDataFromCloud();
+            } catch(e) { alert("Status Update fehlgeschlagen"); }
+        }
+
+        // === RENDERING ENGINE ===
+        function createAnimeDOM(anime, context, listName, index = null) {
+            const uniqueId = `anime-${context}-${anime.id}-${listName}`;
+            let metaHTML = '', actionHTML = '', leadingIconHTML = '';
+
+            if (context === 'watched' && index !== null) {
+                leadingIconHTML = `<div class="anime-number">${index}</div>`;
+            } else {
+                let iconClass = 'fa-solid fa-bookmark';
+                if(context === 'next-season') iconClass = anime.isReleased ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-hourglass-half';
+                if(context === 'current') iconClass = 'fa-solid fa-circle-play';
+                leadingIconHTML = `<i class="${iconClass} anime-decor-icon"></i>`;
+            }
+
+            if(context === 'next-season') {
+                metaHTML = `<div class="anime-meta"><i class="fa-regular fa-calendar"></i> <span>Next: ${anime.meta}</span></div>`;
+                actionHTML = `
+                    <button class="btn-action check" onclick="toggleRelease(${anime.id}, ${anime.isReleased})">
+                        <i class="fa-solid ${anime.isReleased ? 'fa-circle-check' : 'fa-circle'}"></i>
+                    </button>`;
+            }
+
+            return `
+                <div class="anime-item" id="${uniqueId}">
+                    <div class="anime-info-wrapper">
+                        ${leadingIconHTML}
+                        <div class="anime-info"><h4>${anime.title}</h4>${metaHTML}</div>
+                    </div>
+                    <div class="action-btns">
+                        ${actionHTML}
+                        <button class="btn-action delete" onclick="deleteAnime('${context}', ${anime.id}, '${uniqueId}')">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>`;
+        }
+
+        function renderAll() {
+            document.getElementById('list-watched').innerHTML = animeData.watched.length 
+                ? animeData.watched.map((a, i) => createAnimeDOM(a, 'watched', 'p-watch', i + 1)).join('') 
+                : '<div class="empty-state">Noch keine komplett geschauten Animes eingetragen.</div>';
+
+            const waitingAnimes = animeData.nextSeason.filter(a => !a.isReleased);
+            const releasedAnimes = animeData.nextSeason.filter(a => a.isReleased);
+
+            document.getElementById('list-next-waiting').innerHTML = waitingAnimes.length ? waitingAnimes.map(a => createAnimeDOM(a, 'next-season', 'p-wait')).join('') : '<div class="empty-state">Keine offenen Wartepositionen.</div>';
+            document.getElementById('list-next-released').innerHTML = releasedAnimes.length ? releasedAnimes.map(a => createAnimeDOM(a, 'next-season', 'p-rel')).join('') : '<div class="empty-state">Aktuell keine neuen Staffeln verfügbar.</div>';
+            document.getElementById('list-watchlist').innerHTML = animeData.watchlist.length ? animeData.watchlist.map(a => createAnimeDOM(a, 'watchlist', 'p-wlist')).join('') : '<div class="empty-state">Deine Watchlist ist im Moment leer.</div>';
+            document.getElementById('list-current').innerHTML = animeData.current.length ? animeData.current.map(a => createAnimeDOM(a, 'current', 'p-curr')).join('') : '<div class="empty-state">Du schaust momentan nichts aktiv.</div>';
+
+            // Homepage Widgets
+            document.getElementById('hp-current-list').innerHTML = animeData.current.length ? animeData.current.map(a => `
+                <div class="anime-item">
+                    <div class="anime-info-wrapper">
+                        <i class="fa-solid fa-circle-play anime-decor-icon"></i>
+                        <div class="anime-info"><h4>${a.title}</h4></div>
+                    </div>
+                    <span class="status-badge current-badge">Folge läuft...</span>
+                </div>
+            `).join('') : '<div class="empty-state" style="padding: 12px; border: none;">Klicke oben auf "Currently Watching", um eine Serie hinzuzufügen!</div>';
+
+            document.getElementById('hp-alerts-list').innerHTML = releasedAnimes.length ? releasedAnimes.map(a => `
+                <div class="anime-item">
+                    <div class="anime-info-wrapper">
+                        <i class="fa-solid fa-circle-exclamation anime-decor-icon"></i>
+                        <div class="anime-info"><h4>${a.title}</h4><div class="anime-meta"><span>${a.meta}</span></div></div>
+                    </div>
+                    <span class="status-badge alert">STAFFEL START!</span>
+                </div>
+            `).join('') : '<div class="empty-state" style="padding: 12px; border: none;">Alles auf dem neuesten Stand. Keine neuen Staffeln aktiv.</div>';
+        }
+
+        // Sobald der Browser bereit ist -> Cloud laden!
+        document.addEventListener('DOMContentLoaded', loadDataFromCloud);
+    </script>
+</body>
+</html>
