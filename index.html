@@ -521,20 +521,26 @@
     </div>
 
     <script>
-        // === SUPABASE INITIALISIERUNG ===
+        // === SUPABASE INITIALISIERUNG (SICHER FÜR GITHUB PAGES) ===
         const SUPABASE_URL = "https://anyvdbweojvaztyiacwb.supabase.co";
-        // Hier wird der Bereitgestellte Key genutzt (Geputzt von internen Präfixen falls nötig)
         const SUPABASE_ANON_KEY = "sb_publishable_6A73CDl65UrCWWVbTz9z7A_nu3cIWME"; 
         
-        const supabase = bootstrapSupabase();
+        let supabase;
 
-        function bootstrapSupabase() {
+        function initSupabaseClient() {
             try {
-                return typeof supabasejs !== 'undefined' 
-                    ? supabasejs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-                    : window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                } else if (typeof supabasejs !== 'undefined') {
+                    supabase = supabasejs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                } else if (window.Supabase && window.Supabase.createClient) {
+                    supabase = window.Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                } else {
+                    supabase = window['@supabase/supabase-js'].createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                }
             } catch(e) {
-                return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.error("Supabase-Init Error, versuche Fallback:", e);
+                supabase = null;
             }
         }
 
@@ -543,36 +549,48 @@
 
         // === DATEN AUS CLOUD LADEN ===
         async function loadDataFromCloud() {
-            showLoadingStates();
-            
-            const { data, error } = await supabase
-                .from('animes')
-                .select('*')
-                .order('created_at', { ascending: true });
-
-            if (error) {
-                console.error("Fehler beim Cloud-Load:", error);
-                alert("Cloud-Fehler beim Laden der Daten. Überprüfe die SQL-Tabellen.");
+            if (!supabase) {
+                initSupabaseClient();
+            }
+            if (!supabase) {
+                console.error("Supabase Client konnte nicht geladen werden.");
                 return;
             }
+            
+            showLoadingStates();
+            
+            try {
+                const { data, error } = await supabase
+                    .from('animes')
+                    .select('*')
+                    .order('created_at', { ascending: true });
 
-            // Lokalen Speicher resetten
-            animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
-
-            // Daten in Kategorien einsortieren
-            data.forEach(item => {
-                const formatted = {
-                    id: item.id,
-                    title: item.title,
-                    meta: item.meta,
-                    isReleased: item.is_released
-                };
-                if(animeData[item.category]) {
-                    animeData[item.category].push(formatted);
+                if (error) {
+                    console.error("Fehler beim Cloud-Load:", error);
+                    alert("Cloud-Fehler beim Laden der Daten. Vergewissere dich, dass SQL ausgeführt wurde.");
+                    return;
                 }
-            });
 
-            renderAll();
+                // Lokalen Speicher resetten
+                animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
+
+                // Daten in Kategorien einsortieren
+                data.forEach(item => {
+                    const formatted = {
+                        id: item.id,
+                        title: item.title,
+                        meta: item.meta,
+                        isReleased: item.is_released
+                    };
+                    if(animeData[item.category]) {
+                        animeData[item.category].push(formatted);
+                    }
+                });
+
+                renderAll();
+            } catch (err) {
+                console.error("Kritischer Fehler beim Abrufen:", err);
+            }
         }
 
         function showLoadingStates() {
@@ -609,184 +627,3 @@
             } else {
                 title.innerText = 'Neuen Anime hinzufügen';
                 document.getElementById('meta-field-group').style.display = 'none';
-                document.getElementById('released-field-group').style.display = 'none';
-            }
-
-            modal.classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('modal').classList.remove('active');
-        }
-
-        // === CLOUD-AKTIONEN (HINZUFÜGEN / LÖSCHEN / UPDATEN) ===
-        async function saveAnime() {
-            const title = document.getElementById('anime-title').value.trim();
-            const context = document.getElementById('modal-page-context').value;
-            
-            if(!title) return alert('Bitte gib einen Namen ein!');
-
-            const metaValue = context === 'next-season' ? (document.getElementById('anime-meta-input').value.trim() || 'Keine Info') : 'Keine Info';
-            const isReleasedValue = context === 'next-season' ? document.getElementById('anime-is-released').checked : false;
-
-            // In Supabase einfügen
-            const { error } = await supabase
-                .from('animes')
-                .insert([{ 
-                    title: title, 
-                    category: context, 
-                    meta: metaValue, 
-                    is_released: isReleasedValue 
-                }]);
-
-            if (error) {
-                alert("Fehler beim Speichern in der Cloud: " + error.message);
-            } else {
-                closeModal();
-                await loadDataFromCloud(); // Aktualisieren
-            }
-        }
-
-        async function deleteAnime(context, id, elementId) {
-            const element = document.getElementById(elementId);
-            if(element) {
-                element.classList.add('deleting');
-                setTimeout(async () => {
-                    const { error } = await supabase
-                        .from('animes')
-                        .delete()
-                        .eq('id', id);
-
-                    if (error) {
-                        alert("Fehler beim Löschen: " + error.message);
-                    }
-                    await loadDataFromCloud();
-                }, 250);
-            }
-        }
-
-        async function toggleRelease(id, currentStatus) {
-            const { error } = await supabase
-                .from('animes')
-                .update({ is_released: !currentStatus })
-                .eq('id', id);
-
-            if (error) {
-                alert("Fehler beim Aktualisieren: " + error.message);
-            } else {
-                await loadDataFromCloud();
-            }
-        }
-
-        // --- HTML-GENERATOR FÜR LISTEN ---
-        function createAnimeDOM(anime, context, listName, index = null) {
-            const uniqueId = `anime-${context}-${anime.id}-${listName}`;
-            
-            let metaHTML = '';
-            let actionHTML = '';
-            let leadingIconHTML = '';
-
-            if (context === 'watched' && index !== null) {
-                leadingIconHTML = `<div class="anime-number">${index}</div>`;
-            } else {
-                let iconClass = 'fa-solid fa-bookmark';
-                if(context === 'next-season') iconClass = anime.isReleased ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-hourglass-half';
-                if(context === 'current') iconClass = 'fa-solid fa-circle-play';
-                leadingIconHTML = `<i class="${iconClass} anime-decor-icon"></i>`;
-            }
-
-            if(context === 'next-season') {
-                metaHTML = `<div class="anime-meta"><i class="fa-regular fa-calendar"></i> <span>Next: ${anime.meta}</span></div>`;
-                actionHTML = `
-                    <button class="btn-action check" onclick="toggleRelease(${anime.id}, ${anime.isReleased})" title="Status umschalten">
-                        <i class="fa-solid ${anime.isReleased ? 'fa-circle-check' : 'fa-circle'}"></i>
-                    </button>
-                `;
-            }
-
-            return `
-                <div class="anime-item" id="${uniqueId}">
-                    <div class="anime-info-wrapper">
-                        ${leadingIconHTML}
-                        <div class="anime-info">
-                            <h4>${anime.title}</h4>
-                            ${metaHTML}
-                        </div>
-                    </div>
-                    <div class="action-btns">
-                        ${actionHTML}
-                        <button class="btn-action delete" onclick="deleteAnime('${context}', ${anime.id}, '${uniqueId}')">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        // --- RENDERING ENGINE ---
-        function renderAll() {
-            // 1. Seite: Geschaut (mit automatischer Nummerierung)
-            const watchedList = document.getElementById('list-watched');
-            watchedList.innerHTML = animeData.watched.length 
-                ? animeData.watched.map((a, i) => createAnimeDOM(a, 'watched', 'p-watch', i + 1)).join('') 
-                : '<div class="empty-state">Noch keine komplett geschauten Animes eingetragen.</div>';
-
-            // 2. Seite: Neue Staffel
-            const waitingList = document.getElementById('list-next-waiting');
-            const releasedList = document.getElementById('list-next-released');
-            const waitingAnimes = animeData.nextSeason.filter(a => !a.isReleased);
-            const releasedAnimes = animeData.nextSeason.filter(a => a.isReleased);
-
-            waitingList.innerHTML = waitingAnimes.length ? waitingAnimes.map(a => createAnimeDOM(a, 'next-season', 'p-wait')).join('') : '<div class="empty-state">Keine offenen Wartepositionen.</div>';
-            releasedList.innerHTML = releasedAnimes.length ? releasedAnimes.map(a => createAnimeDOM(a, 'next-season', 'p-rel')).join('') : '<div class="empty-state">Aktuell keine neuen Staffeln verfügbar.</div>';
-
-            // 3. Seite: Watchlist
-            const watchlistList = document.getElementById('list-watchlist');
-            watchlistList.innerHTML = animeData.watchlist.length ? animeData.watchlist.map(a => createAnimeDOM(a, 'watchlist', 'p-wlist')).join('') : '<div class="empty-state">Deine Watchlist ist im Moment leer.</div>';
-
-            // 4. Seite: Currently Watching
-            const currentList = document.getElementById('list-current');
-            currentList.innerHTML = animeData.current.length ? animeData.current.map(a => createAnimeDOM(a, 'current', 'p-curr')).join('') : '<div class="empty-state">Du schaust momentan nichts aktiv.</div>';
-
-            // === HOMEPAGE WIDGETS ===
-            const hpCurrentList = document.getElementById('hp-current-list');
-            if(animeData.current.length) {
-                hpCurrentList.innerHTML = animeData.current.map(a => `
-                    <div class="anime-item">
-                        <div class="anime-info-wrapper">
-                            <i class="fa-solid fa-circle-play anime-decor-icon"></i>
-                            <div class="anime-info">
-                                <h4>${a.title}</h4>
-                            </div>
-                        </div>
-                        <span class="status-badge current-badge">Folge läuft...</span>
-                    </div>
-                `).join('');
-            } else {
-                hpCurrentList.innerHTML = '<div class="empty-state" style="padding: 12px; border: none;">Klicke oben auf "Currently Watching", um eine Serie hinzuzufügen!</div>';
-            }
-
-            const hpAlertsList = document.getElementById('hp-alerts-list');
-            if(releasedAnimes.length) {
-                hpAlertsList.innerHTML = releasedAnimes.map(a => `
-                    <div class="anime-item">
-                        <div class="anime-info-wrapper">
-                            <i class="fa-solid fa-circle-exclamation anime-decor-icon"></i>
-                            <div class="anime-info">
-                                <h4>${a.title}</h4>
-                                <div class="anime-meta"><span>${a.meta}</span></div>
-                            </div>
-                        </div>
-                        <span class="status-badge alert">STAFFEL START!</span>
-                    </div>
-                `).join('');
-            } else {
-                hpAlertsList.innerHTML = '<div class="empty-state" style="padding: 12px; border: none;">Alles auf dem neuesten Stand. Keine neuen Staffeln aktiv.</div>';
-            }
-        }
-
-        // App-Start: Daten initial aus der Cloud holen
-        loadDataFromCloud();
-    </script>
-</body>
-</html>
