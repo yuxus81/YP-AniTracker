@@ -25,102 +25,29 @@
             --danger: #ff4757;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            padding-bottom: 60px;
-            overflow-x: hidden;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; padding-bottom: 60px; overflow-x: hidden; }
+        
         header {
-            background: linear-gradient(135deg, #180f2b 0%, #0d0f18 100%);
-            padding: 25px 20px;
-            text-align: center;
-            border-bottom: 2px solid var(--accent-purple);
-            box-shadow: 0 4px 25px rgba(138, 43, 226, 0.25);
+            background: linear-gradient(135deg, #180f2b 0%, #0d0f18 100%); padding: 25px 20px;
+            text-align: center; border-bottom: 2px solid var(--accent-purple); box-shadow: 0 4px 25px rgba(138, 43, 226, 0.25);
             position: relative;
         }
 
-        /* --- LOGO STYLING NEU --- */
-        .logo {
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+        .logo { cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 14px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .logo:hover { transform: scale(1.05) rotate(-1deg); }
+        .logo img { width: 45px; height: 45px; border-radius: 12px; box-shadow: 0 0 15px rgba(138, 43, 226, 0.5); object-fit: cover; }
+        .logo span { font-size: 2.2rem; font-weight: 700; letter-spacing: 1.5px; background: linear-gradient(45deg, var(--accent-neon), #b55fe6, var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .logo:hover {
-            transform: scale(1.05) rotate(-1deg);
-        }
+        .container { max-width: 950px; margin: 30px auto; padding: 0 20px; }
+        .page { display: none; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .page.active { display: block; }
 
-        .logo img {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
-            object-fit: cover;
-        }
-
-        .logo span {
-            font-size: 2.2rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            background: linear-gradient(45deg, var(--accent-neon), #b55fe6, var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .container {
-            max-width: 950px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .page {
-            display: none;
-            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- HOMEPAGE STYLING --- */
-        .grid-navigation {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-            margin-top: 10px;
-        }
-
-        .nav-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255,255,255,0.03);
-            border-radius: 16px;
-            padding: 25px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
-
+        .grid-navigation { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; margin-top: 10px; }
+        .nav-card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.03); border-radius: 16px; padding: 25px; text-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; }
         .nav-card.card-watched:hover { border-color: var(--accent-neon); box-shadow: 0 10px 20px rgba(0, 245, 212, 0.12); }
         .nav-card.card-next:hover { border-color: var(--accent-purple); box-shadow: 0 10px 20px rgba(138, 43, 226, 0.12); }
         .nav-card.card-watchlist:hover { border-color: var(--accent-blue); box-shadow: 0 10px 20px rgba(58, 134, 255, 0.12); }
@@ -134,112 +61,71 @@
         .nav-card:hover i { transform: scale(1.15); }
         .nav-card h3 { font-size: 1.05rem; font-weight: 600; }
 
-        .homepage-section {
-            background: rgba(22, 25, 43, 0.7);
-            border-radius: 16px;
-            padding: 22px;
-            margin-bottom: 25px;
-            border-left: 4px solid var(--accent-purple);
-            backdrop-filter: blur(10px);
-        }
-
-        .homepage-section.current-section {
-            border-left-color: var(--accent-orange);
-            background: linear-gradient(90deg, rgba(255, 0, 127, 0.03) 0%, rgba(22, 25, 43, 0.7) 100%);
-        }
-
-        .homepage-section.alert-section {
-            border-left-color: var(--accent-neon);
-            background: linear-gradient(90deg, rgba(0, 245, 212, 0.03) 0%, rgba(22, 25, 43, 0.7) 100%);
-        }
-
+        .homepage-section { background: rgba(22, 25, 43, 0.7); border-radius: 16px; padding: 22px; margin-bottom: 25px; border-left: 4px solid var(--accent-purple); backdrop-filter: blur(10px); }
+        .homepage-section.current-section { border-left-color: var(--accent-orange); background: linear-gradient(90deg, rgba(255, 0, 127, 0.03) 0%, rgba(22, 25, 43, 0.7) 100%); }
+        .homepage-section.alert-section { border-left-color: var(--accent-neon); background: linear-gradient(90deg, rgba(0, 245, 212, 0.03) 0%, rgba(22, 25, 43, 0.7) 100%); }
         .homepage-section h2 { font-size: 1.25rem; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
 
         /* --- UNTERSEITEN STYLING --- */
-        .page-header {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;
-            background: rgba(22, 25, 43, 0.4); padding: 15px 20px; border-radius: 12px;
-        }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: rgba(22, 25, 43, 0.4); padding: 15px 20px; border-radius: 12px; }
         .btn-back { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; transition: color 0.3s; }
         .btn-back:hover { color: white; }
-        .btn-add {
-            background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; border: none;
-            padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); transition: all 0.2s ease;
-        }
+        .btn-add { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); transition: all 0.2s ease; }
         .btn-add:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
 
-        /* --- LISTEN DESIGN --- */
+        /* --- NEUES LISTEN DESIGN --- */
         .anime-list { display: flex; flex-direction: column; gap: 14px; }
-        .anime-item {
-            background: var(--card-bg); border-radius: 12px; padding: 16px 20px; display: flex;
-            justify-content: space-between; align-items: center; position: relative; transition: all 0.25s ease;
-            border: 1px solid rgba(255,255,255,0.01);
-        }
+        .anime-item { background: var(--card-bg); border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; position: relative; transition: all 0.25s ease; border: 1px solid rgba(255,255,255,0.01); }
         .anime-item:hover { transform: translateX(4px); background: #1d213a; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .list-type-watched .anime-item { border-left: 4px solid var(--accent-neon); }
-        .list-type-waiting .anime-item { border-left: 4px solid var(--accent-purple); }
-        .list-type-released .anime-item { border-left: 4px solid #b55fe6; }
-        .list-type-watchlist .anime-item { border-left: 4px solid var(--accent-blue); }
-        .list-type-current .anime-item { border-left: 4px solid var(--accent-orange); }
+        
+        /* Direkte Farbzuweisung für Listen-Items */
+        .item-watched { border-left: 4px solid var(--accent-neon); }
+        .item-waiting { border-left: 4px solid var(--accent-purple); }
+        .item-released { border-left: 4px solid #b55fe6; }
+        .item-watchlist { border-left: 4px solid var(--accent-blue); }
+        .item-current { border-left: 4px solid var(--accent-orange); }
 
         .anime-item.deleting { opacity: 0; transform: scale(0.9) translateX(50px); }
         .anime-info-wrapper { display: flex; align-items: center; gap: 15px; }
-        .anime-number {
-            font-weight: 700; font-size: 1.1rem; color: var(--accent-neon); background: rgba(0, 245, 212, 0.08);
-            min-width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            border: 1px solid rgba(0, 245, 212, 0.2);
-        }
+        
+        /* Farbige Nummerierungen für die Geschaut-Liste */
+        .anime-number { font-weight: 700; font-size: 1.1rem; min-width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .num-watched { color: var(--accent-neon); background: rgba(0, 245, 212, 0.08); border: 1px solid rgba(0, 245, 212, 0.2); }
+        .num-waiting { color: var(--accent-purple); background: rgba(138, 43, 226, 0.08); border: 1px solid rgba(138, 43, 226, 0.2); }
+        .num-released { color: #b55fe6; background: rgba(181, 95, 230, 0.08); border: 1px solid rgba(181, 95, 230, 0.2); }
+
         .anime-decor-icon { font-size: 1.1rem; opacity: 0.8; }
-        .list-type-waiting .anime-decor-icon { color: var(--accent-purple); }
-        .list-type-released .anime-decor-icon { color: #b55fe6; }
-        .list-type-watchlist .anime-decor-icon { color: var(--accent-blue); }
-        .list-type-current .anime-decor-icon { color: var(--accent-orange); }
+        .color-watched { color: var(--accent-neon); }
+        .color-waiting { color: var(--accent-purple); }
+        .color-released { color: #b55fe6; }
+        .color-watchlist { color: var(--accent-blue); }
+        .color-current { color: var(--accent-orange); }
+
         .anime-info h4 { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.3px; }
         .anime-meta { font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; display: flex; align-items: center; gap: 6px; }
 
         .status-badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5px; }
-        .status-badge.alert {
-            background: rgba(138, 43, 226, 0.15); color: #d19fff; border: 1px solid rgba(138, 43, 226, 0.4);
-            animation: pulse 2s infinite;
-        }
+        .status-badge.alert { background: rgba(138, 43, 226, 0.15); color: #d19fff; border: 1px solid rgba(138, 43, 226, 0.4); animation: pulse 2s infinite; }
         .status-badge.current-badge { background: rgba(255, 0, 127, 0.1); color: #ff55aa; }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.4); }
-            70% { box-shadow: 0 0 0 6px rgba(138, 43, 226, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0); }
-        }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(138, 43, 226, 0); } 100% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0); } }
 
         .action-btns { display: flex; gap: 14px; align-items: center; }
         .btn-action { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.15rem; transition: all 0.2s; }
         .btn-action.delete:hover { color: var(--danger); transform: scale(1.1); }
         .btn-action.check:hover { color: var(--accent-purple); transform: scale(1.1); }
-        .sub-section-title {
-            margin: 35px 0 15px 0; font-size: 0.95rem; color: var(--text-muted); text-transform: uppercase;
-            letter-spacing: 1.5px; font-weight: 600; display: flex; align-items: center; gap: 8px;
-        }
+        
+        .sub-section-title { margin: 35px 0 15px 0; font-size: 0.95rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
 
         /* --- MODAL STYLING --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 18, 0.85);
-            backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center;
-            opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 100;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 18, 0.85); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 100; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal {
-            background: var(--card-bg); border-radius: 20px; padding: 30px; width: 90%; max-width: 450px;
-            border: 1px solid rgba(138, 43, 226, 0.25); transform: scale(0.9); transition: transform 0.3s ease;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-        }
+        .modal { background: var(--card-bg); border-radius: 20px; padding: 30px; width: 90%; max-width: 450px; border: 1px solid rgba(138, 43, 226, 0.25); transform: scale(0.9); transition: transform 0.3s ease; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
         .modal-overlay.active .modal { transform: scale(1); }
         .modal h3 { margin-bottom: 20px; font-size: 1.35rem; font-weight: 700; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
-        .form-group input {
-            width: 100%; padding: 12px 15px; background: var(--bg-color); border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px; color: white; font-size: 1rem; outline: none; transition: all 0.3s;
-        }
+        .form-group input { width: 100%; padding: 12px 15px; background: var(--bg-color); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: white; font-size: 1rem; outline: none; transition: all 0.3s; }
         .form-group input:focus { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(138, 43, 226, 0.2); }
         .checkbox-group { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
         .checkbox-group input { width: auto; accent-color: var(--accent-purple); transform: scale(1.2); }
@@ -247,57 +133,23 @@
         .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; }
         .btn-cancel:hover { color: white; }
 
-        .empty-state {
-            text-align: center; color: var(--text-muted); padding: 25px; font-style: italic; font-size: 0.9rem;
-            background: rgba(255,255,255,0.01); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.05);
-        }
+        .empty-state { text-align: center; color: var(--text-muted); padding: 25px; font-style: italic; font-size: 0.9rem; background: rgba(255,255,255,0.01); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.05); }
         .loading-notice { text-align: center; padding: 40px; color: var(--accent-neon); font-weight: 600; font-size: 1.2rem; }
 
         /* ================= MOBILE OPTIMIERUNG ================= */
         @media (max-width: 600px) {
-            .grid-navigation {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-            .nav-card {
-                padding: 18px 10px;
-            }
-            .nav-card i {
-                font-size: 1.8rem;
-                margin-bottom: 8px;
-            }
-            .nav-card h3 {
-                font-size: 0.85rem;
-            }
-            .logo {
-                gap: 10px;
-            }
-            .logo img {
-                width: 36px;
-                height: 36px;
-                border-radius: 8px;
-            }
-            .logo span {
-                font-size: 1.8rem;
-            }
-            .homepage-section {
-                padding: 18px;
-            }
-            .homepage-section h2 {
-                font-size: 1.1rem;
-            }
-            .page-header {
-                flex-direction: column;
-                gap: 15px;
-                align-items: flex-start;
-            }
-            .btn-back {
-                align-self: flex-start;
-            }
-            .btn-add {
-                width: 100%;
-                text-align: center;
-            }
+            .grid-navigation { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .nav-card { padding: 18px 10px; }
+            .nav-card i { font-size: 1.8rem; margin-bottom: 8px; }
+            .nav-card h3 { font-size: 0.85rem; }
+            .logo { gap: 10px; }
+            .logo img { width: 36px; height: 36px; border-radius: 8px; }
+            .logo span { font-size: 1.8rem; }
+            .homepage-section { padding: 18px; }
+            .homepage-section h2 { font-size: 1.1rem; }
+            .page-header { flex-direction: column; gap: 15px; align-items: flex-start; }
+            .btn-back { align-self: flex-start; }
+            .btn-add { width: 100%; text-align: center; }
         }
     </style>
 </head>
@@ -312,7 +164,6 @@
 
     <div class="container">
         <div id="page-home" class="page active">
-            
             <div class="grid-navigation">
                 <div class="nav-card card-watched" onclick="showPage('watched')">
                     <i class="fa-solid fa-square-check"></i><h3>Geschaut</h3>
@@ -330,22 +181,27 @@
 
             <div class="homepage-section current-section">
                 <h2><i class="fa-solid fa-bolt" style="color: var(--accent-orange);"></i> Aktuell am Schauen</h2>
-                <div id="hp-current-list" class="list-type-current anime-list"></div>
+                <div id="hp-current-list" class="anime-list"></div>
             </div>
 
             <div class="homepage-section alert-section">
                 <h2><i class="fa-solid fa-bell" style="color: var(--accent-neon);"></i> Neue Staffel draußen!</h2>
-                <div id="hp-alerts-list" class="list-type-released anime-list"></div>
+                <div id="hp-alerts-list" class="anime-list"></div>
             </div>
         </div>
 
         <div id="page-watched" class="page">
             <div class="page-header">
                 <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
-                <h2><i class="fa-solid fa-square-check" style="color: var(--accent-neon);"></i> Komplett Geschaut</h2>
+                <h2><i class="fa-solid fa-square-check" style="color: var(--accent-neon);"></i> Geschaut (Gesamt)</h2>
                 <button class="btn-add" onclick="openModal('watched')">+ Hinzufügen</button>
             </div>
-            <div id="list-watched" class="list-type-watched anime-list"></div>
+            
+            <div class="sub-section-title"><i class="fa-solid fa-check-double" style="color: var(--accent-neon);"></i> Komplett Abgeschlossen</div>
+            <div id="list-watched-completed" class="anime-list"></div>
+
+            <div class="sub-section-title"><i class="fa-solid fa-forward-step" style="color: var(--accent-purple);"></i> Fortsetzung folgt (Wartet auf Staffel)</div>
+            <div id="list-watched-continuing" class="anime-list"></div>
         </div>
 
         <div id="page-next-season" class="page">
@@ -355,9 +211,9 @@
                 <button class="btn-add" onclick="openModal('next-season')">+ Hinzufügen</button>
             </div>
             <div class="sub-section-title"><i class="fa-solid fa-hourglass"></i> In Warteschleife (Zukünftige Staffeln)</div>
-            <div id="list-next-waiting" class="list-type-waiting anime-list"></div>
+            <div id="list-next-waiting" class="anime-list"></div>
             <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: #b55fe6;"></i> Neue Staffel verfügbar!</div>
-            <div id="list-next-released" class="list-type-released anime-list"></div>
+            <div id="list-next-released" class="anime-list"></div>
         </div>
 
         <div id="page-watchlist" class="page">
@@ -366,7 +222,7 @@
                 <h2><i class="fa-solid fa-hourglass-start" style="color: var(--accent-blue);"></i> Watchlist (Noch schauen)</h2>
                 <button class="btn-add" onclick="openModal('watchlist')">+ Hinzufügen</button>
             </div>
-            <div id="list-watchlist" class="list-type-watchlist anime-list"></div>
+            <div id="list-watchlist" class="anime-list"></div>
         </div>
 
         <div id="page-current" class="page">
@@ -375,7 +231,7 @@
                 <h2><i class="fa-solid fa-play" style="color: var(--accent-orange);"></i> Currently Watching</h2>
                 <button class="btn-add" onclick="openModal('current')">+ Hinzufügen</button>
             </div>
-            <div id="list-current" class="list-type-current anime-list"></div>
+            <div id="list-current" class="anime-list"></div>
         </div>
     </div>
 
@@ -416,7 +272,6 @@
 
         let animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
 
-        // Globale UI Funktionen
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('page-' + pageId).classList.add('active');
@@ -447,12 +302,11 @@
 
         function showLoadingStates() {
             const loading = '<div class="loading-notice"><i class="fa-solid fa-spinner fa-spin"></i> Verbinde mit Cloud...</div>';
-            ['list-watched', 'list-next-waiting', 'list-next-released', 'list-watchlist', 'list-current'].forEach(id => {
+            ['list-watched-completed', 'list-watched-continuing', 'list-next-waiting', 'list-next-released', 'list-watchlist', 'list-current'].forEach(id => {
                 document.getElementById(id).innerHTML = loading;
             });
         }
 
-        // === DATENBANK LOGIK ===
         async function loadDataFromCloud() {
             showLoadingStates();
             try {
@@ -460,7 +314,6 @@
                     method: 'GET',
                     headers: reqHeaders
                 });
-                
                 if (!response.ok) throw new Error("HTTP Status " + response.status);
                 
                 const data = await response.json();
@@ -521,20 +374,40 @@
             } catch(e) { alert("Status Update fehlgeschlagen"); }
         }
 
-        // === RENDERING ENGINE ===
+        // --- DYNAMISCHER HTML-GENERATOR ---
         function createAnimeDOM(anime, context, listName, index = null) {
             const uniqueId = `anime-${context}-${anime.id}-${listName}`;
             let metaHTML = '', actionHTML = '', leadingIconHTML = '';
 
-            if (context === 'watched' && index !== null) {
-                leadingIconHTML = `<div class="anime-number">${index}</div>`;
+            // Farbe und Border der Box bestimmen
+            let borderClass = '';
+            if (context === 'watched') borderClass = 'item-watched';
+            else if (context === 'next-season') borderClass = anime.isReleased ? 'item-released' : 'item-waiting';
+            else if (context === 'watchlist') borderClass = 'item-watchlist';
+            else if (context === 'current') borderClass = 'item-current';
+
+            if (index !== null) {
+                // Nummerierung mit passender Farbe
+                let numClass = 'num-watched';
+                if (context === 'next-season') numClass = anime.isReleased ? 'num-released' : 'num-waiting';
+                leadingIconHTML = `<div class="anime-number ${numClass}">${index}</div>`;
             } else {
+                // Icon für Listen ohne Nummerierung
                 let iconClass = 'fa-solid fa-bookmark';
-                if(context === 'next-season') iconClass = anime.isReleased ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-hourglass-half';
-                if(context === 'current') iconClass = 'fa-solid fa-circle-play';
-                leadingIconHTML = `<i class="${iconClass} anime-decor-icon"></i>`;
+                let decorColorClass = '';
+                
+                if (context === 'watched') { decorColorClass = 'color-watched'; }
+                else if (context === 'next-season') { 
+                    iconClass = anime.isReleased ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-hourglass-half';
+                    decorColorClass = anime.isReleased ? 'color-released' : 'color-waiting';
+                }
+                else if (context === 'watchlist') { decorColorClass = 'color-watchlist'; }
+                else if (context === 'current') { iconClass = 'fa-solid fa-circle-play'; decorColorClass = 'color-current'; }
+                
+                leadingIconHTML = `<i class="${iconClass} anime-decor-icon ${decorColorClass}"></i>`;
             }
 
+            // Metadaten und Interaktions-Buttons
             if(context === 'next-season') {
                 metaHTML = `<div class="anime-meta"><i class="fa-regular fa-calendar"></i> <span>Next: ${anime.meta}</span></div>`;
                 actionHTML = `
@@ -544,7 +417,7 @@
             }
 
             return `
-                <div class="anime-item" id="${uniqueId}">
+                <div class="anime-item ${borderClass}" id="${uniqueId}">
                     <div class="anime-info-wrapper">
                         ${leadingIconHTML}
                         <div class="anime-info"><h4>${anime.title}</h4>${metaHTML}</div>
@@ -559,23 +432,35 @@
         }
 
         function renderAll() {
-            document.getElementById('list-watched').innerHTML = animeData.watched.length 
-                ? animeData.watched.map((a, i) => createAnimeDOM(a, 'watched', 'p-watch', i + 1)).join('') 
+            // === SEITE 1: GESCHAUT (Gesamt-Counter) ===
+            let globalWatchCounter = 0;
+            
+            // 1. Komplett geschaut
+            document.getElementById('list-watched-completed').innerHTML = animeData.watched.length 
+                ? animeData.watched.map(a => { globalWatchCounter++; return createAnimeDOM(a, 'watched', 'p-watch-comp', globalWatchCounter); }).join('') 
                 : '<div class="empty-state">Noch keine komplett geschauten Animes eingetragen.</div>';
+                
+            // 2. Fortsetzung folgt (Spiegelt die Next-Season-Animes wider)
+            document.getElementById('list-watched-continuing').innerHTML = animeData.nextSeason.length
+                ? animeData.nextSeason.map(a => { globalWatchCounter++; return createAnimeDOM(a, 'next-season', 'p-watch-cont', globalWatchCounter); }).join('')
+                : '<div class="empty-state">Keine offenen Serien mit neuen Staffeln.</div>';
 
+            // === SEITE 2: NEUE STAFFEL (Split nach Status) ===
             const waitingAnimes = animeData.nextSeason.filter(a => !a.isReleased);
             const releasedAnimes = animeData.nextSeason.filter(a => a.isReleased);
 
             document.getElementById('list-next-waiting').innerHTML = waitingAnimes.length ? waitingAnimes.map(a => createAnimeDOM(a, 'next-season', 'p-wait')).join('') : '<div class="empty-state">Keine offenen Wartepositionen.</div>';
             document.getElementById('list-next-released').innerHTML = releasedAnimes.length ? releasedAnimes.map(a => createAnimeDOM(a, 'next-season', 'p-rel')).join('') : '<div class="empty-state">Aktuell keine neuen Staffeln verfügbar.</div>';
+            
+            // === SEITE 3 & 4 ===
             document.getElementById('list-watchlist').innerHTML = animeData.watchlist.length ? animeData.watchlist.map(a => createAnimeDOM(a, 'watchlist', 'p-wlist')).join('') : '<div class="empty-state">Deine Watchlist ist im Moment leer.</div>';
             document.getElementById('list-current').innerHTML = animeData.current.length ? animeData.current.map(a => createAnimeDOM(a, 'current', 'p-curr')).join('') : '<div class="empty-state">Du schaust momentan nichts aktiv.</div>';
 
-            // Homepage Widgets
+            // === HOMEPAGE WIDGETS ===
             document.getElementById('hp-current-list').innerHTML = animeData.current.length ? animeData.current.map(a => `
-                <div class="anime-item">
+                <div class="anime-item item-current">
                     <div class="anime-info-wrapper">
-                        <i class="fa-solid fa-circle-play anime-decor-icon"></i>
+                        <i class="fa-solid fa-circle-play anime-decor-icon color-current"></i>
                         <div class="anime-info"><h4>${a.title}</h4></div>
                     </div>
                     <span class="status-badge current-badge">Folge läuft...</span>
@@ -583,9 +468,9 @@
             `).join('') : '<div class="empty-state" style="padding: 12px; border: none;">Klicke oben auf "Currently Watching", um eine Serie hinzuzufügen!</div>';
 
             document.getElementById('hp-alerts-list').innerHTML = releasedAnimes.length ? releasedAnimes.map(a => `
-                <div class="anime-item">
+                <div class="anime-item item-released">
                     <div class="anime-info-wrapper">
-                        <i class="fa-solid fa-circle-exclamation anime-decor-icon"></i>
+                        <i class="fa-solid fa-circle-exclamation anime-decor-icon color-released"></i>
                         <div class="anime-info"><h4>${a.title}</h4><div class="anime-meta"><span>${a.meta}</span></div></div>
                     </div>
                     <span class="status-badge alert">STAFFEL START!</span>
@@ -593,7 +478,7 @@
             `).join('') : '<div class="empty-state" style="padding: 12px; border: none;">Alles auf dem neuesten Stand. Keine neuen Staffeln aktiv.</div>';
         }
 
-        // Sobald der Browser bereit ist -> Cloud laden!
+        // Start!
         document.addEventListener('DOMContentLoaded', loadDataFromCloud);
     </script>
 </body>
