@@ -17,10 +17,10 @@
             --bg-color: #0d0f18;
             --card-bg: #16192b;
             --accent-purple: #8a2be2;
-            --accent-neon: #00f5d4; /* Türkis für Aktuell am Schauen */
-            --accent-green: #2ecc71; /* Sattes Grün für Geschaut */
+            --accent-neon: #00f5d4;
+            --accent-green: #2ecc71;
             --accent-blue: #3a86ff;
-            --accent-orange: #ff0055; /* Neon-Rot/Pink für Alerts */
+            --accent-orange: #ff0055;
             --text-color: #f1f3f9;
             --text-muted: #7e8da6;
             --danger: #ff4757;
@@ -72,7 +72,6 @@
         
         .homepage-section h2 { font-size: 1.25rem; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
 
-        /* --- RASTER-LAYOUT HOMESCREEN --- */
         .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
         .anime-grid-item { 
             background: var(--card-bg); border-radius: 14px; padding: 18px; 
@@ -131,10 +130,11 @@
         .btn-action { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.15rem; transition: all 0.2s; }
         .btn-action.delete:hover { color: var(--danger); transform: scale(1.1); }
         .btn-action.check:hover { color: var(--accent-orange); transform: scale(1.1); }
+        .btn-action.edit:hover { color: var(--accent-blue); transform: scale(1.1); } /* Hover für den Edit-Button */
         
         .sub-section-title { margin: 35px 0 15px 0; font-size: 0.95rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
 
-        /* --- MODAL STYLING & SELECT CORRECTIONS --- */
+        /* --- MODAL STYLING --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 18, 0.85); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 100; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
         .modal { background: var(--card-bg); border-radius: 20px; padding: 30px; width: 90%; max-width: 450px; border: 1px solid rgba(138, 43, 226, 0.25); transform: scale(0.9); transition: transform 0.3s ease; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
@@ -159,7 +159,6 @@
         .empty-state { text-align: center; color: var(--text-muted); padding: 25px; font-style: italic; font-size: 0.9rem; background: rgba(255,255,255,0.01); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.05); width: 100%; }
         .loading-notice { text-align: center; padding: 40px; color: var(--accent-neon); font-weight: 600; font-size: 1.2rem; }
 
-        /* ================= MOBILE OPTIMIERUNG ================= */
         @media (max-width: 600px) {
             .grid-navigation { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .nav-card { padding: 18px 10px; }
@@ -266,6 +265,8 @@
         <div class="modal">
             <h3 id="modal-title">Anime hinzufügen</h3>
             <input type="hidden" id="modal-page-context">
+            <input type="hidden" id="anime-edit-id">
+            
             <div class="form-group">
                 <label for="anime-title">Anime Name</label>
                 <input type="text" id="anime-title" placeholder="z.B. Demon Slayer...">
@@ -315,6 +316,8 @@
 
         function openModal(pageContext) {
             document.getElementById('modal-page-context').value = pageContext;
+            document.getElementById('anime-edit-id').value = ''; // ID leeren, damit er weiß, es ist ein neuer Eintrag
+            
             document.getElementById('anime-title').value = '';
             document.getElementById('anime-meta-input').value = '';
             document.getElementById('anime-is-released').checked = false;
@@ -331,6 +334,27 @@
                 document.getElementById('meta-field-group').style.display = 'none';
                 document.getElementById('released-field-group').style.display = 'none';
             }
+            document.getElementById('modal').classList.add('active');
+        }
+
+        // NEU: Logik zum Bearbeiten
+        function editAnime(id) {
+            const anime = animeData.nextSeason.find(a => a.id === id);
+            if (!anime) return;
+
+            document.getElementById('modal-page-context').value = 'next-season';
+            document.getElementById('anime-edit-id').value = anime.id;
+            
+            document.getElementById('anime-title').value = anime.title;
+            document.getElementById('anime-type').value = anime.type || 'staffel';
+            document.getElementById('anime-meta-input').value = anime.meta;
+            document.getElementById('anime-is-released').checked = anime.isReleased;
+
+            document.getElementById('modal-title').innerText = 'Release-Info bearbeiten';
+            document.getElementById('type-field-group').style.display = 'block';
+            document.getElementById('meta-field-group').style.display = 'block';
+            document.getElementById('released-field-group').style.display = 'flex';
+            
             document.getElementById('modal').classList.add('active');
         }
 
@@ -360,7 +384,6 @@
                 animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
 
                 data.forEach(item => {
-                    // Falls noch kein 'type' in alten Zeilen existiert, Fallback auf 'staffel'
                     const formatted = { 
                         id: item.id, 
                         title: item.title, 
@@ -384,6 +407,8 @@
         async function saveAnime() {
             const title = document.getElementById('anime-title').value.trim();
             const context = document.getElementById('modal-page-context').value;
+            const editId = document.getElementById('anime-edit-id').value; // ID holen
+            
             if(!title) return alert('Bitte gib einen Namen ein!');
 
             const isNext = context === 'next-season';
@@ -392,15 +417,36 @@
                 category: context,
                 meta: isNext ? (document.getElementById('anime-meta-input').value.trim() || 'Keine Info') : 'Keine Info',
                 is_released: isNext ? document.getElementById('anime-is-released').checked : false,
-                type: isNext ? document.getElementById('anime-type').value : 'staffel' // Speichert den Typ
+                type: isNext ? document.getElementById('anime-type').value : 'staffel'
             };
 
             try {
-                const res = await fetch(API_URL, { method: 'POST', headers: reqHeaders, body: JSON.stringify(payload) });
-                if (!res.ok) throw new Error("Speichern fehlgeschlagen");
+                let res;
+                if (editId) {
+                    // Update (PATCH), wenn eine ID existiert
+                    res = await fetch(API_URL + "?id=eq." + editId, { 
+                        method: 'PATCH', 
+                        headers: reqHeaders, 
+                        body: JSON.stringify(payload) 
+                    });
+                } else {
+                    // Neu anlegen (POST)
+                    res = await fetch(API_URL, { 
+                        method: 'POST', 
+                        headers: reqHeaders, 
+                        body: JSON.stringify(payload) 
+                    });
+                }
+
+                if (!res.ok) {
+                    const errorText = await res.json();
+                    throw new Error(errorText.message || "Unbekannter Fehler von Supabase");
+                }
                 closeModal();
                 await loadDataFromCloud();
-            } catch(e) { alert(e.message); }
+            } catch(e) { 
+                alert("Speichern fehlgeschlagen!\nHast du den SQL-Befehl für die neue Spalte 'type' ausgeführt?\nDetails: " + e.message); 
+            }
         }
 
         async function deleteAnime(context, id, elementId) {
@@ -448,7 +494,6 @@
                 let iconClass = 'fa-solid fa-bookmark';
                 let decorColorClass = 'color-' + context;
                 if (context === 'next-season') { 
-                    // Dynamic Icons basierend auf Typ (Film kriegt ein Film-Icon)
                     if (anime.type === 'film') {
                         iconClass = anime.isReleased ? 'fa-solid fa-film color-released' : 'fa-solid fa-film color-waiting';
                     } else {
@@ -462,11 +507,15 @@
             }
 
             if(context === 'next-season') {
-                // Präfix je nach Typ in den Metadaten anzeigen
                 const prefix = anime.type === 'film' ? 'Film: ' : 'Next: ';
                 metaHTML = `<div class="anime-meta"><i class="fa-regular fa-calendar"></i> <span>${prefix}${anime.meta}</span></div>`;
+                
+                // NEU: Bearbeiten Button integriert
                 actionHTML = `
-                    <button class="btn-action check" onclick="toggleRelease(${anime.id}, ${anime.isReleased})">
+                    <button class="btn-action edit" onclick="editAnime(${anime.id})" title="Info bearbeiten">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <button class="btn-action check" onclick="toggleRelease(${anime.id}, ${anime.isReleased})" title="Status umschalten">
                         <i class="fa-solid ${anime.isReleased ? 'fa-circle-check' : 'fa-circle'}"></i>
                     </button>`;
             }
@@ -501,12 +550,11 @@
             const releasedAnimes = animeData.nextSeason.filter(a => a.isReleased);
 
             document.getElementById('list-next-waiting').innerHTML = waitingAnimes.length ? waitingAnimes.map(a => createAnimeDOM(a, 'next-season', 'p-wait')).join('') : '<div class="empty-state">Keine offenen Wartepositionen.</div>';
-            document.getElementById('list-next-released').innerHTML = releasedAnimes.length ? releasedAnimes.map(a => createAnimeDOM(a, 'next-season', 'p-rel')).join('') : '<div class="empty-state">Aktuell keine neuen Staffeln verfügbar.</div>';
+            document.getElementById('list-next-released').innerHTML = releasedAnimes.length ? releasedAnimes.map(a => createAnimeDOM(a, 'next-season', 'p-rel')).join('') : '<div class="empty-state">Aktuell keine neuen Releases verfügbar.</div>';
             
             document.getElementById('list-watchlist').innerHTML = animeData.watchlist.length ? animeData.watchlist.map(a => createAnimeDOM(a, 'watchlist', 'p-wlist')).join('') : '<div class="empty-state">Deine Watchlist ist im Moment leer.</div>';
             document.getElementById('list-current').innerHTML = animeData.current.length ? animeData.current.map(a => createAnimeDOM(a, 'current', 'p-curr')).join('') : '<div class="empty-state">Du schaust momentan nichts aktiv.</div>';
 
-            // Homepage: Aktuell am Schauen Liste
             document.getElementById('hp-current-list').innerHTML = animeData.current.length ? animeData.current.map(a => `
                 <div class="anime-item item-current">
                     <div class="anime-info-wrapper">
@@ -517,7 +565,6 @@
                 </div>
             `).join('') : '<div class="empty-state" style="padding: 12px; border: none;">Klicke oben auf "Aktuell am Schauen", um Serien hinzuzufügen!</div>';
 
-            // Homepage: Das kompakte Raster mit dynamischem Text-Badge (Staffel vs Film)
             document.getElementById('hp-alerts-grid').innerHTML = releasedAnimes.length ? releasedAnimes.map(a => {
                 const badgeText = a.type === 'film' ? 'NEUER FILM!' : 'NEUE STAFFEL!';
                 const iconClass = a.type === 'film' ? 'fa-solid fa-film' : 'fa-solid fa-circle-exclamation';
