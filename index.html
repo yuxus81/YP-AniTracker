@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YP AniTracker (Cloud)</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d0f18">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -44,20 +49,35 @@
             position: relative;
         }
 
+        /* --- LOGO STYLING NEU --- */
         .logo {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .logo:hover {
+            transform: scale(1.05) rotate(-1deg);
+        }
+
+        .logo img {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+            object-fit: cover;
+        }
+
+        .logo span {
             font-size: 2.2rem;
             font-weight: 700;
             letter-spacing: 1.5px;
             background: linear-gradient(45deg, var(--accent-neon), #b55fe6, var(--accent-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            cursor: pointer;
-            display: inline-block;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .logo:hover {
-            transform: scale(1.05) rotate(-1deg);
         }
 
         .container {
@@ -250,6 +270,14 @@
                 font-size: 0.85rem;
             }
             .logo {
+                gap: 10px;
+            }
+            .logo img {
+                width: 36px;
+                height: 36px;
+                border-radius: 8px;
+            }
+            .logo span {
                 font-size: 1.8rem;
             }
             .homepage-section {
@@ -276,7 +304,10 @@
 <body>
 
     <header>
-        <div class="logo" onclick="showPage('home')"><i class="fa-solid fa-shapes"></i> YP AniTracker</div>
+        <div class="logo" onclick="showPage('home')">
+            <img src="icon-192.png" alt="YP Logo">
+            <span>YP AniTracker</span>
+        </div>
     </header>
 
     <div class="container">
