@@ -81,18 +81,12 @@
         }
 
         /* --- HOMEPAGE STYLING --- */
-        .welcome-text {
-            margin-bottom: 25px;
-            font-weight: 400;
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
-
         .grid-navigation {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 40px;
+            margin-top: 10px; /* Etwas Abstand nach oben, da der Text weg ist */
         }
 
         .nav-card {
@@ -238,6 +232,45 @@
             background: rgba(255,255,255,0.01); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.05);
         }
         .loading-notice { text-align: center; padding: 40px; color: var(--accent-neon); font-weight: 600; font-size: 1.2rem; }
+
+        /* ================= MOBILE OPTIMIERUNG ================= */
+        @media (max-width: 600px) {
+            .grid-navigation {
+                grid-template-columns: repeat(2, 1fr); /* Erzwingt das 2x2 Layout auf dem Handy */
+                gap: 12px;
+            }
+            .nav-card {
+                padding: 18px 10px;
+            }
+            .nav-card i {
+                font-size: 1.8rem;
+                margin-bottom: 8px;
+            }
+            .nav-card h3 {
+                font-size: 0.85rem;
+            }
+            .logo {
+                font-size: 1.8rem;
+            }
+            .homepage-section {
+                padding: 18px;
+            }
+            .homepage-section h2 {
+                font-size: 1.1rem;
+            }
+            .page-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            .btn-back {
+                align-self: flex-start;
+            }
+            .btn-add {
+                width: 100%;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -248,8 +281,6 @@
 
     <div class="container">
         <div id="page-home" class="page active">
-            <h1 class="welcome-text">Hey, deine Anime-Zentrale ist startklar! 🚀</h1>
-            
             <div class="grid-navigation">
                 <div class="nav-card card-watched" onclick="showPage('watched')">
                     <i class="fa-solid fa-square-check"></i><h3>Geschaut</h3>
@@ -266,7 +297,7 @@
             </div>
 
             <div class="homepage-section current-section">
-                <h2><i class="fa-solid fa-bolt" style="color: var(--accent-orange);"></i> Aktuell am Schauen (Schnellzugriff)</h2>
+                <h2><i class="fa-solid fa-bolt" style="color: var(--accent-orange);"></i> Aktuell am Schauen</h2>
                 <div id="hp-current-list" class="list-type-current anime-list"></div>
             </div>
 
@@ -340,7 +371,7 @@
     </div>
 
     <script>
-        // === NATIVER DATENBANK-ZUGRIFF (Bypass für GitHub Pages & Adblocker) ===
+        // === NATIVER DATENBANK-ZUGRIFF ===
         const API_URL = "https://anyvdbweojvaztyiacwb.supabase.co/rest/v1/animes";
         const API_KEY = "sb_publishable_6A73CDl65UrCWWVbTz9z7A_nu3cIWME";
         
