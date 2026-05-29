@@ -109,18 +109,20 @@
         .homepage-section h2 { font-size: 1.25rem; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
 
         .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-        .anime-grid-item { background: var(--card-bg); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(255, 0, 85, 0.15); background: linear-gradient(145deg, rgba(255, 0, 85, 0.04) 0%, var(--card-bg) 100%); box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s; animation: slideIn 0.4s ease; }
+        .anime-grid-item { background: var(--card-bg); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(255, 0, 85, 0.15); background: linear-gradient(145deg, rgba(255, 0, 85, 0.04) 0%, var(--card-bg) 100%); box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s; animation: slideIn 0.4s ease; cursor: pointer; }
         .anime-grid-item:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(255, 0, 85, 0.15); border-color: var(--accent-orange); }
         .anime-grid-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
         .anime-grid-header h4 { font-size: 1.05rem; font-weight: 600; line-height: 1.4; flex: 1; }
 
-        /* --- PAGES --- */
+        /* --- PAGES & BUTTONS --- */
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: rgba(22, 25, 43, 0.4); padding: 15px 20px; border-radius: 12px; }
         .page-header h2 { margin: 0; display: flex; align-items: center; gap: 10px; font-size: 1.4rem; }
         .btn-back { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; transition: color 0.3s; }
         .btn-back:hover { color: white; }
         .btn-add { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); transition: all 0.2s ease; }
         .btn-add:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
+        
+        .header-action-group { display: flex; gap: 10px; }
 
         /* --- ANIME LISTEN ITEMS (Standard Listen-Layout) --- */
         .anime-list { display: flex; flex-direction: column; gap: 14px; }
@@ -129,27 +131,27 @@
             display: flex; justify-content: space-between; align-items: center; position: relative; 
             border: 1px solid rgba(255,255,255,0.01); transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
             animation: slideIn 0.4s ease forwards;
+            cursor: pointer;
         }
-        .anime-item:hover { transform: translateX(4px); background: #1d213a; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .anime-item:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4); border-color: rgba(138, 43, 226, 0.3); z-index: 10; }
         
-        /* --- NEU: GRID LAYOUT FÜR WATCHLIST --- */
+        /* --- GRID LAYOUTS --- */
         .grid-layout-watchlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
         .grid-layout-watchlist .anime-item { 
             flex-direction: column; text-align: center; padding: 20px 15px; align-items: center; 
             border-left: none; border-top: 4px solid var(--accent-blue); justify-content: flex-start;
+            overflow: hidden; max-width: 100%;
         }
-        .grid-layout-watchlist .anime-item:hover { transform: translateY(-4px); }
-        .grid-layout-watchlist .anime-info-wrapper { flex-direction: column; width: 100%; gap: 10px; justify-content: center; }
+        .grid-layout-watchlist .anime-item:hover { transform: translateY(-6px); }
+        .grid-layout-watchlist .anime-info-wrapper { flex-direction: column; width: 100%; max-width: 100%; gap: 10px; justify-content: center; }
         .grid-layout-watchlist .anime-title-row { justify-content: center; }
         .grid-layout-watchlist .action-btns { 
             width: 100%; justify-content: center; gap: 20px; border-top: 1px solid rgba(255,255,255,0.05); 
             padding-top: 15px; margin-top: auto; 
         }
 
-        /* --- NEU: GRID LAYOUT FÜR FOLGESTAFFELN --- */
         .grid-layout-next { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px; }
         .grid-layout-next .anime-item { align-items: center; height: 100%; }
-        .grid-layout-next .anime-item:hover { transform: translateY(-4px); }
         
         @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
         
@@ -178,12 +180,24 @@
         .color-watchlist { color: var(--accent-blue); font-size: 1.8rem; margin-bottom: 5px; } 
         .color-current { color: var(--accent-neon); }
 
-        /* --- API COVER STYLING (High-Res & Responsive) --- */
+        /* --- API COVER STYLING --- */
         .anime-cover { width: 45px; height: 65px; object-fit: cover; border-radius: 6px; margin-right: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); flex-shrink: 0; }
         .grid-layout-watchlist .anime-cover { width: 80px; height: 115px; margin-right: 0; margin-bottom: 5px; }
 
-        .anime-info { display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
-        .anime-info h4 { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.3px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* --- FIX FÜR LANGE TITEL --- */
+        .anime-info { display: flex; flex-direction: column; gap: 4px; overflow: hidden; width: 100%; }
+        .anime-info h4 { 
+            font-size: 1.05rem; 
+            font-weight: 600; 
+            letter-spacing: 0.3px; 
+            line-height: 1.3; 
+            display: -webkit-box; 
+            -webkit-line-clamp: 2; /* Maximal 2 Zeilen anzeigen */
+            -webkit-box-orient: vertical; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            word-wrap: break-word; 
+        }
         
         .anime-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .meta-dot { font-size: 0.6rem; opacity: 0.5; margin: 0 2px; }
@@ -237,6 +251,15 @@
         .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; padding: 10px; }
         .btn-cancel:hover { color: white; }
 
+        /* --- DETAILS POPUP MODAL --- */
+        #detail-modal .modal { padding: 0; overflow: hidden; background: linear-gradient(180deg, var(--card-bg) 0%, #0d0f18 100%); border: 1px solid rgba(138, 43, 226, 0.4); text-align: center; }
+        .detail-cover-wrapper { width: 100%; height: 350px; position: relative; }
+        .detail-cover-wrapper img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; }
+        .detail-cover-wrapper::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(0deg, #0d0f18 0%, transparent 100%); }
+        .detail-content { padding: 20px 30px 30px; position: relative; z-index: 10; margin-top: -60px; }
+        .detail-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 10px; line-height: 1.3; text-shadow: 0 4px 15px rgba(0,0,0,0.8); }
+        .detail-badges { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
+        
         /* Danger Modal & Einstellungen */
         .modal-danger { border-color: rgba(255, 0, 85, 0.4); }
         .btn-danger-action { background: linear-gradient(45deg, var(--danger), var(--accent-orange)); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 0, 85, 0.3); transition: all 0.2s ease; }
@@ -274,7 +297,6 @@
             .btn-back { align-self: flex-start; }
             .btn-add { width: 100%; text-align: center; padding: 12px; }
             
-            /* Responsive Grid Anpassung */
             .grid-layout-watchlist { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
             .grid-layout-next { grid-template-columns: 1fr; }
         }
@@ -453,6 +475,22 @@
                     <button class="btn-add" onclick="openModal('current')">+ Hinzufügen</button>
                 </div>
                 <div id="list-current" class="anime-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detail-modal" class="modal-overlay" onclick="closeDetailModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="detail-cover-wrapper">
+                <img id="detail-cover" src="" alt="Cover">
+            </div>
+            <div class="detail-content">
+                <h3 id="detail-title" class="detail-title">Title</h3>
+                <div class="detail-badges">
+                    <span id="detail-format" class="format-badge" style="background: rgba(138, 43, 226, 0.2); color: #c18eff;">Format</span>
+                    <span id="detail-meta" class="status-badge" style="background: rgba(0, 245, 212, 0.15); color: var(--accent-neon);">Meta</span>
+                </div>
+                <button class="btn-auth" style="background: rgba(255,255,255,0.1); color: white;" onclick="closeDetailModal()">Schließen</button>
             </div>
         </div>
     </div>
@@ -798,7 +836,7 @@
         }
 
         // ==========================================
-        // API SUCHE (JIKAN) - HOHE AUFLÖSUNG & ÜBERSETZUNG & AUTO-FILL
+        // API SUCHE (JIKAN)
         // ==========================================
         let searchTimeout;
         async function searchAnime(query) {
@@ -883,9 +921,8 @@
             resultsDiv.style.display = 'none';
         }
 
-
         // ==========================================
-        // APP LOGIK
+        // APP LOGIK & UI INTERAKTIONEN
         // ==========================================
         function showToast(message) {
             const toast = document.getElementById('toast-notification');
@@ -910,6 +947,30 @@
             } else {
                 metaGroup.style.display = 'block'; releaseGroup.style.display = 'flex';
             }
+        }
+
+        function openDetailModal(id) {
+            const numId = Number(id);
+            const allAnimes = [...animeData.watched, ...animeData.nextSeason, ...animeData.watchlist, ...animeData.current];
+            const anime = allAnimes.find(a => a.id === numId);
+            if(!anime) return;
+
+            document.getElementById('detail-cover').src = anime.coverUrl || 'icon-192.png';
+            document.getElementById('detail-title').innerText = anime.title;
+            
+            let formatText = anime.type === 'film' ? '🎬 Film' : '📺 Staffel';
+            document.getElementById('detail-format').innerText = formatText;
+            
+            let metaDisplay = anime.meta.replace('STAFFEL|', '').replace('FILM|', '');
+            if(metaDisplay === 'Keine Info') metaDisplay = 'Abgeschlossen';
+            document.getElementById('detail-meta').innerText = metaDisplay;
+
+            document.getElementById('detail-modal').classList.add('active');
+        }
+
+        function closeDetailModal(event) {
+            if (event) event.stopPropagation();
+            document.getElementById('detail-modal').classList.remove('active');
         }
 
         function openModal(pageContext) {
@@ -943,7 +1004,6 @@
         }
 
         function editAnime(id) {
-            // FIX: Verwende '==' statt '===', da id als String aus HTML übergeben wird, aber eine Nummer in der DB ist.
             const anime = animeData.nextSeason.find(a => a.id == id);
             if (!anime) return;
             
@@ -971,7 +1031,6 @@
         }
 
         function finishCurrentAnime(id, title) {
-            // FIX: Auch hier '==' statt '===' verwenden!
             const anime = animeData.current.find(a => a.id == id);
             
             document.getElementById('modal-page-context').value = 'archive-pipeline';
@@ -1191,7 +1250,7 @@
             let coverHTML = anime.coverUrl ? `<img src="${anime.coverUrl}" class="anime-cover" alt="Cover" onerror="this.style.display='none'">` : '';
 
             return `
-                <div class="anime-item ${borderClass}" id="${uniqueId}">
+                <div class="anime-item ${borderClass}" id="${uniqueId}" onclick="openDetailModal('${anime.id}')">
                     <div class="anime-info-wrapper">
                         ${leadingIconHTML}
                         ${coverHTML}
@@ -1200,29 +1259,69 @@
                             ${metaHTML}
                         </div>
                     </div>
-                    <div class="action-btns">
+                    <div class="action-btns" onclick="event.stopPropagation()">
                         ${actionHTML}
                         <button class="btn-action delete" onclick="deleteAnime('${context === 'next-season' ? 'next-season' : context}', '${anime.id}', '${uniqueId}')"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>`;
         }
 
+        function renderGrouped(animes, context, prefix, isNumbered) {
+            if (!animes || animes.length === 0) return '<div class="empty-state">Keine Einträge.</div>';
+
+            const groups = {};
+            animes.forEach(a => {
+                let base = a.title.split(/[:\-]/)[0].trim();
+                if (base.length < 3) base = a.title; 
+                if (!groups[base]) groups[base] = [];
+                groups[base].push(a);
+            });
+
+            let html = '';
+            let counter = 0;
+            for (const base in groups) {
+                if (groups[base].length > 1) {
+                    const groupHtml = groups[base].map(a => { 
+                        counter++; 
+                        return createAnimeDOM(a, context, prefix, isNumbered ? counter : null); 
+                    }).join('');
+                    
+                    const gridClass = (context === 'next-season' && !isNumbered) ? 'grid-layout-next' : 'anime-list';
+                    
+                    html += `<div style="grid-column: 1 / -1; background: rgba(138, 43, 226, 0.05); border-radius: 16px; padding: 18px; border: 1px solid rgba(138, 43, 226, 0.15); margin-bottom: 15px;">
+                                <h4 style="margin-bottom: 15px; color: var(--text-color); display: flex; align-items: center; gap: 10px; font-size: 1.05rem;">
+                                    <i class="fa-solid fa-folder-open" style="color: var(--accent-purple);"></i> ${base} Collection
+                                </h4>
+                                <div class="${gridClass}" style="margin-bottom: 0;">
+                                    ${groupHtml}
+                                </div>
+                             </div>`;
+                } else {
+                    counter++;
+                    html += createAnimeDOM(groups[base][0], context, prefix, isNumbered ? counter : null);
+                }
+            }
+            return html;
+        }
+
         function renderAll() {
             let globalWatchCounter = 0;
+            
             document.getElementById('list-watched-completed').innerHTML = animeData.watched.length ? animeData.watched.map(a => { globalWatchCounter++; return createAnimeDOM(a, 'watched', 'p-w-c', globalWatchCounter); }).join('') : '<div class="empty-state">Noch keine komplett geschauten Animes eingetragen.</div>';
-            document.getElementById('list-watched-continuing').innerHTML = animeData.nextSeason.length ? animeData.nextSeason.map(a => { globalWatchCounter++; return createAnimeDOM(a, 'next-season', 'p-w-cont', globalWatchCounter); }).join('') : '<div class="empty-state">Keine offenen Serien mit neuen Releases.</div>';
+            
+            document.getElementById('list-watched-continuing').innerHTML = renderGrouped(animeData.nextSeason, 'next-season', 'p-w-cont', true);
             
             const waiting = animeData.nextSeason.filter(a => !a.isReleased);
             const released = animeData.nextSeason.filter(a => a.isReleased);
             
-            document.getElementById('list-next-waiting').innerHTML = waiting.length ? waiting.map(a => createAnimeDOM(a, 'next-season', 'p-wait')).join('') : '<div class="empty-state">Keine offenen Wartepositionen.</div>';
-            document.getElementById('list-next-released').innerHTML = released.length ? released.map(a => createAnimeDOM(a, 'next-season', 'p-rel')).join('') : '<div class="empty-state">Nichts Neues da.</div>';
+            document.getElementById('list-next-waiting').innerHTML = renderGrouped(waiting, 'next-season', 'p-wait', false);
+            document.getElementById('list-next-released').innerHTML = renderGrouped(released, 'next-season', 'p-rel', false);
             
             document.getElementById('list-watchlist').innerHTML = animeData.watchlist.length ? animeData.watchlist.map(a => createAnimeDOM(a, 'watchlist', 'p-wl')).join('') : '<div class="empty-state">Deine Watchlist ist im Moment leer.</div>';
             document.getElementById('list-current').innerHTML = animeData.current.length ? animeData.current.map(a => createAnimeDOM(a, 'current', 'p-curr')).join('') : '<div class="empty-state">Du schaust gerade nichts aktiv.</div>';
             
             document.getElementById('hp-current-list').innerHTML = animeData.current.length ? animeData.current.map(a => `
-                <div class="anime-item item-current">
+                <div class="anime-item item-current" onclick="openDetailModal('${a.id}')">
                     <div class="anime-info-wrapper">
                         <i class="fa-solid fa-circle-play anime-decor-icon color-current"></i>
                         ${a.coverUrl ? `<img src="${a.coverUrl}" class="anime-cover" onerror="this.style.display='none'">` : ''}
@@ -1232,7 +1331,7 @@
                 </div>`).join('') : '<div class="empty-state" style="border:none;">Nichts aktiv am Schauen.</div>';
             
             document.getElementById('hp-alerts-grid').innerHTML = released.length ? released.map(a => `
-                <div class="anime-grid-item">
+                <div class="anime-grid-item" onclick="openDetailModal('${a.id}')">
                     <div class="anime-grid-header">
                         <i class="${a.type === 'film' ? 'fa-solid fa-film' : 'fa-solid fa-circle-exclamation'} color-released" style="font-size: 1.5rem;"></i>
                         ${a.coverUrl ? `<img src="${a.coverUrl}" class="anime-cover" onerror="this.style.display='none'">` : ''}
