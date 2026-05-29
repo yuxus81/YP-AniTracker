@@ -30,12 +30,12 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         
-        /* OVERSCROLL FIX: Verhindert Gummiband-Effekt und Rutschen */
-        html, body { overscroll-behavior-y: none; background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; overflow-x: hidden; margin: 0; }
+        /* OVERSCROLL WURDE ENTFERNT, DAMIT MAUS-SCROLL WIEDER FUNKTIONIERT */
+        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; overflow-x: hidden; margin: 0; }
         
-        /* --- APPLE AUTOCORRECT / PASSWORD HACK --- */
+        /* APPLE AUTOCORRECT / PASSWORD HACK */
         .pw-input { -webkit-text-security: disc; text-security: disc; }
-        
+
         /* --- GLOBAL LOADER --- */
         #global-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease; }
         #global-loader h1 { margin-top: 15px; font-size: 1.8rem; background: linear-gradient(45deg, var(--accent-neon), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -43,14 +43,14 @@
         /* --- LAYOUT CONTROLLER --- */
         .layout-section { display: none; opacity: 0; transition: opacity 0.4s ease; }
         .active-layout { display: block !important; opacity: 1 !important; }
-        
+
         #auth-layout { min-height: 100vh; align-items: center; justify-content: center; padding: 20px; }
-        #auth-layout.active-layout { display: flex !important; } /* Wichtig: Überschreibt Flexbox wenn aktiv */
+        #auth-layout.active-layout { display: flex !important; }
         
         #app-layout { padding-bottom: 60px; }
 
         /* --- AUTH SCREEN STYLING --- */
-        .auth-container { background: var(--card-bg); border-radius: 20px; padding: 40px 30px; width: 100%; max-width: 400px; border: 1px solid rgba(138, 43, 226, 0.25); box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center; }
+        .auth-container { background: var(--card-bg); border-radius: 20px; padding: 40px 30px; width: 100%; max-width: 400px; border: 1px solid rgba(138, 43, 226, 0.25); box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center; margin: auto; }
         .auth-logo { margin-bottom: 30px; }
         .auth-logo img { width: 80px; border-radius: 20px; box-shadow: 0 0 20px rgba(138, 43, 226, 0.5); }
         .auth-logo h1 { font-size: 1.8rem; margin-top: 15px; background: linear-gradient(45deg, var(--accent-neon), #b55fe6, var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -119,7 +119,6 @@
         .homepage-section h2 { font-size: 1.25rem; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
 
         .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-        
         .anime-grid-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
         .anime-grid-header h4 { font-size: 1.05rem; font-weight: 600; line-height: 1.4; flex: 1; }
 
@@ -131,7 +130,7 @@
         .btn-add { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); transition: all 0.2s ease; }
         .btn-add:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
         
-        /* --- GESAMT-ZÄHLER BADGE --- */
+        /* --- PERFEKTER BEFRIEDIGENDER KOMETEN-ZÄHLER --- */
         .watched-stats { display: flex; justify-content: center; margin-bottom: 20px; }
         
         .stat-wrapper {
@@ -175,10 +174,9 @@
         .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--accent-green); line-height: 1.2; margin-bottom: 2px; text-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
         .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
-        /* --- ANIME LISTEN ITEMS & STATISCHER GLOW --- */
+        /* --- ANIME LISTEN ITEMS & STATISCHER GLOW (CLASSY) --- */
         .anime-list { display: flex; flex-direction: column; gap: 14px; }
         
-        /* Basis Layout für Liste */
         .anime-item { 
             background: var(--card-bg); border-radius: 12px; 
             padding: 16px 25px 16px 20px; 
@@ -187,31 +185,30 @@
             cursor: pointer;
         }
         
-        /* Basis Layout für Grid (Homepage) */
         .anime-grid-item { 
             background: var(--card-bg); border-radius: 14px; padding: 18px; 
             display: flex; flex-direction: column; justify-content: space-between; 
             transition: all 0.3s; cursor: pointer; 
         }
 
-        /* 1. Geschaut - Statisch Grün */
-        .item-watched { border-left: 4px solid var(--accent-green); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(46, 204, 113, 0.25); }
+        /* 1. Geschaut - Statisch Grün (KEIN dicker Balken mehr!) */
+        .item-watched { border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(46, 204, 113, 0.25); }
         .item-watched:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(46, 204, 113, 0.5); border-color: var(--accent-green); z-index: 10; }
 
         /* 2. Aktuell - Statisch Neon */
-        .item-current { border-left: 4px solid var(--accent-neon); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(0, 245, 212, 0.25); }
+        .item-current { border: 1px solid rgba(0, 245, 212, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(0, 245, 212, 0.25); }
         .item-current:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(0, 245, 212, 0.5); border-color: var(--accent-neon); z-index: 10; }
 
         /* 3. Warten - Statisch Lila */
-        .item-waiting { border-left: 4px solid var(--accent-purple); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(138, 43, 226, 0.25); }
+        .item-waiting { border: 1px solid rgba(138, 43, 226, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(138, 43, 226, 0.25); }
         .item-waiting:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(138, 43, 226, 0.5); border-color: var(--accent-purple); z-index: 10; }
 
-        /* 4. Watchlist - Statisch Blau (Grid: Border Top) */
-        .grid-layout-watchlist .anime-item { border-top: 4px solid var(--accent-blue); border-left: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(58, 134, 255, 0.25); }
+        /* 4. Watchlist - Statisch Blau */
+        .grid-layout-watchlist .anime-item { border: 1px solid rgba(58, 134, 255, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(58, 134, 255, 0.25); }
         .grid-layout-watchlist .anime-item:hover { transform: translateY(-6px); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(58, 134, 255, 0.5); border-color: var(--accent-blue); z-index: 10; }
 
         /* Grid-Überschreibungen für Next-Season */
-        .grid-layout-next .item-waiting { border-top: 4px solid var(--accent-purple); border-left: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(138, 43, 226, 0.25); }
+        .grid-layout-next .item-waiting { border: 1px solid rgba(138, 43, 226, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(138, 43, 226, 0.25); }
         .grid-layout-next .item-waiting:hover { transform: translateY(-6px); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(138, 43, 226, 0.5); border-color: var(--accent-purple); z-index: 10; }
 
         /* 5. RELEASED - ANIMIERT (Nur Release blinkt orange) */
@@ -221,16 +218,16 @@
         }
         
         .item-released { 
-            border-left: 4px solid var(--accent-orange); 
+            border: 1px solid rgba(255, 0, 85, 0.5); 
             background: linear-gradient(90deg, rgba(255, 0, 85, 0.05) 0%, var(--card-bg) 100%);
             animation: releasePulse 1.5s infinite alternate ease-in-out;
         }
         .item-released:hover { background: #1d213a; border-color: var(--accent-orange); box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 30px rgba(255, 0, 85, 0.8) !important; transform: translateY(-3px) scale(1.01); z-index: 10; animation: none; }
 
-        .grid-layout-next .item-released { border-top: 4px solid var(--accent-orange); border-left: none; }
+        .grid-layout-next .item-released { border: 1px solid rgba(255, 0, 85, 0.5); }
         .grid-layout-next .item-released:hover { transform: translateY(-6px); background: #1d213a; border-color: var(--accent-orange); animation: none; }
         
-        .anime-grid-item.item-released { animation: releasePulse 1.5s infinite alternate ease-in-out; }
+        .anime-grid-item.item-released { border: 1px solid rgba(255, 0, 85, 0.5); animation: releasePulse 1.5s infinite alternate ease-in-out; }
         .anime-grid-item.item-released:hover { transform: translateY(-4px); background: #1d213a; border-color: var(--accent-orange); box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 30px rgba(255, 0, 85, 0.8) !important; z-index: 10; animation: none; }
 
         /* --- GRID LAYOUTS (Desktop) --- */
@@ -243,6 +240,7 @@
         .grid-layout-watchlist .anime-info-wrapper, .grid-layout-next .anime-info-wrapper { flex-direction: column; width: 100%; max-width: 100%; gap: 10px; justify-content: center; }
         .grid-layout-watchlist .anime-title-row, .grid-layout-next .anime-title-row { justify-content: center; }
         
+        /* Action-Buttons Margin Right Fix */
         .action-btns { display: flex; gap: 14px; align-items: center; flex-shrink: 0; margin-right: 8px; }
         .grid-layout-watchlist .action-btns, .grid-layout-next .action-btns { 
             width: 100%; justify-content: center; gap: 20px; border-top: 1px solid rgba(255,255,255,0.05); 
@@ -315,7 +313,7 @@
             display: flex; justify-content: center; align-items: center; 
             opacity: 0; pointer-events: none; transition: opacity 0.35s ease; z-index: 1000; 
         }
-        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; display: flex; }
         
         .modal { 
             background: var(--card-bg); border-radius: 20px; padding: 30px; 
@@ -347,7 +345,7 @@
         .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; padding: 10px; }
         .btn-cancel:hover { color: white; }
 
-        /* --- DETAILS POPUP MODAL --- */
+        /* --- DETAILS POPUP MODAL (Perfektes Bild Format) --- */
         #detail-modal .modal { padding: 30px; text-align: center; }
         .detail-cover-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 25px; }
         .detail-cover-wrapper img { width: auto; max-width: 100%; height: auto; max-height: 400px; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
@@ -562,8 +560,12 @@
 
                 <div class="sub-section-title"><i class="fa-solid fa-check-double" style="color: var(--accent-green);"></i> Komplett Abgeschlossen</div>
                 <div id="list-watched-completed" class="anime-list"></div>
-                <div class="sub-section-title"><i class="fa-solid fa-forward-step" style="color: var(--accent-purple);"></i> Fortsetzung folgt (Wartet auf Staffel)</div>
+                
+                <div class="sub-section-title"><i class="fa-solid fa-hourglass-half" style="color: var(--accent-purple);"></i> Fortsetzung folgt</div>
                 <div id="list-watched-continuing" class="anime-list"></div>
+                
+                <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> Neue Staffel verfügbar!</div>
+                <div id="list-watched-released" class="anime-list"></div>
             </div>
 
             <div id="page-next-season" class="page">
@@ -760,10 +762,7 @@
                 authLayout.style.opacity = '0';
                 setTimeout(() => { 
                     authLayout.classList.remove('active-layout');
-                    
-                    // DOM NUKE: Wenn der User eingeloggt ist, vernichten wir alle Login HTML Container!
-                    authLayout.innerHTML = ''; 
-                    authLayout.style.display = 'none'; // Hartes Verstecken
+                    authLayout.style.display = 'none'; 
 
                     appLayout.classList.add('active-layout'); 
                     setTimeout(() => {
@@ -1182,7 +1181,7 @@
 
         function showLoadingStates() {
             const loading = '<div class="loading-notice"><i class="fa-solid fa-spinner fa-spin"></i> Lade deine Animes...</div>';
-            ['list-watched-completed', 'list-watched-continuing', 'list-next-waiting', 'list-next-released', 'list-watchlist', 'list-current'].forEach(id => {
+            ['list-watched-completed', 'list-watched-continuing', 'list-watched-released', 'list-next-waiting', 'list-next-released', 'list-watchlist', 'list-current'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) el.innerHTML = loading;
             });
@@ -1434,26 +1433,29 @@
         }
 
         function renderAll() {
-            // Kontinuierlicher Zähler für die "Geschaut" Seite
+            // Kontinuierlicher Zähler für alle drei "Geschaut" Listen
             let watchCounter = { val: 0 };
             
-            // Gesamt Zähler Updaten
             const totalWatched = animeData.watched.length + animeData.nextSeason.length;
             const totalDisplay = document.getElementById('total-watched-count');
             if(totalDisplay) totalDisplay.innerText = totalWatched;
             
-            // Render Listen mit dem durchgehenden Counter
+            // 1. Komplett Abgeschlossen
             document.getElementById('list-watched-completed').innerHTML = animeData.watched.length ? animeData.watched.map(a => { 
                 watchCounter.val++; 
                 return createAnimeDOM(a, 'watched', 'p-w-c', watchCounter.val); 
             }).join('') : '<div class="empty-state">Noch keine komplett geschauten Animes eingetragen.</div>';
             
-            // Setzt die Zählung von 'watched' nahtlos fort
-            document.getElementById('list-watched-continuing').innerHTML = renderGrouped(animeData.nextSeason, 'next-season', 'p-w-cont', true, watchCounter);
-            
             const waiting = animeData.nextSeason.filter(a => !a.isReleased);
             const released = animeData.nextSeason.filter(a => a.isReleased);
+
+            // 2. Wartet auf Staffel (zählt weiter)
+            document.getElementById('list-watched-continuing').innerHTML = renderGrouped(waiting, 'next-season', 'p-w-cont', true, watchCounter);
             
+            // 3. Neue Staffel draußen (zählt auch weiter)
+            document.getElementById('list-watched-released').innerHTML = renderGrouped(released, 'next-season', 'p-w-rel', true, watchCounter);
+            
+            // Listen für Folgestaffeln-Seite (Keine Zählung)
             document.getElementById('list-next-waiting').innerHTML = renderGrouped(waiting, 'next-season', 'p-wait', false);
             document.getElementById('list-next-released').innerHTML = renderGrouped(released, 'next-season', 'p-rel', false);
             
