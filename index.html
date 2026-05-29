@@ -30,7 +30,6 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         
-        /* OVERSCROLL WURDE ENTFERNT, DAMIT MAUS-SCROLL WIEDER FUNKTIONIERT */
         body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; overflow-x: hidden; margin: 0; }
         
         /* APPLE AUTOCORRECT / PASSWORD HACK */
@@ -119,6 +118,7 @@
         .homepage-section h2 { font-size: 1.25rem; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
 
         .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+        
         .anime-grid-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
         .anime-grid-header h4 { font-size: 1.05rem; font-weight: 600; line-height: 1.4; flex: 1; }
 
@@ -174,7 +174,7 @@
         .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--accent-green); line-height: 1.2; margin-bottom: 2px; text-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
         .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
-        /* --- ANIME LISTEN ITEMS & STATISCHER GLOW (CLASSY) --- */
+        /* --- ANIME LISTEN ITEMS & STATISCHER GLOW --- */
         .anime-list { display: flex; flex-direction: column; gap: 14px; }
         
         .anime-item { 
@@ -191,27 +191,27 @@
             transition: all 0.3s; cursor: pointer; 
         }
 
-        /* 1. Geschaut - Statisch Grün (KEIN dicker Balken mehr!) */
+        /* 1. Geschaut - Statisch Grün */
         .item-watched { border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(46, 204, 113, 0.25); }
-        .item-watched:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(46, 204, 113, 0.5); border-color: var(--accent-green); z-index: 10; }
+        .item-watched:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(46, 204, 113, 0.45); border-color: var(--accent-green); z-index: 10; }
 
         /* 2. Aktuell - Statisch Neon */
         .item-current { border: 1px solid rgba(0, 245, 212, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(0, 245, 212, 0.25); }
-        .item-current:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(0, 245, 212, 0.5); border-color: var(--accent-neon); z-index: 10; }
+        .item-current:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(0, 245, 212, 0.45); border-color: var(--accent-neon); z-index: 10; }
 
         /* 3. Warten - Statisch Lila */
         .item-waiting { border: 1px solid rgba(138, 43, 226, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(138, 43, 226, 0.25); }
-        .item-waiting:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(138, 43, 226, 0.5); border-color: var(--accent-purple); z-index: 10; }
+        .item-waiting:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(138, 43, 226, 0.45); border-color: var(--accent-purple); z-index: 10; }
 
         /* 4. Watchlist - Statisch Blau */
         .grid-layout-watchlist .anime-item { border: 1px solid rgba(58, 134, 255, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(58, 134, 255, 0.25); }
-        .grid-layout-watchlist .anime-item:hover { transform: translateY(-6px); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(58, 134, 255, 0.5); border-color: var(--accent-blue); z-index: 10; }
+        .grid-layout-watchlist .anime-item:hover { transform: translateY(-6px); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(58, 134, 255, 0.45); border-color: var(--accent-blue); z-index: 10; }
 
         /* Grid-Überschreibungen für Next-Season */
         .grid-layout-next .item-waiting { border: 1px solid rgba(138, 43, 226, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(138, 43, 226, 0.25); }
-        .grid-layout-next .item-waiting:hover { transform: translateY(-6px); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(138, 43, 226, 0.5); border-color: var(--accent-purple); z-index: 10; }
+        .grid-layout-next .item-waiting:hover { transform: translateY(-6px); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(138, 43, 226, 0.45); border-color: var(--accent-purple); z-index: 10; }
 
-        /* 5. RELEASED - ANIMIERT (Nur Release blinkt orange) */
+        /* 5. RELEASED - ANIMIERT (Pulsierendes Orange) */
         @keyframes releasePulse {
             0% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 5px rgba(255, 0, 85, 0.15); }
             100% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 25px rgba(255, 0, 85, 0.6); }
@@ -240,7 +240,6 @@
         .grid-layout-watchlist .anime-info-wrapper, .grid-layout-next .anime-info-wrapper { flex-direction: column; width: 100%; max-width: 100%; gap: 10px; justify-content: center; }
         .grid-layout-watchlist .anime-title-row, .grid-layout-next .anime-title-row { justify-content: center; }
         
-        /* Action-Buttons Margin Right Fix */
         .action-btns { display: flex; gap: 14px; align-items: center; flex-shrink: 0; margin-right: 8px; }
         .grid-layout-watchlist .action-btns, .grid-layout-next .action-btns { 
             width: 100%; justify-content: center; gap: 20px; border-top: 1px solid rgba(255,255,255,0.05); 
@@ -313,7 +312,7 @@
             display: flex; justify-content: center; align-items: center; 
             opacity: 0; pointer-events: none; transition: opacity 0.35s ease; z-index: 1000; 
         }
-        .modal-overlay.active { opacity: 1; pointer-events: auto; display: flex; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
         
         .modal { 
             background: var(--card-bg); border-radius: 20px; padding: 30px; 
@@ -345,7 +344,7 @@
         .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; padding: 10px; }
         .btn-cancel:hover { color: white; }
 
-        /* --- DETAILS POPUP MODAL (Perfektes Bild Format) --- */
+        /* --- DETAILS POPUP MODAL --- */
         #detail-modal .modal { padding: 30px; text-align: center; }
         .detail-cover-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 25px; }
         .detail-cover-wrapper img { width: auto; max-width: 100%; height: auto; max-height: 400px; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
@@ -616,7 +615,7 @@
     </div>
 
     <div id="modal" class="modal-overlay">
-        <div class="modal" onkeydown="if(event.key === 'Enter') saveAnime();">
+        <div class="modal">
             <h3 id="modal-title">Anime hinzufügen</h3>
             <input type="hidden" id="modal-page-context">
             <input type="hidden" id="anime-edit-id">
@@ -762,12 +761,12 @@
                 authLayout.style.opacity = '0';
                 setTimeout(() => { 
                     authLayout.classList.remove('active-layout');
-                    authLayout.style.display = 'none'; 
+                    authLayout.style.display = 'none'; // Hartes Verstecken um leeren Raum zu killen
 
                     appLayout.classList.add('active-layout'); 
                     setTimeout(() => {
                         appLayout.classList.add('visible');
-                        window.scrollTo(0, 0); // Scroll in Nichts Fix
+                        window.scrollTo(0, 0); // Scroll-Bug Fix
                         if(isInitialLoad) loadDataFromCloud(); 
                         isInitialLoad = false;
                     }, 50);
@@ -814,6 +813,8 @@
                     sessionStorage.removeItem('tempSessionActive');
                 }
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> Eingeloggt!';
+                
+                // Hard-Reload beim Login: Löscht das DOM komplett!
                 location.reload(); 
             }
         }
@@ -1082,7 +1083,22 @@
             
             let metaDisplay = anime.meta.replace('STAFFEL|', '').replace('FILM|', '');
             if(metaDisplay === 'Keine Info') metaDisplay = 'Abgeschlossen';
-            document.getElementById('detail-meta').innerText = metaDisplay;
+            
+            const metaBadge = document.getElementById('detail-meta');
+            
+            // NEU: Pop-Up Anpassung für Released Filme/Staffeln
+            if ((anime.category === 'next-season' || anime.category === 'watched') && anime.isReleased) { 
+                metaDisplay = anime.type === 'film' ? '🔥 NEUER FILM IST DRAUßEN!' : '🔥 NEUE STAFFEL IST DRAUßEN!';
+                metaBadge.style.background = 'rgba(255, 0, 85, 0.15)';
+                metaBadge.style.color = 'var(--accent-orange)';
+                metaBadge.style.border = '1px solid rgba(255, 0, 85, 0.4)';
+            } else {
+                metaBadge.style.background = 'rgba(0, 245, 212, 0.15)';
+                metaBadge.style.color = 'var(--accent-neon)';
+                metaBadge.style.border = 'none';
+            }
+            
+            metaBadge.innerText = metaDisplay;
 
             document.getElementById('detail-modal').classList.add('active');
         }
@@ -1332,9 +1348,14 @@
                 leadingIconHTML = `<div class="anime-number ${numClass}">${displayIndex}</div>`;
             } else {
                 let iconClass = 'fa-solid fa-bookmark';
-                if (context === 'next-season') iconClass = anime.type === 'film' ? 'fa-solid fa-film' : (anime.isReleased ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-hourglass-half');
+                if (context === 'next-season') iconClass = anime.type === 'film' ? 'fa-solid fa-film' : (anime.isReleased ? 'fa-solid fa-tv' : 'fa-solid fa-hourglass-half');
                 if (context === 'current') iconClass = 'fa-solid fa-circle-play';
-                leadingIconHTML = `<i class="${iconClass} anime-decor-icon color-${context === 'next-season' ? (anime.isReleased ? 'released' : 'waiting') : context}"></i>`;
+                
+                if (context === 'watchlist') {
+                    leadingIconHTML = ''; 
+                } else {
+                    leadingIconHTML = `<i class="${iconClass} anime-decor-icon color-${context === 'next-season' ? (anime.isReleased ? 'released' : 'waiting') : context}"></i>`;
+                }
             }
 
             if(context === 'next-season') {
@@ -1433,14 +1454,12 @@
         }
 
         function renderAll() {
-            // Kontinuierlicher Zähler für alle drei "Geschaut" Listen
             let watchCounter = { val: 0 };
             
             const totalWatched = animeData.watched.length + animeData.nextSeason.length;
             const totalDisplay = document.getElementById('total-watched-count');
             if(totalDisplay) totalDisplay.innerText = totalWatched;
             
-            // 1. Komplett Abgeschlossen
             document.getElementById('list-watched-completed').innerHTML = animeData.watched.length ? animeData.watched.map(a => { 
                 watchCounter.val++; 
                 return createAnimeDOM(a, 'watched', 'p-w-c', watchCounter.val); 
@@ -1449,13 +1468,10 @@
             const waiting = animeData.nextSeason.filter(a => !a.isReleased);
             const released = animeData.nextSeason.filter(a => a.isReleased);
 
-            // 2. Wartet auf Staffel (zählt weiter)
             document.getElementById('list-watched-continuing').innerHTML = renderGrouped(waiting, 'next-season', 'p-w-cont', true, watchCounter);
             
-            // 3. Neue Staffel draußen (zählt auch weiter)
             document.getElementById('list-watched-released').innerHTML = renderGrouped(released, 'next-season', 'p-w-rel', true, watchCounter);
             
-            // Listen für Folgestaffeln-Seite (Keine Zählung)
             document.getElementById('list-next-waiting').innerHTML = renderGrouped(waiting, 'next-season', 'p-wait', false);
             document.getElementById('list-next-released').innerHTML = renderGrouped(released, 'next-season', 'p-rel', false);
             
@@ -1475,7 +1491,7 @@
             document.getElementById('hp-alerts-grid').innerHTML = released.length ? released.map(a => `
                 <div class="anime-grid-item item-released" onclick="openDetailModal('${a.id}')">
                     <div class="anime-grid-header">
-                        <i class="${a.type === 'film' ? 'fa-solid fa-film' : 'fa-solid fa-circle-exclamation'} color-released" style="font-size: 1.5rem;"></i>
+                        <i class="${a.type === 'film' ? 'fa-solid fa-film' : 'fa-solid fa-tv'} color-released" style="font-size: 1.5rem;"></i>
                         ${a.coverUrl ? `<img src="${a.coverUrl}" class="anime-cover" onerror="this.style.display='none'">` : ''}
                         <h4>${a.title}</h4>
                     </div>
