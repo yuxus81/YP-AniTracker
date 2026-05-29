@@ -43,7 +43,7 @@
         #auth-layout { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
         #app-layout { padding-bottom: 60px; }
 
-        /* --- AUTH SCREEN STYLING (OHNE FORM-TAGS!) --- */
+        /* --- AUTH SCREEN STYLING (KEINE FORM-TAGS MEHR) --- */
         .auth-container { background: var(--card-bg); border-radius: 20px; padding: 40px 30px; width: 100%; max-width: 400px; border: 1px solid rgba(138, 43, 226, 0.25); box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center; margin: auto; }
         .auth-logo { margin-bottom: 30px; }
         .auth-logo img { width: 80px; border-radius: 20px; box-shadow: 0 0 20px rgba(138, 43, 226, 0.5); }
@@ -124,33 +124,33 @@
         .btn-add { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); transition: all 0.2s ease; }
         .btn-add:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
         
-        /* --- PERFEKTER BEFRIEDIGENDER ROTIERENDER KOMETEN-RAHMEN (Gesamt-Zähler) --- */
+        /* --- PERFEKTER BEFRIEDIGENDER KOMETEN-ZÄHLER --- */
         .watched-stats { display: flex; justify-content: center; margin-bottom: 20px; }
         
         .stat-wrapper {
             position: relative;
             border-radius: 16px;
-            padding: 2px; /* Dies ist die Dicke des animierten Rahmens */
+            padding: 2px; /* Rahmendicke */
             overflow: hidden;
             display: inline-flex;
-            box-shadow: 0 0 15px rgba(46, 204, 113, 0.15); /* Sanfter Glow nach außen */
+            background: var(--card-bg);
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.15); /* Sanftes Hintergrundleuchten */
         }
 
-        /* Der wandernde Streifen */
+        /* Der scharfe, wandernde Licht-Streifen */
         .stat-wrapper::before {
             content: '';
             position: absolute;
             top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(from 0deg, transparent 75%, var(--accent-green) 100%);
+            background: conic-gradient(transparent, transparent, transparent 80%, var(--accent-green) 100%);
             animation: borderRotate 2.5s linear infinite;
             z-index: 0;
         }
 
-        /* Die eigentliche Box obendrauf */
         .stat-box { 
             position: relative;
-            background: #111320; /* Schön dunkler Hintergrund */
-            padding: 8px 30px; 
+            background: #111320; 
+            padding: 10px 35px; 
             border-radius: 14px; 
             text-align: center; 
             display: flex; 
@@ -166,74 +166,77 @@
             100% { transform: rotate(360deg); }
         }
 
-        .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--accent-green); line-height: 1.2; margin-bottom: 2px; text-shadow: 0 0 10px rgba(46, 204, 113, 0.4); }
+        .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--accent-green); line-height: 1.2; margin-bottom: 2px; text-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
         .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
         /* --- ANIME LISTEN ITEMS & STATISCHER GLOW --- */
         .anime-list { display: flex; flex-direction: column; gap: 14px; }
+        
         .anime-item { 
             background: var(--card-bg); border-radius: 12px; 
-            padding: 16px 25px 16px 20px; /* Viel Platz rechts für den Button! */
+            padding: 16px 25px 16px 20px; 
             display: flex; justify-content: space-between; align-items: center; position: relative; 
-            border: 1px solid rgba(255,255,255,0.01); transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
             cursor: pointer;
-            
-            /* Statischer Glow für ALLE Elemente standardmäßig! */
-            --glow-rgb: 255, 255, 255;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 12px rgba(var(--glow-rgb), 0.25);
         }
         
-        /* Basis Hover Effekt */
-        .anime-item:hover { 
-            transform: translateY(-3px) scale(1.01); background: #1d213a; 
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(var(--glow-rgb), 0.5) !important; 
-            border-color: rgba(var(--glow-rgb), 0.8); z-index: 10; 
-        }
-
-        /* Individuelle Farben für Statischen Glow */
-        .item-watched { --glow-rgb: 46, 204, 113; border-left: 4px solid var(--accent-green); }
-        .item-waiting { --glow-rgb: 138, 43, 226; border-left: 4px solid var(--accent-purple); }
-        .item-current { --glow-rgb: 0, 245, 212; border-left: 4px solid var(--accent-neon); }
-        
-        .grid-layout-watchlist .anime-item { --glow-rgb: 58, 134, 255; border-top: 4px solid var(--accent-blue); border-left: none; }
-        .grid-layout-next .anime-item.item-waiting { --glow-rgb: 138, 43, 226; border-top: 4px solid var(--accent-purple); border-left: none; }
-        .grid-layout-next .anime-item.item-released { --glow-rgb: 255, 0, 85; border-top: 4px solid var(--accent-orange); border-left: none; }
-
-        /* --- NUR NEUE RELEASES SIND ANIMIERT --- */
-        @keyframes releasePulse {
-            0% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 5px rgba(var(--glow-rgb), 0.15); }
-            100% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 22px rgba(var(--glow-rgb), 0.6); }
-        }
-        
-        .item-released { 
-            --glow-rgb: 255, 0, 85; 
-            border-left: 4px solid var(--accent-orange); 
-            background: linear-gradient(90deg, rgba(255, 0, 85, 0.05) 0%, var(--card-bg) 100%); 
-            animation: releasePulse 2s infinite alternate ease-in-out !important; 
-        }
-
         .anime-grid-item { 
-            background: var(--card-bg); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(255, 0, 85, 0.15); cursor: pointer;
-            --glow-rgb: 255, 0, 85; 
-            animation: releasePulse 2s infinite alternate ease-in-out !important; 
+            background: var(--card-bg); border-radius: 14px; padding: 18px; 
+            display: flex; flex-direction: column; justify-content: space-between; 
+            transition: all 0.3s; cursor: pointer; 
         }
-        .anime-grid-item:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(255, 0, 85, 0.15), 0 0 20px rgba(var(--glow-rgb), 0.6) !important; border-color: var(--accent-orange); z-index: 10; }
+
+        /* 1. Geschaut - Statisch Grün */
+        .item-watched { border-left: 4px solid var(--accent-green); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(46, 204, 113, 0.25); }
+        .item-watched:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(46, 204, 113, 0.45); border-color: var(--accent-green); z-index: 10; }
+
+        /* 2. Aktuell - Statisch Neon */
+        .item-current { border-left: 4px solid var(--accent-neon); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(0, 245, 212, 0.25); }
+        .item-current:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(0, 245, 212, 0.45); border-color: var(--accent-neon); z-index: 10; }
+
+        /* 3. Warten - Statisch Lila */
+        .item-waiting { border-left: 4px solid var(--accent-purple); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(138, 43, 226, 0.25); }
+        .item-waiting:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(138, 43, 226, 0.45); border-color: var(--accent-purple); z-index: 10; }
+
+        /* 4. Watchlist - Statisch Blau (Grid: Border Top) */
+        .grid-layout-watchlist .anime-item { border-top: 4px solid var(--accent-blue); border-left: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(58, 134, 255, 0.25); }
+        .grid-layout-watchlist .anime-item:hover { transform: translateY(-6px); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(58, 134, 255, 0.45); border-color: var(--accent-blue); z-index: 10; }
+
+        /* Grid-Überschreibungen für Next-Season */
+        .grid-layout-next .item-waiting { border-top: 4px solid var(--accent-purple); border-left: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(138, 43, 226, 0.25); }
+        .grid-layout-next .item-waiting:hover { transform: translateY(-6px); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(138, 43, 226, 0.45); border-color: var(--accent-purple); z-index: 10; }
+
+        /* 5. RELEASED - ANIMIERT (Pulsierendes Orange) */
+        @keyframes releasePulse {
+            0% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 5px rgba(255, 0, 85, 0.15); }
+            100% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 25px rgba(255, 0, 85, 0.6); }
+        }
+        .item-released { 
+            border-left: 4px solid var(--accent-orange); 
+            background: linear-gradient(90deg, rgba(255, 0, 85, 0.05) 0%, var(--card-bg) 100%);
+            animation: releasePulse 1.5s infinite alternate ease-in-out;
+        }
+        .item-released:hover { background: #1d213a; border-color: var(--accent-orange); transform: translateY(-3px) scale(1.01); z-index: 10; }
+
+        /* Gleiches auf der Homepage Grid / Folgestaffeln Grid */
+        .grid-layout-next .item-released { border-top: 4px solid var(--accent-orange); border-left: none; }
+        .grid-layout-next .item-released:hover { transform: translateY(-6px); background: #1d213a; border-color: var(--accent-orange); }
+        
+        .anime-grid-item.item-released { animation: releasePulse 1.5s infinite alternate ease-in-out; }
+        .anime-grid-item.item-released:hover { transform: translateY(-4px); background: #1d213a; border-color: var(--accent-orange); z-index: 10; }
 
         /* --- GRID LAYOUTS (Desktop) --- */
         .grid-layout-watchlist, .grid-layout-next { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
         .grid-layout-watchlist .anime-item, .grid-layout-next .anime-item { 
             flex-direction: column; text-align: center; padding: 20px 15px; align-items: center; 
-            justify-content: flex-start;
-            overflow: hidden; max-width: 100%;
+            justify-content: flex-start; overflow: hidden; max-width: 100%;
         }
 
-        .grid-layout-watchlist .anime-item:hover, .grid-layout-next .anime-item:hover { transform: translateY(-6px); }
         .grid-layout-watchlist .anime-info-wrapper, .grid-layout-next .anime-info-wrapper { flex-direction: column; width: 100%; max-width: 100%; gap: 10px; justify-content: center; }
         .grid-layout-watchlist .anime-title-row, .grid-layout-next .anime-title-row { justify-content: center; }
         
-        /* Button Container Styling & Abstand */
-        .action-btns { display: flex; gap: 14px; align-items: center; flex-shrink: 0; margin-left: auto; margin-right: 8px; }
-        
+        /* Action-Buttons Margin Right Fix */
+        .action-btns { display: flex; gap: 14px; align-items: center; flex-shrink: 0; margin-right: 8px; }
         .grid-layout-watchlist .action-btns, .grid-layout-next .action-btns { 
             width: 100%; justify-content: center; gap: 20px; border-top: 1px solid rgba(255,255,255,0.05); 
             padding-top: 15px; margin-top: auto; margin-right: 0; 
@@ -403,7 +406,38 @@
     </div>
 
     <div id="auth-layout" class="layout-section">
-        <div id="auth-content"></div>
+        <div class="auth-container">
+            <div class="auth-logo">
+                <img src="icon-192.png" alt="Logo" onerror="this.style.display='none'">
+                <h1>YP AniTracker</h1>
+            </div>
+            
+            <div>
+                <div class="auth-form-group">
+                    <label>E-Mail Adresse</label>
+                    <input type="email" id="login-email" placeholder="deine@email.de">
+                </div>
+                <div class="auth-form-group">
+                    <label>Passwort</label>
+                    <input type="password" id="login-password" placeholder="••••••••">
+                </div>
+                <label class="auth-options">
+                    <div style="display: flex; align-items: center;">
+                        <input type="checkbox" id="auth-remember" checked>
+                        <span>Angemeldet bleiben</span>
+                    </div>
+                </label>
+                <button type="button" class="btn-auth btn-login" onclick="handleLogin()">
+                    <i class="fa-solid fa-right-to-bracket"></i> Einloggen
+                </button>
+                <div class="auth-switch">
+                    <a onclick="openForgotPasswordModal()" style="font-weight: 400; font-size: 0.85rem;">Passwort vergessen?</a>
+                    <div style="margin-top: 10px;">Neu hier? <a onclick="toggleAuthMode('register')">Account erstellen</a></div>
+                </div>
+            </div>
+
+            <div id="auth-error-msg" class="auth-error"></div>
+        </div>
     </div>
 
     <div id="register-modal" class="modal-overlay">
@@ -411,15 +445,15 @@
             <h3><i class="fa-solid fa-user-plus" style="color: var(--accent-neon);"></i> Account erstellen</h3>
             <div class="form-group">
                 <label>Benutzername</label>
-                <input type="text" id="reg-username" placeholder="Wie sollen wir dich nennen?" autocomplete="off">
+                <input type="text" id="reg-username" placeholder="Wie sollen wir dich nennen?">
             </div>
             <div class="form-group">
                 <label>E-Mail Adresse</label>
-                <input type="email" id="reg-email" placeholder="deine@email.de" autocomplete="off">
+                <input type="email" id="reg-email" placeholder="deine@email.de">
             </div>
             <div class="form-group">
                 <label>Passwort (Min. 6 Zeichen)</label>
-                <input type="password" id="reg-password" placeholder="••••••••" autocomplete="off">
+                <input type="password" id="reg-password" placeholder="••••••••">
             </div>
             <div id="reg-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
             <div class="modal-footer">
@@ -435,7 +469,7 @@
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Gib deine E-Mail ein. Wir senden dir einen Link, um ein neues Passwort festzulegen.</p>
             <div class="form-group">
                 <label>E-Mail Adresse</label>
-                <input type="email" id="forgot-email" placeholder="deine@email.de" autocomplete="off">
+                <input type="email" id="forgot-email" placeholder="deine@email.de">
             </div>
             <div id="forgot-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
             <div class="modal-footer">
@@ -451,7 +485,7 @@
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Bitte vergib jetzt dein neues Passwort.</p>
             <div class="form-group">
                 <label>Neues Passwort</label>
-                <input type="password" id="recovery-password" placeholder="••••••••" autocomplete="off">
+                <input type="password" id="recovery-password" placeholder="••••••••">
             </div>
             <div id="recovery-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
             <div class="modal-footer">
@@ -583,7 +617,7 @@
             
             <div class="form-group" style="position: relative;">
                 <label for="anime-title">Anime Name</label>
-                <input type="text" id="anime-title" placeholder="z.B. Demon Slayer..." oninput="searchAnime(this.value)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true">
+                <input type="text" id="anime-title" placeholder="z.B. Demon Slayer..." oninput="searchAnime(this.value)">
                 <div id="search-results" class="search-res"></div>
             </div>
             
@@ -598,7 +632,7 @@
 
             <div id="meta-field-group" class="form-group" style="display: none;">
                 <label id="meta-label" for="anime-meta-input">Wann kommt das Release? (Optional)</label>
-                <input type="text" id="anime-meta-input" placeholder="z.B. Winter 2027 oder leer lassen" autocomplete="off" autocorrect="off">
+                <input type="text" id="anime-meta-input" placeholder="z.B. Winter 2027 oder leer lassen">
             </div>
             <div id="released-field-group" class="form-group checkbox-group" style="display: none;">
                 <input type="checkbox" id="anime-is-released">
@@ -618,7 +652,7 @@
             <div style="margin-top: 20px;">
                 <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Benutzername ändern</h4>
                 <div class="form-group">
-                    <input type="text" id="settings-new-username" placeholder="Neuer Benutzername" autocomplete="off">
+                    <input type="text" id="settings-new-username" placeholder="Neuer Benutzername">
                 </div>
                 <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsUsernameChange()">
                     Namen aktualisieren
@@ -630,7 +664,7 @@
             <div>
                 <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Passwort ändern</h4>
                 <div class="form-group">
-                    <input type="text" id="settings-new-password" placeholder="Neues Passwort (min. 6 Zeichen)" style="-webkit-text-security: disc;">
+                    <input type="password" id="settings-new-password" placeholder="Neues Passwort (min. 6 Zeichen)">
                 </div>
                 <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()">
                     Passwort aktualisieren
@@ -685,42 +719,6 @@
         // ==========================================
         // AUTHENTIFIKATION & LOADER
         // ==========================================
-        
-        function renderLogin() {
-            document.getElementById('auth-content').innerHTML = `
-                <div class="auth-container">
-                    <div class="auth-logo">
-                        <img src="icon-192.png" alt="Logo" onerror="this.style.display='none'">
-                        <h1>YP AniTracker</h1>
-                    </div>
-                    
-                    <div>
-                        <div class="auth-form-group">
-                            <label>E-Mail Adresse</label>
-                            <input type="email" id="login-email" placeholder="deine@email.de">
-                        </div>
-                        <div class="auth-form-group">
-                            <label>Passwort</label>
-                            <input type="password" id="login-password" placeholder="••••••••">
-                        </div>
-                        <label class="auth-options">
-                            <div style="display: flex; align-items: center;">
-                                <input type="checkbox" id="auth-remember" checked>
-                                <span>Angemeldet bleiben</span>
-                            </div>
-                        </label>
-                        <button type="button" class="btn-auth btn-login" onclick="handleLogin()">
-                            <i class="fa-solid fa-right-to-bracket"></i> Einloggen
-                        </button>
-                        <div class="auth-switch">
-                            <a onclick="openForgotPasswordModal()" style="font-weight: 400; font-size: 0.85rem;">Passwort vergessen?</a>
-                            <div style="margin-top: 10px;">Neu hier? <a onclick="toggleAuthMode('register')">Account erstellen</a></div>
-                        </div>
-                    </div>
-                    <div id="auth-error-msg" class="auth-error"></div>
-                </div>
-            `;
-        }
 
         db.auth.getSession().then(({ data: { session } }) => {
             const loader = document.getElementById('global-loader');
@@ -755,10 +753,6 @@
                 authLayout.style.opacity = '0';
                 setTimeout(() => { 
                     authLayout.classList.remove('active-layout');
-                    
-                    // DOM NUKE: Wenn der User eingeloggt ist, vernichten wir alle Login HTML Container!
-                    document.getElementById('auth-content').innerHTML = ''; 
-
                     appLayout.classList.add('active-layout'); 
                     setTimeout(() => {
                         appLayout.classList.add('visible');
@@ -771,7 +765,6 @@
                 setTimeout(() => { 
                     appLayout.classList.remove('active-layout');
                     authLayout.classList.add('active-layout'); 
-                    renderLogin(); // Rendere Login neu, wenn ausgeloggt
                     setTimeout(() => authLayout.classList.add('visible'), 50);
                     isInitialLoad = false;
                 }, isInitialLoad ? 0 : 400);
@@ -808,6 +801,8 @@
                     sessionStorage.removeItem('tempSessionActive');
                 }
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> Eingeloggt!';
+                
+                // Hard-Reload beim Login, das fegt den DOM sauber.
                 location.reload(); 
             }
         }
@@ -1379,8 +1374,7 @@
                 </div>`;
         }
 
-        // NEU ANGEPASST: Nutzt jetzt ein globales Zähler-Objekt für fortlaufende Nummerierung
-        function renderGrouped(animes, context, prefix, counterObj) {
+        function renderGrouped(animes, context, prefix, isNumbered, counterObj = null) {
             if (!animes || animes.length === 0) return '<div class="empty-state">Keine Einträge.</div>';
 
             const groups = {};
@@ -1392,14 +1386,20 @@
             });
 
             let html = '';
+            let localCounter = 0;
+            
             for (const base in groups) {
                 if (groups[base].length > 1) {
                     const groupHtml = groups[base].map(a => { 
-                        if (counterObj) counterObj.count++;
-                        return createAnimeDOM(a, context, prefix, counterObj ? counterObj.count : null); 
+                        let currentNum = null;
+                        if (isNumbered) {
+                            if (counterObj) { counterObj.val++; currentNum = counterObj.val; }
+                            else { localCounter++; currentNum = localCounter; }
+                        }
+                        return createAnimeDOM(a, context, prefix, currentNum); 
                     }).join('');
                     
-                    const gridClass = (context === 'next-season' && !counterObj) ? 'grid-layout-next' : 'anime-list';
+                    const gridClass = (context === 'next-season' && !isNumbered) ? 'grid-layout-next' : 'anime-list';
                     
                     html += `<div style="grid-column: 1 / -1; background: rgba(138, 43, 226, 0.05); border-radius: 16px; padding: 18px; border: 1px solid rgba(138, 43, 226, 0.15); margin-bottom: 15px;">
                                 <h4 style="margin-bottom: 15px; color: var(--text-color); display: flex; align-items: center; gap: 10px; font-size: 1.05rem;">
@@ -1410,28 +1410,35 @@
                                 </div>
                              </div>`;
                 } else {
-                    if (counterObj) counterObj.count++;
-                    html += createAnimeDOM(groups[base][0], context, prefix, counterObj ? counterObj.count : null);
+                    let currentNum = null;
+                    if (isNumbered) {
+                        if (counterObj) { counterObj.val++; currentNum = counterObj.val; }
+                        else { localCounter++; currentNum = localCounter; }
+                    }
+                    html += createAnimeDOM(groups[base][0], context, prefix, currentNum);
                 }
             }
             return html;
         }
 
         function renderAll() {
-            // GLOBALES ZÄHLER OBJEKT, DAS SICH DURCH BEIDE LISTEN ZIEHT
-            let globalCounterObj = { count: 0 };
-            
+            // Berechne Gesamtzahl (Abgeschlossen + Fortsetzungen)
             const totalWatched = animeData.watched.length + animeData.nextSeason.length;
             const totalDisplay = document.getElementById('total-watched-count');
             if(totalDisplay) totalDisplay.innerText = totalWatched;
             
-            // Liste 1 (Komplett Abgeschlossen)
-            document.getElementById('list-watched-completed').innerHTML = animeData.watched.length ? animeData.watched.map(a => { globalCounterObj.count++; return createAnimeDOM(a, 'watched', 'p-w-c', globalCounterObj.count); }).join('') : '<div class="empty-state">Noch keine komplett geschauten Animes eingetragen.</div>';
+            // Fortlaufender Counter als Objekt, damit er durch beide Rendering-Phasen durchreicht
+            let watchCounter = { val: 0 };
             
-            // Liste 2 (Fortsetzung folgt) - Übernimmt den Zähler nahtlos aus globalCounterObj
-            document.getElementById('list-watched-continuing').innerHTML = renderGrouped(animeData.nextSeason, 'next-season', 'p-w-cont', globalCounterObj);
+            document.getElementById('list-watched-completed').innerHTML = animeData.watched.length ? animeData.watched.map(a => { 
+                watchCounter.val++; 
+                return createAnimeDOM(a, 'watched', 'p-w-c', watchCounter.val); 
+            }).join('') : '<div class="empty-state">Noch keine komplett geschauten Animes eingetragen.</div>';
             
-            // Andere Listen OHNE Nummerierung (false übergeben)
+            // Hier wird nahtlos weitergezählt
+            document.getElementById('list-watched-continuing').innerHTML = renderGrouped(animeData.nextSeason, 'next-season', 'p-w-cont', true, watchCounter);
+            
+            // Restliche Listen (ohne Nummerierung)
             const waiting = animeData.nextSeason.filter(a => !a.isReleased);
             const released = animeData.nextSeason.filter(a => a.isReleased);
             
