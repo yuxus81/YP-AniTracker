@@ -30,10 +30,8 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         
-        /* OVERSCROLL FIX: Normales Scrollen erlaubt */
         body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; overflow-x: hidden; margin: 0; }
         
-        /* APPLE AUTOCORRECT / PASSWORD HACK */
         .pw-input { -webkit-text-security: disc; text-security: disc; }
 
         /* --- GLOBAL LOADER --- */
@@ -411,93 +409,10 @@
     </div>
 
     <div id="auth-layout" class="layout-section">
-        <div class="auth-container" onkeydown="if(event.key === 'Enter') handleLogin();">
-            <div class="auth-logo">
-                <img src="icon-192.png" alt="Logo" onerror="this.style.display='none'">
-                <h1>YP AniTracker</h1>
-            </div>
-            
-            <div>
-                <div class="auth-form-group">
-                    <label>E-Mail Adresse</label>
-                    <input type="text" id="login-email" placeholder="deine@email.de" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true">
-                </div>
-                <div class="auth-form-group">
-                    <label>Passwort</label>
-                    <input type="text" id="login-password" class="pw-input" placeholder="••••••••" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true">
-                </div>
-                <label class="auth-options">
-                    <div style="display: flex; align-items: center;">
-                        <input type="checkbox" id="auth-remember" checked>
-                        <span>Angemeldet bleiben</span>
-                    </div>
-                </label>
-                <button type="button" class="btn-auth btn-login" onclick="handleLogin()">
-                    <i class="fa-solid fa-right-to-bracket"></i> Einloggen
-                </button>
-                <div class="auth-switch">
-                    <a onclick="openForgotPasswordModal()" style="font-weight: 400; font-size: 0.85rem;">Passwort vergessen?</a>
-                    <div style="margin-top: 10px;">Neu hier? <a onclick="toggleAuthMode('register')">Account erstellen</a></div>
-                </div>
-            </div>
-
-            <div id="auth-error-msg" class="auth-error"></div>
-        </div>
+        <div id="auth-content-container"></div>
     </div>
 
-    <div id="register-modal" class="modal-overlay">
-        <div class="modal" onkeydown="if(event.key === 'Enter') handleRegister();">
-            <h3><i class="fa-solid fa-user-plus" style="color: var(--accent-neon);"></i> Account erstellen</h3>
-            <div class="form-group">
-                <label>Benutzername</label>
-                <input type="text" id="reg-username" placeholder="Wie sollen wir dich nennen?" autocomplete="off" data-lpignore="true">
-            </div>
-            <div class="form-group">
-                <label>E-Mail Adresse</label>
-                <input type="text" id="reg-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true">
-            </div>
-            <div class="form-group">
-                <label>Passwort (Min. 6 Zeichen)</label>
-                <input type="text" id="reg-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true">
-            </div>
-            <div id="reg-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeRegisterModal()">Abbrechen</button>
-                <button type="button" class="btn-add" onclick="handleRegister()">Erstellen</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="forgot-password-modal" class="modal-overlay">
-        <div class="modal" onkeydown="if(event.key === 'Enter') handlePasswordResetRequest();">
-            <h3><i class="fa-solid fa-key" style="color: var(--accent-blue);"></i> Passwort zurücksetzen</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Gib deine E-Mail ein. Wir senden dir einen Link, um ein neues Passwort festzulegen.</p>
-            <div class="form-group">
-                <label>E-Mail Adresse</label>
-                <input type="text" id="forgot-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true">
-            </div>
-            <div id="forgot-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeForgotPasswordModal()">Abbrechen</button>
-                <button type="button" class="btn-add" onclick="handlePasswordResetRequest()">Link senden</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="recovery-modal" class="modal-overlay">
-        <div class="modal" onkeydown="if(event.key === 'Enter') handleRecoveryUpdate();">
-            <h3><i class="fa-solid fa-unlock-keyhole" style="color: var(--accent-green);"></i> Neues Passwort</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Bitte vergib jetzt dein neues Passwort.</p>
-            <div class="form-group">
-                <label>Neues Passwort</label>
-                <input type="text" id="recovery-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true">
-            </div>
-            <div id="recovery-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn-add" onclick="handleRecoveryUpdate()">Speichern & Einloggen</button>
-            </div>
-        </div>
-    </div>
+    <div id="modals-container"></div>
 
     <div id="app-layout" class="layout-section">
         <header>
@@ -615,99 +530,6 @@
         </div>
     </div>
 
-    <div id="modal" class="modal-overlay">
-        <div class="modal" onkeydown="if(event.key === 'Enter') saveAnime();">
-            <h3 id="modal-title">Anime hinzufügen</h3>
-            <input type="hidden" id="modal-page-context">
-            <input type="hidden" id="anime-edit-id">
-            
-            <input type="hidden" id="anime-cover-url">
-            <input type="hidden" id="anime-mal-id">
-            
-            <div class="form-group" style="position: relative;">
-                <label for="anime-title">Anime Name</label>
-                <input type="text" id="anime-title" placeholder="z.B. Demon Slayer..." oninput="searchAnime(this.value)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true">
-                <div id="search-results" class="search-res"></div>
-            </div>
-            
-            <div id="type-field-group" class="form-group" style="display: none;">
-                <label for="anime-type">Format / Status</label>
-                <select id="anime-type" onchange="handleTypeChange()">
-                    <option value="staffel">Neue Staffel folgt</option>
-                    <option value="film">Film folgt</option>
-                    <option value="abgeschlossen">Komplett abgeschlossen (Archiv)</option>
-                </select>
-            </div>
-
-            <div id="meta-field-group" class="form-group" style="display: none;">
-                <label id="meta-label" for="anime-meta-input">Wann kommt das Release? (Optional)</label>
-                <input type="text" id="anime-meta-input" placeholder="z.B. Winter 2027 oder leer lassen" autocomplete="off" autocorrect="off">
-            </div>
-            <div id="released-field-group" class="form-group checkbox-group" style="display: none;">
-                <input type="checkbox" id="anime-is-released">
-                <label for="anime-is-released">Das Release ist ab jetzt draußen!</label>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeModal()">Abbrechen</button>
-                <button type="button" class="btn-add" onclick="saveAnime()">Speichern</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="settings-modal" class="modal-overlay">
-        <div class="modal">
-            <h3><i class="fa-solid fa-gear" style="color: var(--text-muted);"></i> Einstellungen</h3>
-            
-            <div style="margin-top: 20px;" onkeydown="if(event.key === 'Enter') handleSettingsUsernameChange();">
-                <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Benutzername ändern</h4>
-                <div class="form-group">
-                    <input type="text" id="settings-new-username" placeholder="Neuer Benutzername" autocomplete="off" data-lpignore="true">
-                </div>
-                <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsUsernameChange()">
-                    Namen aktualisieren
-                </button>
-            </div>
-
-            <hr class="settings-divider">
-            
-            <div onkeydown="if(event.key === 'Enter') handleSettingsPasswordChange();">
-                <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Passwort ändern</h4>
-                <div class="form-group">
-                    <input type="text" id="settings-new-password" class="pw-input" placeholder="Neues Passwort (min. 6 Zeichen)" autocomplete="off" data-lpignore="true">
-                </div>
-                <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()">
-                    Passwort aktualisieren
-                </button>
-            </div>
-
-            <hr class="settings-divider">
-
-            <div>
-                <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--danger);">Gefahrenzone</h4>
-                <button class="btn-auth" style="background: rgba(255,0,85,0.1); color: var(--danger); border: 1px solid rgba(255,0,85,0.3); padding: 10px;" onclick="openDeleteConfirmModal()">
-                    <i class="fa-solid fa-trash-can"></i> Account & Daten löschen
-                </button>
-            </div>
-
-            <div class="modal-footer" style="margin-top: 20px;">
-                <button type="button" class="btn-cancel" onclick="closeSettingsModal()">Schließen</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="delete-confirm-modal" class="modal-overlay">
-        <div class="modal modal-danger">
-            <h3><i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i> Bist du sicher?</h3>
-            <p class="danger-text">
-                Wenn du fortfährst, werden <strong>alle deine gespeicherten Animes unwiderruflich aus der Datenbank gelöscht</strong>. Dein Account wird geleert und du wirst ausgeloggt.
-            </p>
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeDeleteConfirmModal()">Abbrechen</button>
-                <button class="btn-danger-action" onclick="wipeAccountData()">Ja, alles löschen!</button>
-            </div>
-        </div>
-    </div>
-
     <div id="toast-notification" class="toast">
         <i class="fa-solid fa-circle-check"></i> <span id="toast-message">Erfolgreich!</span>
     </div>
@@ -726,15 +548,158 @@
         let isInitialLoad = true;
 
         // ==========================================
+        // DYNAMISCHES RENDERN DER MODALS (SAFARI KILLER)
+        // ==========================================
+        function renderAuthModals() {
+            document.getElementById('auth-content-container').innerHTML = `
+                <div class="auth-container" onkeydown="if(event.key === 'Enter') handleLogin();">
+                    <div class="auth-logo">
+                        <img src="icon-192.png" alt="Logo" onerror="this.style.display='none'">
+                        <h1>YP AniTracker</h1>
+                    </div>
+                    <div>
+                        <div class="auth-form-group">
+                            <label>E-Mail Adresse</label>
+                            <input type="text" id="login-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true">
+                        </div>
+                        <div class="auth-form-group">
+                            <label>Passwort</label>
+                            <input type="text" id="login-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true">
+                        </div>
+                        <label class="auth-options">
+                            <div style="display: flex; align-items: center;">
+                                <input type="checkbox" id="auth-remember" checked>
+                                <span>Angemeldet bleiben</span>
+                            </div>
+                        </label>
+                        <button type="button" class="btn-auth btn-login" onclick="handleLogin()">
+                            <i class="fa-solid fa-right-to-bracket"></i> Einloggen
+                        </button>
+                        <div class="auth-switch">
+                            <a onclick="openForgotPasswordModal()" style="font-weight: 400; font-size: 0.85rem;">Passwort vergessen?</a>
+                            <div style="margin-top: 10px;">Neu hier? <a onclick="toggleAuthMode('register')">Account erstellen</a></div>
+                        </div>
+                    </div>
+                    <div id="auth-error-msg" class="auth-error"></div>
+                </div>
+            `;
+
+            document.getElementById('modals-container').innerHTML = `
+                <div id="register-modal" class="modal-overlay">
+                    <div class="modal" onkeydown="if(event.key === 'Enter') handleRegister();">
+                        <h3><i class="fa-solid fa-user-plus" style="color: var(--accent-neon);"></i> Account erstellen</h3>
+                        <div class="form-group"><label>Benutzername</label><input type="text" id="reg-username" autocomplete="off" data-lpignore="true"></div>
+                        <div class="form-group"><label>E-Mail Adresse</label><input type="text" id="reg-email" autocomplete="off" data-lpignore="true"></div>
+                        <div class="form-group"><label>Passwort (Min. 6 Zeichen)</label><input type="text" id="reg-password" class="pw-input" autocomplete="off" data-lpignore="true"></div>
+                        <div id="reg-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
+                        <div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeRegisterModal()">Abbrechen</button><button type="button" class="btn-add" onclick="handleRegister()">Erstellen</button></div>
+                    </div>
+                </div>
+
+                <div id="forgot-password-modal" class="modal-overlay">
+                    <div class="modal" onkeydown="if(event.key === 'Enter') handlePasswordResetRequest();">
+                        <h3><i class="fa-solid fa-key" style="color: var(--accent-blue);"></i> Passwort zurücksetzen</h3>
+                        <div class="form-group"><label>E-Mail Adresse</label><input type="text" id="forgot-email" autocomplete="off" data-lpignore="true"></div>
+                        <div id="forgot-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
+                        <div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeForgotPasswordModal()">Abbrechen</button><button type="button" class="btn-add" onclick="handlePasswordResetRequest()">Link senden</button></div>
+                    </div>
+                </div>
+
+                <div id="recovery-modal" class="modal-overlay">
+                    <div class="modal" onkeydown="if(event.key === 'Enter') handleRecoveryUpdate();">
+                        <h3><i class="fa-solid fa-unlock-keyhole" style="color: var(--accent-green);"></i> Neues Passwort</h3>
+                        <div class="form-group"><label>Neues Passwort</label><input type="text" id="recovery-password" class="pw-input" autocomplete="off" data-lpignore="true"></div>
+                        <div id="recovery-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
+                        <div class="modal-footer"><button type="button" class="btn-add" onclick="handleRecoveryUpdate()">Speichern & Einloggen</button></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAppModals() {
+            document.getElementById('modals-container').innerHTML = `
+                <div id="modal" class="modal-overlay">
+                    <div class="modal" onkeydown="if(event.key === 'Enter') saveAnime();">
+                        <h3 id="modal-title">Anime hinzufügen</h3>
+                        <input type="hidden" id="modal-page-context">
+                        <input type="hidden" id="anime-edit-id">
+                        <input type="hidden" id="anime-cover-url">
+                        <input type="hidden" id="anime-mal-id">
+                        
+                        <div class="form-group" style="position: relative;">
+                            <label for="anime-title">Anime Name</label>
+                            <input type="text" id="anime-title" placeholder="z.B. Demon Slayer..." oninput="searchAnime(this.value)" autocomplete="off" data-lpignore="true">
+                            <div id="search-results" class="search-res"></div>
+                        </div>
+                        
+                        <div id="type-field-group" class="form-group" style="display: none;">
+                            <label for="anime-type">Format / Status</label>
+                            <select id="anime-type" onchange="handleTypeChange()">
+                                <option value="staffel">Neue Staffel folgt</option>
+                                <option value="film">Film folgt</option>
+                                <option value="abgeschlossen">Komplett abgeschlossen (Archiv)</option>
+                            </select>
+                        </div>
+
+                        <div id="meta-field-group" class="form-group" style="display: none;">
+                            <label id="meta-label" for="anime-meta-input">Wann kommt das Release? (Optional)</label>
+                            <input type="text" id="anime-meta-input" placeholder="z.B. Winter 2027 oder leer lassen" autocomplete="off">
+                        </div>
+                        <div id="released-field-group" class="form-group checkbox-group" style="display: none;">
+                            <input type="checkbox" id="anime-is-released">
+                            <label for="anime-is-released">Das Release ist ab jetzt draußen!</label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-cancel" onclick="closeModal()">Abbrechen</button>
+                            <button type="button" class="btn-add" onclick="saveAnime()">Speichern</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="settings-modal" class="modal-overlay">
+                    <div class="modal">
+                        <h3><i class="fa-solid fa-gear" style="color: var(--text-muted);"></i> Einstellungen</h3>
+                        <div style="margin-top: 20px;" onkeydown="if(event.key === 'Enter') handleSettingsUsernameChange();">
+                            <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Benutzername ändern</h4>
+                            <div class="form-group"><input type="text" id="settings-new-username" autocomplete="off" data-lpignore="true"></div>
+                            <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsUsernameChange()">Namen aktualisieren</button>
+                        </div>
+                        <hr class="settings-divider">
+                        <div id="dynamic-pw-setting">
+                            <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Passwort ändern</h4>
+                            <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="injectPasswordUpdateField(this)">Passwort aktualisieren</button>
+                        </div>
+                        <hr class="settings-divider">
+                        <div>
+                            <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--danger);">Gefahrenzone</h4>
+                            <button class="btn-auth" style="background: rgba(255,0,85,0.1); color: var(--danger); border: 1px solid rgba(255,0,85,0.3); padding: 10px;" onclick="openDeleteConfirmModal()"><i class="fa-solid fa-trash-can"></i> Account & Daten löschen</button>
+                        </div>
+                        <div class="modal-footer" style="margin-top: 20px;">
+                            <button type="button" class="btn-cancel" onclick="closeSettingsModal()">Schließen</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="delete-confirm-modal" class="modal-overlay">
+                    <div class="modal modal-danger">
+                        <h3><i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i> Bist du sicher?</h3>
+                        <p class="danger-text">Wenn du fortfährst, werden <strong>alle deine gespeicherten Animes unwiderruflich aus der Datenbank gelöscht</strong>. Dein Account wird geleert und du wirst ausgeloggt.</p>
+                        <div class="modal-footer">
+                            <button class="btn-cancel" onclick="closeDeleteConfirmModal()">Abbrechen</button>
+                            <button class="btn-danger-action" onclick="wipeAccountData()">Ja, alles löschen!</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==========================================
         // AUTHENTIFIKATION & LOADER
         // ==========================================
 
         db.auth.getSession().then(({ data: { session } }) => {
             const loader = document.getElementById('global-loader');
-            if (loader) {
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 500);
-            }
+            if (loader) { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
             toggleLayout(session);
         }).catch(err => {
             const loader = document.getElementById('global-loader');
@@ -745,6 +710,7 @@
 
         db.auth.onAuthStateChange((event, session) => {
             if (event === 'PASSWORD_RECOVERY') {
+                if(!document.getElementById('recovery-modal')) renderAuthModals();
                 document.getElementById('recovery-modal').classList.add('active');
             }
             if(!isInitialLoad) toggleLayout(session);
@@ -762,12 +728,18 @@
                 authLayout.style.opacity = '0';
                 setTimeout(() => { 
                     authLayout.classList.remove('active-layout');
-                    authLayout.style.display = 'none'; 
+                    
+                    // NUKLEAR OPTION: Alles was mit Login zu tun hat, physisch aus dem Dokument löschen!
+                    document.getElementById('auth-content-container').innerHTML = '';
+                    document.getElementById('modals-container').innerHTML = '';
+                    
+                    // Danach App Modals (Settings, Add Anime) reinladen
+                    renderAppModals();
 
                     appLayout.classList.add('active-layout'); 
                     setTimeout(() => {
                         appLayout.classList.add('visible');
-                        window.scrollTo(0, 0); 
+                        window.scrollTo(0, 0); // SCROLL FIX: Verhindert das Hängen in leerem Raum
                         if(isInitialLoad) loadDataFromCloud(); 
                         isInitialLoad = false;
                     }, 50);
@@ -776,7 +748,10 @@
                 appLayout.style.opacity = '0';
                 setTimeout(() => { 
                     appLayout.classList.remove('active-layout');
-                    appLayout.style.display = 'none';
+                    document.getElementById('modals-container').innerHTML = ''; // App Modals löschen
+                    
+                    renderAuthModals(); // Login Modals reinladen
+                    
                     authLayout.classList.add('active-layout'); 
                     setTimeout(() => authLayout.classList.add('visible'), 50);
                     isInitialLoad = false;
@@ -785,9 +760,7 @@
         }
 
         window.addEventListener('beforeunload', () => {
-            if (sessionStorage.getItem('tempSessionActive') === 'true') {
-                db.auth.signOut();
-            }
+            if (sessionStorage.getItem('tempSessionActive') === 'true') { db.auth.signOut(); }
         });
 
         async function handleLogin() {
@@ -808,20 +781,15 @@
                 errorMsg.innerText = "Fehler: " + error.message;
                 btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Einloggen';
             } else {
-                if (!rememberMe) {
-                    sessionStorage.setItem('tempSessionActive', 'true');
-                } else {
-                    sessionStorage.removeItem('tempSessionActive');
-                }
+                if (!rememberMe) sessionStorage.setItem('tempSessionActive', 'true');
+                else sessionStorage.removeItem('tempSessionActive');
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> Eingeloggt!';
                 location.reload(); 
             }
         }
 
         function toggleAuthMode(mode) {
-            if(mode === 'register') {
-                document.getElementById('register-modal').classList.add('active');
-            }
+            if(mode === 'register') document.getElementById('register-modal').classList.add('active');
         }
         
         function closeRegisterModal() {
@@ -838,18 +806,10 @@
             if(!email || !password || !username) return errorMsg.innerText = "Bitte alle Felder ausfüllen.";
             if(password.length < 6) return errorMsg.innerText = "Passwort muss mind. 6 Zeichen haben.";
             
-            const { error } = await db.auth.signUp({ 
-                email, 
-                password,
-                options: { data: { username: username } }
-            });
+            const { error } = await db.auth.signUp({ email, password, options: { data: { username: username } } });
             
-            if (error) {
-                errorMsg.innerText = "Fehler: " + error.message;
-            } else {
-                closeRegisterModal();
-                showToast("Account erstellt! Willkommen ✨");
-            }
+            if (error) errorMsg.innerText = "Fehler: " + error.message;
+            else { closeRegisterModal(); showToast("Account erstellt! Willkommen ✨"); }
         }
 
         async function handleLogout() {
@@ -864,38 +824,33 @@
         async function handlePasswordResetRequest() {
             const email = document.getElementById('forgot-email').value;
             const errorMsg = document.getElementById('forgot-error-msg');
-            
             if(!email) return errorMsg.innerText = "Bitte E-Mail eingeben.";
             
             const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
-            
-            if(error) {
-                errorMsg.innerText = "Fehler: " + error.message;
-            } else {
-                closeForgotPasswordModal();
-                alert("E-Mail gesendet! Bitte überprüfe deinen Posteingang (auch Spam).");
-            }
+            if(error) errorMsg.innerText = "Fehler: " + error.message;
+            else { closeForgotPasswordModal(); alert("E-Mail gesendet! Bitte überprüfe deinen Posteingang (auch Spam)."); }
         }
 
         async function handleRecoveryUpdate() {
             const newPassword = document.getElementById('recovery-password').value;
             const errorMsg = document.getElementById('recovery-error-msg');
-            
             if(newPassword.length < 6) return errorMsg.innerText = "Mindestens 6 Zeichen.";
             
             const { error } = await db.auth.updateUser({ password: newPassword });
-            
-            if(error) {
-                errorMsg.innerText = "Fehler: " + error.message;
-            } else {
-                document.getElementById('recovery-modal').classList.remove('active');
-                showToast("Passwort erfolgreich geändert! 🔐");
-            }
+            if(error) errorMsg.innerText = "Fehler: " + error.message;
+            else { document.getElementById('recovery-modal').classList.remove('active'); showToast("Passwort erfolgreich geändert! 🔐"); }
         }
 
+        // ==========================================
+        // EINSTELLUNGEN
+        // ==========================================
         function openSettingsModal() { 
             document.getElementById('settings-new-username').value = document.getElementById('header-username-display').innerText;
-            document.getElementById('settings-new-password').value = '';
+            // Resette PW Update Container zu nur Button
+            document.getElementById('dynamic-pw-setting').innerHTML = `
+                <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Passwort ändern</h4>
+                <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="injectPasswordUpdateField(this)">Passwort aktualisieren</button>
+            `;
             document.getElementById('settings-modal').classList.add('active'); 
         }
         function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
@@ -905,53 +860,39 @@
             if(!newUsername) return alert("Bitte einen gültigen Namen eingeben.");
             
             const { error } = await db.auth.updateUser({ data: { username: newUsername } });
-            
-            if(error) {
-                alert("Fehler beim Ändern des Namens: " + error.message);
-            } else {
-                document.getElementById('header-username-display').innerText = newUsername;
-                closeSettingsModal();
-                showToast("Benutzername erfolgreich geändert! 👤");
-            }
+            if(error) alert("Fehler beim Ändern des Namens: " + error.message);
+            else { document.getElementById('header-username-display').innerText = newUsername; closeSettingsModal(); showToast("Benutzername erfolgreich geändert! 👤"); }
+        }
+
+        // Feld wird erst erzeugt, wenn User aktiv das Passwort ändern will
+        function injectPasswordUpdateField(btn) {
+            document.getElementById('dynamic-pw-setting').innerHTML = `
+                <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Passwort ändern</h4>
+                <div class="form-group"><input type="text" id="sec-update-val" class="pw-input" placeholder="Neues Passwort (min. 6 Zeichen)" autocomplete="off" data-lpignore="true"></div>
+                <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()">Jetzt Speichern</button>
+            `;
         }
 
         async function handleSettingsPasswordChange() {
-            const newPassword = document.getElementById('settings-new-password').value;
+            const newPassword = document.getElementById('sec-update-val').value;
             if(newPassword.length < 6) return alert("Das neue Passwort muss mindestens 6 Zeichen lang sein.");
             
             const { error } = await db.auth.updateUser({ password: newPassword });
-            
-            if(error) {
-                alert("Fehler beim Ändern des Passworts.");
-            } else {
-                document.getElementById('settings-new-password').value = '';
-                closeSettingsModal();
-                showToast("Passwort erfolgreich geändert! 🔐");
-            }
+            if(error) alert("Fehler beim Ändern des Passworts.");
+            else { closeSettingsModal(); showToast("Passwort erfolgreich geändert! 🔐"); }
         }
         
-        function openDeleteConfirmModal() { 
-            closeSettingsModal();
-            document.getElementById('delete-confirm-modal').classList.add('active'); 
-        }
+        function openDeleteConfirmModal() { closeSettingsModal(); document.getElementById('delete-confirm-modal').classList.add('active'); }
         function closeDeleteConfirmModal() { document.getElementById('delete-confirm-modal').classList.remove('active'); }
 
         async function wipeAccountData() {
             const btn = document.querySelector('.btn-danger-action');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Lösche...';
-            
             try {
                 const { error } = await db.from('animes').delete().neq('id', 0);
                 if (error) throw error;
-                
-                closeDeleteConfirmModal();
-                await handleLogout();
-                showToast("Alle Daten wurden gelöscht.");
-                btn.innerHTML = 'Ja, alles löschen!';
-            } catch (e) {
-                alert("Fehler beim Löschen: " + e.message);
-                btn.innerHTML = 'Ja, alles löschen!';
-            }
+                closeDeleteConfirmModal(); await handleLogout(); showToast("Alle Daten wurden gelöscht.");
+            } catch (e) { alert("Fehler beim Löschen: " + e.message); btn.innerHTML = 'Ja, alles löschen!'; }
         }
 
         // ==========================================
@@ -961,12 +902,7 @@
         async function searchAnime(query) {
             clearTimeout(searchTimeout);
             const resultsDiv = document.getElementById('search-results');
-            
-            if(!query || query.trim().length < 3) { 
-                resultsDiv.innerHTML = ''; 
-                resultsDiv.style.display = 'none';
-                return; 
-            }
+            if(!query || query.trim().length < 3) { resultsDiv.innerHTML = ''; resultsDiv.style.display = 'none'; return; }
 
             searchTimeout = setTimeout(async () => {
                 resultsDiv.style.display = 'block';
@@ -976,40 +912,26 @@
                     const res = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=5`);
                     const { data } = await res.json();
                     
-                    if(!data || data.length === 0) {
-                        resultsDiv.innerHTML = '<div style="padding:15px; text-align:center; color:var(--text-muted);">Kein Anime gefunden.</div>';
-                        return;
-                    }
+                    if(!data || data.length === 0) { resultsDiv.innerHTML = '<div style="padding:15px; text-align:center; color:var(--text-muted);">Kein Anime gefunden.</div>'; return; }
                     
                     resultsDiv.innerHTML = data.map(anime => {
                         let bestTitle = anime.title;
                         if (anime.titles && anime.titles.length > 0) {
                             const ger = anime.titles.find(t => t.type === 'German');
                             const eng = anime.titles.find(t => t.type === 'English');
-                            if (ger) bestTitle = ger.title;
-                            else if (eng) bestTitle = eng.title;
+                            if (ger) bestTitle = ger.title; else if (eng) bestTitle = eng.title;
                         }
-
                         const highResCover = anime.images?.webp?.large_image_url || anime.images?.jpg?.large_image_url || '';
                         const titleEscaped = bestTitle.replace(/'/g, "\\'").replace(/"/g, "&quot;");
-                        
                         let seasonText = '';
                         if (anime.season && anime.year) {
                             const seasonsDe = { 'spring': 'Frühling', 'summer': 'Sommer', 'fall': 'Herbst', 'winter': 'Winter' };
                             seasonText = (seasonsDe[anime.season] || anime.season) + ' ' + anime.year;
-                        } else if (anime.aired && anime.aired.from) {
-                            seasonText = new Date(anime.aired.from).getFullYear().toString();
-                        }
+                        } else if (anime.aired && anime.aired.from) { seasonText = new Date(anime.aired.from).getFullYear().toString(); }
                         
-                        return `
-                        <div class="search-item" onclick="selectAnime('${titleEscaped}', '${highResCover}', ${anime.mal_id}, '${anime.status}', '${anime.type}', '${seasonText}')">
-                            <img src="${highResCover}" class="search-cover" onerror="this.style.display='none'">
-                            <span style="font-weight: 600; font-size: 0.9rem;">${bestTitle}</span>
-                        </div>
-                    `}).join('');
-                } catch(e) { 
-                    resultsDiv.innerHTML = '<div style="padding:15px; text-align:center; color:var(--danger);">Fehler bei der Suche.</div>';
-                }
+                        return `<div class="search-item" onclick="selectAnime('${titleEscaped}', '${highResCover}', ${anime.mal_id}, '${anime.status}', '${anime.type}', '${seasonText}')"><img src="${highResCover}" class="search-cover" onerror="this.style.display='none'"><span style="font-weight: 600; font-size: 0.9rem;">${bestTitle}</span></div>`;
+                    }).join('');
+                } catch(e) { resultsDiv.innerHTML = '<div style="padding:15px; text-align:center; color:var(--danger);">Fehler bei der Suche.</div>'; }
             }, 600);
         }
 
@@ -1017,27 +939,16 @@
             document.getElementById('anime-title').value = title;
             document.getElementById('anime-cover-url').value = coverUrl;
             document.getElementById('anime-mal-id').value = malId;
-            
             const typeSelect = document.getElementById('anime-type');
-            if (apiType === 'Movie') typeSelect.value = 'film';
-            else typeSelect.value = 'staffel';
-            
+            if (apiType === 'Movie') typeSelect.value = 'film'; else typeSelect.value = 'staffel';
             const metaInput = document.getElementById('anime-meta-input');
             const releasedCheck = document.getElementById('anime-is-released');
             
-            if (apiStatus === 'Not yet aired') {
-                metaInput.value = apiDate || 'Unbekanntes Datum';
-                releasedCheck.checked = false;
-            } else if (apiStatus === 'Currently Airing' || apiStatus === 'Finished Airing') {
-                metaInput.value = apiDate || '';
-                releasedCheck.checked = true;
-            }
+            if (apiStatus === 'Not yet aired') { metaInput.value = apiDate || 'Unbekanntes Datum'; releasedCheck.checked = false; } 
+            else if (apiStatus === 'Currently Airing' || apiStatus === 'Finished Airing') { metaInput.value = apiDate || ''; releasedCheck.checked = true; }
             
             handleTypeChange();
-            
-            const resultsDiv = document.getElementById('search-results');
-            resultsDiv.innerHTML = '';
-            resultsDiv.style.display = 'none';
+            document.getElementById('search-results').innerHTML = ''; document.getElementById('search-results').style.display = 'none';
         }
 
         // ==========================================
@@ -1061,11 +972,8 @@
             const type = document.getElementById('anime-type').value;
             const metaGroup = document.getElementById('meta-field-group');
             const releaseGroup = document.getElementById('released-field-group');
-            if (type === 'abgeschlossen') {
-                metaGroup.style.display = 'none'; releaseGroup.style.display = 'none';
-            } else {
-                metaGroup.style.display = 'block'; releaseGroup.style.display = 'flex';
-            }
+            if (type === 'abgeschlossen') { metaGroup.style.display = 'none'; releaseGroup.style.display = 'none'; } 
+            else { metaGroup.style.display = 'block'; releaseGroup.style.display = 'flex'; }
         }
 
         function openDetailModal(id) {
@@ -1082,15 +990,10 @@
             
             let metaDisplay = anime.meta.replace('STAFFEL|', '').replace('FILM|', '');
             
-            // 🔥 FIX: Richtiges Wording für Watchlist und Current (vorher fälschlich "Abgeschlossen")
             if(metaDisplay === 'Keine Info') {
-                if (anime.category === 'watchlist') {
-                    metaDisplay = 'Auf der Watchlist';
-                } else if (anime.category === 'current') {
-                    metaDisplay = 'Wird aktuell geschaut';
-                } else {
-                    metaDisplay = 'Abgeschlossen';
-                }
+                if (anime.category === 'watchlist') metaDisplay = 'Auf der Watchlist';
+                else if (anime.category === 'current') metaDisplay = 'Wird aktuell geschaut';
+                else metaDisplay = 'Abgeschlossen';
             }
             
             const metaBadge = document.getElementById('detail-meta');
@@ -1104,28 +1007,13 @@
                 modalBox.style.borderColor = 'rgba(255, 0, 85, 0.4)';
             } else {
                 metaBadge.style.border = 'none';
-                
-                if (anime.category === 'watched') {
-                    modalBox.style.borderColor = 'rgba(46, 204, 113, 0.4)'; 
-                    metaBadge.style.color = 'var(--accent-green)';
-                    metaBadge.style.background = 'rgba(46, 204, 113, 0.15)';
-                } else if (anime.category === 'current') {
-                    modalBox.style.borderColor = 'rgba(0, 245, 212, 0.4)'; 
-                    metaBadge.style.color = 'var(--accent-neon)';
-                    metaBadge.style.background = 'rgba(0, 245, 212, 0.15)';
-                } else if (anime.category === 'watchlist') {
-                    modalBox.style.borderColor = 'rgba(58, 134, 255, 0.4)'; 
-                    metaBadge.style.color = 'var(--accent-blue)';
-                    metaBadge.style.background = 'rgba(58, 134, 255, 0.15)';
-                } else {
-                    modalBox.style.borderColor = 'rgba(138, 43, 226, 0.4)'; 
-                    metaBadge.style.color = 'var(--accent-purple)';
-                    metaBadge.style.background = 'rgba(138, 43, 226, 0.15)';
-                }
+                if (anime.category === 'watched') { modalBox.style.borderColor = 'rgba(46, 204, 113, 0.4)'; metaBadge.style.color = 'var(--accent-green)'; metaBadge.style.background = 'rgba(46, 204, 113, 0.15)'; } 
+                else if (anime.category === 'current') { modalBox.style.borderColor = 'rgba(0, 245, 212, 0.4)'; metaBadge.style.color = 'var(--accent-neon)'; metaBadge.style.background = 'rgba(0, 245, 212, 0.15)'; } 
+                else if (anime.category === 'watchlist') { modalBox.style.borderColor = 'rgba(58, 134, 255, 0.4)'; metaBadge.style.color = 'var(--accent-blue)'; metaBadge.style.background = 'rgba(58, 134, 255, 0.15)'; } 
+                else { modalBox.style.borderColor = 'rgba(138, 43, 226, 0.4)'; metaBadge.style.color = 'var(--accent-purple)'; metaBadge.style.background = 'rgba(138, 43, 226, 0.15)'; }
             }
             
             metaBadge.innerText = metaDisplay;
-
             document.getElementById('detail-modal').classList.add('active');
         }
 
