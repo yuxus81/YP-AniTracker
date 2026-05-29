@@ -39,21 +39,6 @@
         #app-layout { opacity: 0; pointer-events: none; position: absolute; width: 100%; top: 0; left: 0; padding-bottom: 60px; transform: scale(0.98); }
         #app-layout.visible { opacity: 1; pointer-events: auto; position: relative; transform: scale(1); }
 
-        /* --- RELAX GLOW ANIMATION (CHAMÄLEON) --- */
-        @keyframes relaxGlow {
-            0% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 5px var(--glow-base, rgba(138, 43, 226, 0.05)); }
-            50% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 18px var(--glow-peak, rgba(138, 43, 226, 0.25)); }
-            100% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 5px var(--glow-base, rgba(138, 43, 226, 0.05)); }
-        }
-
-        /* --- ITEM COLORS FÜR DEN GLOW --- */
-        .item-watched { --glow-base: rgba(46, 204, 113, 0.05); --glow-peak: rgba(46, 204, 113, 0.3); border-left: 4px solid var(--accent-green); }
-        .item-waiting { --glow-base: rgba(138, 43, 226, 0.05); --glow-peak: rgba(138, 43, 226, 0.3); border-left: 4px solid var(--accent-purple); }
-        .item-released { --glow-base: rgba(255, 0, 85, 0.05); --glow-peak: rgba(255, 0, 85, 0.3); border-left: 4px solid var(--accent-orange); background: linear-gradient(90deg, rgba(255, 0, 85, 0.05) 0%, var(--card-bg) 100%); }
-        .item-current { --glow-base: rgba(0, 245, 212, 0.05); --glow-peak: rgba(0, 245, 212, 0.3); border-left: 4px solid var(--accent-neon); }
-        .item-watchlist { --glow-base: rgba(58, 134, 255, 0.05); --glow-peak: rgba(58, 134, 255, 0.3); border-left: 4px solid var(--accent-blue); }
-        .anime-grid-item { --glow-base: rgba(255, 0, 85, 0.05); --glow-peak: rgba(255, 0, 85, 0.3); }
-
         /* --- AUTH SCREEN STYLING --- */
         .auth-container { background: var(--card-bg); border-radius: 20px; padding: 40px 30px; width: 100%; max-width: 400px; border: 1px solid rgba(138, 43, 226, 0.25); box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center; }
         .auth-logo { margin-bottom: 30px; }
@@ -102,6 +87,13 @@
 
         @keyframes fadeInPage { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* --- RELAX GLOW ANIMATION --- */
+        @keyframes relaxGlow {
+            0% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 5px rgba(138, 43, 226, 0.05); }
+            50% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 18px rgba(138, 43, 226, 0.25); }
+            100% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 5px rgba(138, 43, 226, 0.05); }
+        }
+
         /* --- HOMEPAGE NAVIGATION --- */
         .grid-navigation { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; margin-top: 10px; }
         .nav-card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.03); border-radius: 16px; padding: 25px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
@@ -125,21 +117,25 @@
 
         .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
         .anime-grid-item { background: var(--card-bg); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(255, 0, 85, 0.15); box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s; cursor: pointer; animation: slideIn 0.4s ease forwards, relaxGlow 4s 0.4s infinite alternate ease-in-out; }
-        .anime-grid-item:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(255, 0, 85, 0.15), 0 0 20px var(--glow-peak) !important; border-color: var(--accent-orange); z-index: 10; }
+        .anime-grid-item:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(255, 0, 85, 0.15), 0 0 20px rgba(138, 43, 226, 0.4) !important; border-color: var(--accent-orange); z-index: 10; }
         .anime-grid-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
         .anime-grid-header h4 { font-size: 1.05rem; font-weight: 600; line-height: 1.4; flex: 1; }
 
         /* --- PAGES & BUTTONS --- */
-        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: rgba(22, 25, 43, 0.4); padding: 15px 20px; border-radius: 12px; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: rgba(22, 25, 43, 0.4); padding: 15px 20px; border-radius: 12px; }
         .page-header h2 { margin: 0; display: flex; align-items: center; gap: 10px; font-size: 1.4rem; }
         .btn-back { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; transition: color 0.3s; }
         .btn-back:hover { color: white; }
         .btn-add { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); transition: all 0.2s ease; }
         .btn-add:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
-        
-        .header-action-group { display: flex; gap: 10px; }
 
-        /* --- ANIME LISTEN ITEMS --- */
+        /* --- NEU: GESAMT-ZÄHLER BADGE --- */
+        .watched-stats { display: flex; justify-content: center; margin-bottom: 30px; }
+        .stat-box { background: linear-gradient(145deg, rgba(46, 204, 113, 0.1) 0%, rgba(46, 204, 113, 0.02) 100%); border: 1px solid rgba(46, 204, 113, 0.3); padding: 15px 35px; border-radius: 16px; text-align: center; display: inline-flex; flex-direction: column; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .stat-number { font-size: 2.2rem; font-weight: 700; color: var(--accent-green); line-height: 1; margin-bottom: 5px; text-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
+        .stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+
+        /* --- ANIME LISTEN ITEMS (Standard Listen-Layout) --- */
         .anime-list { display: flex; flex-direction: column; gap: 14px; }
         .anime-item { 
             background: var(--card-bg); border-radius: 12px; padding: 16px 20px; 
@@ -148,7 +144,7 @@
             animation: slideIn 0.4s ease forwards, relaxGlow 4s 0.4s infinite alternate ease-in-out;
             cursor: pointer;
         }
-        .anime-item:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px var(--glow-peak) !important; border-color: var(--glow-peak); z-index: 10; }
+        .anime-item:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(138, 43, 226, 0.3) !important; border-color: rgba(138, 43, 226, 0.3); z-index: 10; }
         
         /* --- GRID LAYOUTS (Desktop) --- */
         .grid-layout-watchlist, .grid-layout-next { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
@@ -157,11 +153,9 @@
             border-left: none; justify-content: flex-start;
             overflow: hidden; max-width: 100%;
         }
-        
-        /* Farben für Grid-Rahmen reparieren */
         .grid-layout-watchlist .anime-item { border-top: 4px solid var(--accent-blue); }
-        .grid-layout-next .item-waiting { border-top: 4px solid var(--accent-purple); }
-        .grid-layout-next .item-released { border-top: 4px solid var(--accent-orange); }
+        .grid-layout-next .anime-item { border-top: 4px solid var(--accent-purple); }
+        .grid-layout-next .anime-item.item-released { border-top: 4px solid var(--accent-orange); }
 
         .grid-layout-watchlist .anime-item:hover, .grid-layout-next .anime-item:hover { transform: translateY(-6px); }
         .grid-layout-watchlist .anime-info-wrapper, .grid-layout-next .anime-info-wrapper { flex-direction: column; width: 100%; max-width: 100%; gap: 10px; justify-content: center; }
@@ -180,6 +174,11 @@
         @keyframes popOut { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } 100% { transform: scale(0.8); opacity: 0; } }
         @keyframes highlightPulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0.4); } 100% { box-shadow: 0 0 0 15px rgba(255, 0, 85, 0); } }
 
+        .item-watched { border-left: 4px solid var(--accent-green); }
+        .item-waiting { border-left: 4px solid var(--accent-purple); }
+        .item-released { border-left: 4px solid var(--accent-orange); background: linear-gradient(90deg, rgba(255, 0, 85, 0.05) 0%, var(--card-bg) 100%); }
+        .item-current { border-left: 4px solid var(--accent-neon); }
+
         .anime-info-wrapper { display: flex; align-items: center; gap: 15px; width: 75%; }
         .anime-number { font-weight: 700; font-size: 1.1rem; min-width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .num-watched { color: var(--accent-green); background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); }
@@ -193,23 +192,16 @@
         .color-watchlist { color: var(--accent-blue); font-size: 1.8rem; margin-bottom: 5px; } 
         .color-current { color: var(--accent-neon); }
 
-        /* --- API COVER STYLING (High-Res & Responsive) --- */
+        /* --- API COVER STYLING --- */
         .anime-cover { width: 45px; height: 65px; object-fit: cover; border-radius: 6px; margin-right: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); flex-shrink: 0; }
         .grid-layout-watchlist .anime-cover, .grid-layout-next .anime-cover { width: 80px; height: 115px; margin-right: 0; margin-bottom: 5px; }
 
         /* --- FIX FÜR LANGE TITEL --- */
         .anime-info { display: flex; flex-direction: column; gap: 4px; overflow: hidden; width: 100%; }
         .anime-info h4 { 
-            font-size: 1.05rem; 
-            font-weight: 600; 
-            letter-spacing: 0.3px; 
-            line-height: 1.3; 
-            display: -webkit-box; 
-            -webkit-line-clamp: 2; 
-            -webkit-box-orient: vertical; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-            word-wrap: break-word; 
+            font-size: 1.05rem; font-weight: 600; letter-spacing: 0.3px; line-height: 1.3; 
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; 
+            overflow: hidden; text-overflow: ellipsis; word-wrap: break-word; 
         }
         
         .anime-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
@@ -277,7 +269,7 @@
         .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; padding: 10px; }
         .btn-cancel:hover { color: white; }
 
-        /* --- DETAILS POPUP MODAL (Perfektes Bild Format) --- */
+        /* --- DETAILS POPUP MODAL --- */
         #detail-modal .modal { padding: 30px; text-align: center; }
         .detail-cover-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 25px; }
         .detail-cover-wrapper img { width: auto; max-width: 100%; height: auto; max-height: 400px; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
@@ -338,20 +330,20 @@
 <body>
 
     <div id="auth-layout">
-        <div class="auth-container">
+        <form id="login-form" class="auth-container" onsubmit="event.preventDefault(); handleLogin();">
             <div class="auth-logo">
                 <img src="icon-192.png" alt="Logo" onerror="this.style.display='none'">
                 <h1>YP AniTracker</h1>
             </div>
             
-            <div id="login-form">
+            <div>
                 <div class="auth-form-group">
                     <label>E-Mail Adresse</label>
-                    <input type="email" id="login-email" placeholder="deine@email.de">
+                    <input type="email" id="login-email" placeholder="deine@email.de" autocomplete="username">
                 </div>
                 <div class="auth-form-group">
                     <label>Passwort</label>
-                    <input type="password" id="login-password" placeholder="••••••••">
+                    <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
                 </div>
                 <label class="auth-options">
                     <div style="display: flex; align-items: center;">
@@ -359,7 +351,7 @@
                         <span>Angemeldet bleiben</span>
                     </div>
                 </label>
-                <button class="btn-auth btn-login" onclick="handleLogin()" id="btn-login-submit">
+                <button type="submit" class="btn-auth btn-login" id="btn-login-submit">
                     <i class="fa-solid fa-right-to-bracket"></i> Einloggen
                 </button>
                 <div class="auth-switch">
@@ -369,61 +361,61 @@
             </div>
 
             <div id="auth-error-msg" class="auth-error"></div>
-        </div>
+        </form>
     </div>
 
     <div id="register-modal" class="modal-overlay">
-        <div class="modal">
+        <form class="modal" onsubmit="event.preventDefault(); handleRegister();">
             <h3><i class="fa-solid fa-user-plus" style="color: var(--accent-neon);"></i> Account erstellen</h3>
             <div class="form-group">
                 <label>Benutzername</label>
-                <input type="text" id="reg-username" placeholder="Wie sollen wir dich nennen?">
+                <input type="text" id="reg-username" placeholder="Wie sollen wir dich nennen?" autocomplete="username">
             </div>
             <div class="form-group">
                 <label>E-Mail Adresse</label>
-                <input type="email" id="reg-email" placeholder="deine@email.de">
+                <input type="email" id="reg-email" placeholder="deine@email.de" autocomplete="email">
             </div>
             <div class="form-group">
                 <label>Passwort (Min. 6 Zeichen)</label>
-                <input type="password" id="reg-password" placeholder="••••••••">
+                <input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password">
             </div>
             <div id="reg-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
             <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeRegisterModal()">Abbrechen</button>
-                <button class="btn-add" onclick="handleRegister()" id="btn-reg-submit">Erstellen</button>
+                <button type="button" class="btn-cancel" onclick="closeRegisterModal()">Abbrechen</button>
+                <button type="submit" class="btn-add" id="btn-reg-submit">Erstellen</button>
             </div>
-        </div>
+        </form>
     </div>
 
     <div id="forgot-password-modal" class="modal-overlay">
-        <div class="modal">
+        <form class="modal" onsubmit="event.preventDefault(); handlePasswordResetRequest();">
             <h3><i class="fa-solid fa-key" style="color: var(--accent-blue);"></i> Passwort zurücksetzen</h3>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Gib deine E-Mail ein. Wir senden dir einen Link, um ein neues Passwort festzulegen.</p>
             <div class="form-group">
                 <label>E-Mail Adresse</label>
-                <input type="email" id="forgot-email" placeholder="deine@email.de">
+                <input type="email" id="forgot-email" placeholder="deine@email.de" autocomplete="email">
             </div>
             <div id="forgot-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
             <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeForgotPasswordModal()">Abbrechen</button>
-                <button class="btn-add" onclick="handlePasswordResetRequest()" id="btn-forgot-submit">Link senden</button>
+                <button type="button" class="btn-cancel" onclick="closeForgotPasswordModal()">Abbrechen</button>
+                <button type="submit" class="btn-add" id="btn-forgot-submit">Link senden</button>
             </div>
-        </div>
+        </form>
     </div>
 
     <div id="recovery-modal" class="modal-overlay">
-        <div class="modal">
+        <form class="modal" onsubmit="event.preventDefault(); handleRecoveryUpdate();">
             <h3><i class="fa-solid fa-unlock-keyhole" style="color: var(--accent-green);"></i> Neues Passwort</h3>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Bitte vergib jetzt dein neues Passwort.</p>
             <div class="form-group">
                 <label>Neues Passwort</label>
-                <input type="password" id="recovery-password" placeholder="••••••••">
+                <input type="password" id="recovery-password" placeholder="••••••••" autocomplete="new-password">
             </div>
             <div id="recovery-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
             <div class="modal-footer">
-                <button class="btn-add" onclick="handleRecoveryUpdate()" id="btn-recovery-submit">Speichern & Einloggen</button>
+                <button type="submit" class="btn-add" id="btn-recovery-submit">Speichern & Einloggen</button>
             </div>
-        </div>
+        </form>
     </div>
 
     <div id="app-layout">
@@ -472,9 +464,17 @@
             <div id="page-watched" class="page">
                 <div class="page-header">
                     <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
-                    <h2><i class="fa-solid fa-square-check" style="color: var(--accent-green);"></i> Geschaut (Gesamt)</h2>
+                    <h2><i class="fa-solid fa-square-check" style="color: var(--accent-green);"></i> Geschaut</h2>
                     <button class="btn-add" onclick="openModal('watched')">+ Hinzufügen</button>
                 </div>
+                
+                <div class="watched-stats">
+                    <div class="stat-box">
+                        <span class="stat-number" id="total-watched-count">0</span>
+                        <span class="stat-label">Gesamt geschaut</span>
+                    </div>
+                </div>
+
                 <div class="sub-section-title"><i class="fa-solid fa-check-double" style="color: var(--accent-green);"></i> Komplett Abgeschlossen</div>
                 <div id="list-watched-completed" class="anime-list"></div>
                 <div class="sub-section-title"><i class="fa-solid fa-forward-step" style="color: var(--accent-purple);"></i> Fortsetzung folgt (Wartet auf Staffel)</div>
@@ -529,7 +529,7 @@
     </div>
 
     <div id="modal" class="modal-overlay">
-        <div class="modal">
+        <form class="modal" onsubmit="event.preventDefault(); saveAnime();">
             <h3 id="modal-title">Anime hinzufügen</h3>
             <input type="hidden" id="modal-page-context">
             <input type="hidden" id="anime-edit-id">
@@ -539,7 +539,7 @@
             
             <div class="form-group" style="position: relative;">
                 <label for="anime-title">Anime Name</label>
-                <input type="text" id="anime-title" placeholder="z.B. Demon Slayer..." oninput="searchAnime(this.value)" autocomplete="off">
+                <input type="text" id="anime-title" placeholder="z.B. Demon Slayer..." oninput="searchAnime(this.value)" autocomplete="off" name="search_anime">
                 <div id="search-results" class="search-res"></div>
             </div>
             
@@ -554,44 +554,44 @@
 
             <div id="meta-field-group" class="form-group" style="display: none;">
                 <label id="meta-label" for="anime-meta-input">Wann kommt das Release? (Optional)</label>
-                <input type="text" id="anime-meta-input" placeholder="z.B. Winter 2027 oder leer lassen">
+                <input type="text" id="anime-meta-input" placeholder="z.B. Winter 2027 oder leer lassen" autocomplete="off">
             </div>
             <div id="released-field-group" class="form-group checkbox-group" style="display: none;">
                 <input type="checkbox" id="anime-is-released">
                 <label for="anime-is-released">Das Release ist ab jetzt draußen!</label>
             </div>
             <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeModal()">Abbrechen</button>
-                <button class="btn-add" onclick="saveAnime()">Speichern</button>
+                <button type="button" class="btn-cancel" onclick="closeModal()">Abbrechen</button>
+                <button type="submit" class="btn-add">Speichern</button>
             </div>
-        </div>
+        </form>
     </div>
 
     <div id="settings-modal" class="modal-overlay">
         <div class="modal">
             <h3><i class="fa-solid fa-gear" style="color: var(--text-muted);"></i> Einstellungen</h3>
             
-            <div style="margin-top: 20px;">
+            <form style="margin-top: 20px;" onsubmit="event.preventDefault(); handleSettingsUsernameChange();">
                 <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Benutzername ändern</h4>
                 <div class="form-group">
-                    <input type="text" id="settings-new-username" placeholder="Neuer Benutzername">
+                    <input type="text" id="settings-new-username" placeholder="Neuer Benutzername" autocomplete="username">
                 </div>
-                <button class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsUsernameChange()" id="btn-settings-user">
+                <button type="submit" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" id="btn-settings-user">
                     Namen aktualisieren
                 </button>
-            </div>
+            </form>
 
             <hr class="settings-divider">
             
-            <div>
+            <form onsubmit="event.preventDefault(); handleSettingsPasswordChange();">
                 <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Passwort ändern</h4>
                 <div class="form-group">
-                    <input type="password" id="settings-new-password" placeholder="Neues Passwort (min. 6 Zeichen)">
+                    <input type="password" id="settings-new-password" placeholder="Neues Passwort (min. 6 Zeichen)" autocomplete="new-password">
                 </div>
-                <button class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()" id="btn-settings-pw">
+                <button type="submit" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" id="btn-settings-pw">
                     Passwort aktualisieren
                 </button>
-            </div>
+            </form>
 
             <hr class="settings-divider">
 
@@ -1300,8 +1300,7 @@
                 </div>`;
         }
 
-        // GRUPPIERUNGSFUNKTION MIT GLOBALEM ZÄHLER
-        function renderGrouped(animes, context, prefix, counterObj) {
+        function renderGrouped(animes, context, prefix, isNumbered) {
             if (!animes || animes.length === 0) return '<div class="empty-state">Keine Einträge.</div>';
 
             const groups = {};
@@ -1313,14 +1312,15 @@
             });
 
             let html = '';
+            let counter = 0;
             for (const base in groups) {
                 if (groups[base].length > 1) {
                     const groupHtml = groups[base].map(a => { 
-                        if(counterObj) counterObj.val++; 
-                        return createAnimeDOM(a, context, prefix, counterObj ? counterObj.val : null); 
+                        counter++; 
+                        return createAnimeDOM(a, context, prefix, isNumbered ? counter : null); 
                     }).join('');
                     
-                    const gridClass = (context === 'next-season' && !counterObj) ? 'grid-layout-next' : 'anime-list';
+                    const gridClass = (context === 'next-season' && !isNumbered) ? 'grid-layout-next' : 'anime-list';
                     
                     html += `<div style="grid-column: 1 / -1; background: rgba(138, 43, 226, 0.05); border-radius: 16px; padding: 18px; border: 1px solid rgba(138, 43, 226, 0.15); margin-bottom: 15px;">
                                 <h4 style="margin-bottom: 15px; color: var(--text-color); display: flex; align-items: center; gap: 10px; font-size: 1.05rem;">
@@ -1331,24 +1331,30 @@
                                 </div>
                              </div>`;
                 } else {
-                    if(counterObj) counterObj.val++;
-                    html += createAnimeDOM(groups[base][0], context, prefix, counterObj ? counterObj.val : null);
+                    counter++;
+                    html += createAnimeDOM(groups[base][0], context, prefix, isNumbered ? counter : null);
                 }
             }
             return html;
         }
 
         function renderAll() {
-            let watchCounterObj = { val: 0 };
+            let globalWatchCounter = 0;
             
-            document.getElementById('list-watched-completed').innerHTML = renderGrouped(animeData.watched, 'watched', 'p-w-c', watchCounterObj);
-            document.getElementById('list-watched-continuing').innerHTML = renderGrouped(animeData.nextSeason, 'next-season', 'p-w-cont', watchCounterObj);
+            // NEU: Berechne die absolute Gesamtzahl (Abgeschlossen + Fortsetzungen)
+            const totalWatched = animeData.watched.length + animeData.nextSeason.length;
+            const totalDisplay = document.getElementById('total-watched-count');
+            if(totalDisplay) totalDisplay.innerText = totalWatched;
+            
+            document.getElementById('list-watched-completed').innerHTML = animeData.watched.length ? animeData.watched.map(a => { globalWatchCounter++; return createAnimeDOM(a, 'watched', 'p-w-c', globalWatchCounter); }).join('') : '<div class="empty-state">Noch keine komplett geschauten Animes eingetragen.</div>';
+            
+            document.getElementById('list-watched-continuing').innerHTML = renderGrouped(animeData.nextSeason, 'next-season', 'p-w-cont', true);
             
             const waiting = animeData.nextSeason.filter(a => !a.isReleased);
             const released = animeData.nextSeason.filter(a => a.isReleased);
             
-            document.getElementById('list-next-waiting').innerHTML = renderGrouped(waiting, 'next-season', 'p-wait', null);
-            document.getElementById('list-next-released').innerHTML = renderGrouped(released, 'next-season', 'p-rel', null);
+            document.getElementById('list-next-waiting').innerHTML = renderGrouped(waiting, 'next-season', 'p-wait', false);
+            document.getElementById('list-next-released').innerHTML = renderGrouped(released, 'next-season', 'p-rel', false);
             
             document.getElementById('list-watchlist').innerHTML = animeData.watchlist.length ? animeData.watchlist.map(a => createAnimeDOM(a, 'watchlist', 'p-wl')).join('') : '<div class="empty-state">Deine Watchlist ist im Moment leer.</div>';
             document.getElementById('list-current').innerHTML = animeData.current.length ? animeData.current.map(a => createAnimeDOM(a, 'current', 'p-curr')).join('') : '<div class="empty-state">Du schaust gerade nichts aktiv.</div>';
