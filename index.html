@@ -98,7 +98,6 @@
         }
         .anime-item:hover { transform: translateX(4px); background: #1d213a; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         
-        /* UX State Animations */
         .anime-item.fade-out { opacity: 0; transform: scale(0.95) translateX(30px); pointer-events: none; }
         .anime-item.success-pop { animation: popOut 0.4s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }
         .anime-item.highlight-pulse { animation: highlightPulse 0.5s forwards; }
@@ -136,7 +135,6 @@
         .anime-info { display: flex; flex-direction: column; gap: 4px; }
         .anime-info h4 { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.3px; line-height: 1.2; }
         
-        /* --- CLEAN DESIGN FÜR META-DATEN --- */
         .anime-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .meta-dot { font-size: 0.6rem; opacity: 0.5; margin: 0 2px; }
         .format-badge { padding: 3px 8px; border-radius: 6px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -160,6 +158,29 @@
         .btn-action.start-watching:hover { color: var(--accent-neon); transform: scale(1.1); }
         
         .sub-section-title { margin: 35px 0 15px 0; font-size: 0.95rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+
+        /* --- TOAST NOTIFICATION (Das neue UI-Feedback) --- */
+        .toast {
+            position: fixed;
+            bottom: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, #a04ef6, var(--accent-purple));
+            color: white;
+            padding: 12px 26px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(138, 43, 226, 0.4);
+            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toast.show { bottom: 30px; }
+        .toast i { font-size: 1.1rem; }
 
         /* --- MODAL --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 18, 0.85); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 100; }
@@ -310,6 +331,10 @@
         </div>
     </div>
 
+    <div id="toast-notification" class="toast">
+        <i class="fa-solid fa-circle-check"></i> <span id="toast-message">Erfolgreich!</span>
+    </div>
+
     <script>
         const API_URL = "https://anyvdbweojvaztyiacwb.supabase.co/rest/v1/animes";
         const API_KEY = "sb_publishable_6A73CDl65UrCWWVbTz9z7A_nu3cIWME";
@@ -322,6 +347,19 @@
         };
 
         let animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
+        let toastTimeout;
+
+        // UI-Feedback Funktion
+        function showToast(message) {
+            const toast = document.getElementById('toast-notification');
+            document.getElementById('toast-message').innerText = message;
+            toast.classList.add('show');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
 
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -421,7 +459,6 @@
             document.getElementById('hp-alerts-grid').innerHTML = loading;
         }
 
-        // SILENT LOAD: Aktualisiert das UI ohne Flackern
         async function loadDataFromCloud(silent = false) {
             if(!silent) showLoadingStates();
             try {
@@ -494,16 +531,15 @@
                     await fetch(API_URL, { method: 'POST', headers: reqHeaders, body: JSON.stringify(payload) });
                 }
                 closeModal(); 
-                // Speichern ist jetzt ebenfalls SILENT - kein Flackern!
+                
+                // Silent = true für butterweiches Speichern + Toast Trigger
                 await loadDataFromCloud(true);
+                showToast("Erfolgreich gespeichert! ✨");
+                
             } catch(e) { alert(e.message); }
         }
 
-        // ==========================================
-        // OPTIMISTIC UI UPDATES (Weiche Animationen)
-        // ==========================================
-
-        function animateAndExecute(elementId, animationClass, fetchLogic) {
+        function animateAndExecute(elementId, animationClass, fetchLogic, successMessage) {
             const element = document.getElementById(elementId);
             if (element) element.classList.add(animationClass);
             
@@ -511,6 +547,7 @@
                 try {
                     await fetchLogic();
                     await loadDataFromCloud(true);
+                    if (successMessage) showToast(successMessage);
                 } catch(e) { alert("Aktion fehlgeschlagen."); await loadDataFromCloud(true); }
             }, 350);
         }
@@ -518,13 +555,13 @@
         function moveWatchlistToCurrent(id, elementId) {
             animateAndExecute(elementId, 'fade-out', () => {
                 return fetch(API_URL + "?id=eq." + id, { method: 'PATCH', headers: reqHeaders, body: JSON.stringify({ category: 'current', meta: 'Keine Info' }) });
-            });
+            }, "Verschoben zu 'Aktuell am Schauen' ⚡");
         }
 
         function deleteAnime(context, id, elementId) {
             animateAndExecute(elementId, 'fade-out', () => {
                 return fetch(API_URL + "?id=eq." + id, { method: 'DELETE', headers: reqHeaders });
-            });
+            }, "Anime gelöscht 🗑️");
         }
 
         function toggleRelease(id, currentStatus, elementId) {
@@ -556,13 +593,12 @@
                 leadingIconHTML = `<i class="${iconClass} anime-decor-icon color-${context === 'next-season' ? (anime.isReleased ? 'released' : 'waiting') : context}"></i>`;
             }
 
-            // --- DAS CLEAN DESIGN FÜR DIE META-TAGS ---
             if(context === 'next-season') {
                 const badgeLabel = anime.type === 'film' ? 'Film' : 'Staffel';
                 const badgeClass = anime.type === 'film' ? 'film-type' : 'staffel-type';
                 
                 let extraMeta = '';
-                // NEU: Nur anzeigen, wenn das Release NOCH NICHT draußen ist!
+                // NEU: Keine Platzverschwendung, wenn bereits draußen
                 if (!anime.isReleased) {
                     const isGeneric = anime.meta.includes('angekündigt');
                     const calendarIcon = isGeneric ? '' : '<i class="fa-regular fa-calendar"></i>';
