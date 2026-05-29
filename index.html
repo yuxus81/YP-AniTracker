@@ -33,7 +33,7 @@
         
         /* --- LAYOUT CONTROLLER --- */
         #auth-layout { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        #app-layout { display: none; padding-bottom: 60px; } /* App ist anfangs versteckt */
+        #app-layout { display: none; padding-bottom: 60px; } 
 
         /* --- AUTH SCREEN STYLING --- */
         .auth-container {
@@ -52,7 +52,7 @@
         .btn-login:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
         .btn-register { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); }
         .btn-register:hover { color: white; border-color: white; }
-        .auth-error { color: var(--accent-orange); font-size: 0.85rem; margin-top: 10px; min-height: 20px; }
+        .auth-error { color: var(--accent-orange); font-size: 0.85rem; margin-top: 10px; min-height: 20px; font-weight: 600; }
 
         /* --- APP HEADER --- */
         header {
@@ -346,11 +346,17 @@
         // ==========================================
         // SUPABASE SDK SETUP
         // ==========================================
+        
+        // Sicherheits-Check: Konnte die externe Bibliothek überhaupt geladen werden?
+        if (typeof supabase === 'undefined') {
+            alert("Ladefehler: Die Datenbank-Schnittstelle konnte nicht geladen werden. Bitte überprüfe deine Internetverbindung oder deaktiviere mögliche Adblocker.");
+        }
+
         const SUPABASE_URL = "https://anyvdbweojvaztyiacwb.supabase.co";
         const API_KEY = "sb_publishable_6A73CDl65UrCWWVbTz9z7A_nu3cIWME";
         
-        // Erstellt den offiziellen Client
-        const supabase = window.supabase.createClient(SUPABASE_URL, API_KEY);
+        // Umbenennung in "db" anstelle von "supabase", um JS-Namenskonflikte zu vermeiden
+        const db = supabase.createClient(SUPABASE_URL, API_KEY);
 
         let animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
         let toastTimeout;
@@ -359,19 +365,26 @@
         // AUTHENTIFIKATION (LOGIN / REGISTER)
         // ==========================================
         
-        // Hört darauf, ob jemand eingeloggt ist oder nicht
-        supabase.auth.onAuthStateChange((event, session) => {
+        // Prüft beim allerersten Öffnen der Seite, ob schon ein Login existiert
+        db.auth.getSession().then(({ data: { session } }) => {
+            toggleLayout(session);
+        });
+
+        // Reagiert live auf Login/Logout Aktionen
+        db.auth.onAuthStateChange((event, session) => {
+            toggleLayout(session);
+        });
+
+        function toggleLayout(session) {
             if (session) {
-                // Eingeloggt -> Zeige App, verstecke Login
                 document.getElementById('auth-layout').style.display = 'none';
                 document.getElementById('app-layout').style.display = 'block';
-                loadDataFromCloud(); // Lade NUR die Daten dieses Users!
+                loadDataFromCloud(); 
             } else {
-                // Ausgeloggt -> Zeige Login, verstecke App
                 document.getElementById('auth-layout').style.display = 'flex';
                 document.getElementById('app-layout').style.display = 'none';
             }
-        });
+        }
 
         async function handleLogin() {
             const email = document.getElementById('auth-email').value;
@@ -381,7 +394,7 @@
             if(!email || !password) return errorMsg.innerText = "Bitte E-Mail und Passwort eingeben.";
             
             errorMsg.innerText = "Lade...";
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            const { error } = await db.auth.signInWithPassword({ email, password });
             
             if (error) {
                 errorMsg.innerText = "Fehler: " + error.message;
@@ -399,7 +412,7 @@
             if(password.length < 6) return errorMsg.innerText = "Passwort muss mind. 6 Zeichen haben.";
             
             errorMsg.innerText = "Registriere...";
-            const { error } = await supabase.auth.signUp({ email, password });
+            const { error } = await db.auth.signUp({ email, password });
             
             if (error) {
                 errorMsg.innerText = "Fehler: " + error.message;
@@ -409,8 +422,8 @@
         }
 
         async function handleLogout() {
-            await supabase.auth.signOut();
-            animeData = { watched: [], nextSeason: [], watchlist: [], current: [] }; // Speicher leeren
+            await db.auth.signOut();
+            animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
         }
 
 
@@ -521,16 +534,14 @@
             document.getElementById('hp-alerts-grid').innerHTML = loading;
         }
 
-
         // ==========================================
-        // DATENBANK LOGIK (MIT DEM NEUEN SDK)
+        // DATENBANK LOGIK (SDK V2)
         // ==========================================
         
         async function loadDataFromCloud(silent = false) {
             if(!silent) showLoadingStates();
             try {
-                // Das SDK schickt automatisch deinen Auth-Token mit!
-                const { data, error } = await supabase.from('animes').select('*').order('created_at', { ascending: true });
+                const { data, error } = await db.from('animes').select('*').order('created_at', { ascending: true });
                 if (error) throw error;
                 
                 animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
@@ -593,10 +604,10 @@
 
             try {
                 if (editId && (context === 'next-season' || context === 'archive-pipeline')) {
-                    const { error } = await supabase.from('animes').update(payload).eq('id', editId);
+                    const { error } = await db.from('animes').update(payload).eq('id', editId);
                     if(error) throw error;
                 } else {
-                    const { error } = await supabase.from('animes').insert([payload]);
+                    const { error } = await db.from('animes').insert([payload]);
                     if(error) throw error;
                 }
                 closeModal(); 
@@ -620,14 +631,14 @@
 
         function moveWatchlistToCurrent(id, elementId) {
             animateAndExecute(elementId, 'fade-out', async () => {
-                const { error } = await supabase.from('animes').update({ category: 'current', meta: 'Keine Info' }).eq('id', id);
+                const { error } = await db.from('animes').update({ category: 'current', meta: 'Keine Info' }).eq('id', id);
                 if(error) throw error;
             }, "Verschoben zu 'Aktuell am Schauen' ⚡");
         }
 
         function deleteAnime(context, id, elementId) {
             animateAndExecute(elementId, 'fade-out', async () => {
-                const { error } = await supabase.from('animes').delete().eq('id', id);
+                const { error } = await db.from('animes').delete().eq('id', id);
                 if(error) throw error;
             }, "Anime gelöscht 🗑️");
         }
@@ -637,7 +648,7 @@
             if(element) element.classList.add('highlight-pulse');
 
             animateAndExecute(elementId, 'success-pop', async () => {
-                const { error } = await supabase.from('animes').update({ is_released: !currentStatus }).eq('id', id);
+                const { error } = await db.from('animes').update({ is_released: !currentStatus }).eq('id', id);
                 if(error) throw error;
             });
         }
@@ -684,14 +695,14 @@
                 
                 const releaseBtnClass = anime.isReleased ? 'btn-action release-check active' : 'btn-action release-check';
                 actionHTML = `
-                    <button class="btn-action edit" onclick="editAnime(${anime.id})" title="Bearbeiten"><i class="fa-solid fa-pen"></i></button>
-                    <button class="${releaseBtnClass}" onclick="toggleRelease(${anime.id}, ${anime.isReleased}, '${uniqueId}')" title="Status umschalten"><i class="fa-solid ${anime.isReleased ? 'fa-circle-check' : 'fa-circle'}"></i></button>`;
+                    <button class="btn-action edit" onclick="editAnime('${anime.id}')" title="Bearbeiten"><i class="fa-solid fa-pen"></i></button>
+                    <button class="${releaseBtnClass}" onclick="toggleRelease('${anime.id}', ${anime.isReleased}, '${uniqueId}')" title="Status umschalten"><i class="fa-solid ${anime.isReleased ? 'fa-circle-check' : 'fa-circle'}"></i></button>`;
             } 
             else if(context === 'watchlist') {
-                actionHTML = `<button class="btn-action start-watching" onclick="moveWatchlistToCurrent(${anime.id}, '${uniqueId}')" title="Jetzt schauen"><i class="fa-solid fa-circle-play"></i></button>`;
+                actionHTML = `<button class="btn-action start-watching" onclick="moveWatchlistToCurrent('${anime.id}', '${uniqueId}')" title="Jetzt schauen"><i class="fa-solid fa-circle-play"></i></button>`;
             }
             else if(context === 'current') {
-                actionHTML = `<button class="btn-action check" onclick="finishCurrentAnime(${anime.id}, '${anime.title.replace(/'/g, "\\'")}')" title="Serie abschließen"><i class="fa-solid fa-circle-check"></i></button>`;
+                actionHTML = `<button class="btn-action check" onclick="finishCurrentAnime('${anime.id}', '${anime.title.replace(/'/g, "\\'")}')" title="Serie abschließen"><i class="fa-solid fa-circle-check"></i></button>`;
             }
 
             return `
@@ -705,7 +716,7 @@
                     </div>
                     <div class="action-btns">
                         ${actionHTML}
-                        <button class="btn-action delete" onclick="deleteAnime('${context === 'next-season' ? 'next-season' : context}', ${anime.id}, '${uniqueId}')"><i class="fa-solid fa-trash"></i></button>
+                        <button class="btn-action delete" onclick="deleteAnime('${context === 'next-season' ? 'next-season' : context}', '${anime.id}', '${uniqueId}')"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>`;
         }
