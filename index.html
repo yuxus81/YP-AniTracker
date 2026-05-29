@@ -12,6 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         :root {
             --bg-color: #0d0f18;
@@ -27,18 +29,43 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; padding-bottom: 60px; overflow-x: hidden; }
+        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; overflow-x: hidden; }
         
-        header {
-            background: linear-gradient(135deg, #180f2b 0%, #0d0f18 100%); padding: 25px 20px;
-            text-align: center; border-bottom: 2px solid var(--accent-purple); box-shadow: 0 4px 25px rgba(138, 43, 226, 0.25);
-            position: relative;
-        }
+        /* --- LAYOUT CONTROLLER --- */
+        #auth-layout { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        #app-layout { display: none; padding-bottom: 60px; } /* App ist anfangs versteckt */
 
-        .logo { cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 14px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        /* --- AUTH SCREEN STYLING --- */
+        .auth-container {
+            background: var(--card-bg); border-radius: 20px; padding: 40px 30px; width: 100%; max-width: 400px;
+            border: 1px solid rgba(138, 43, 226, 0.25); box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center;
+        }
+        .auth-logo { margin-bottom: 30px; }
+        .auth-logo img { width: 80px; border-radius: 20px; box-shadow: 0 0 20px rgba(138, 43, 226, 0.5); }
+        .auth-logo h1 { font-size: 1.8rem; margin-top: 15px; background: linear-gradient(45deg, var(--accent-neon), #b55fe6, var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .auth-form-group { margin-bottom: 20px; text-align: left; }
+        .auth-form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
+        .auth-form-group input { width: 100%; padding: 14px; background: var(--bg-color); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: white; font-size: 1rem; outline: none; transition: 0.3s; }
+        .auth-form-group input:focus { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(138, 43, 226, 0.2); }
+        .btn-auth { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-bottom: 15px; }
+        .btn-login { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
+        .btn-register { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); }
+        .btn-register:hover { color: white; border-color: white; }
+        .auth-error { color: var(--accent-orange); font-size: 0.85rem; margin-top: 10px; min-height: 20px; }
+
+        /* --- APP HEADER --- */
+        header {
+            background: linear-gradient(135deg, #180f2b 0%, #0d0f18 100%); padding: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid var(--accent-purple); box-shadow: 0 4px 25px rgba(138, 43, 226, 0.25);
+        }
+        .logo { cursor: pointer; display: inline-flex; align-items: center; gap: 12px; transition: transform 0.3s; }
         .logo:hover { transform: scale(1.05) rotate(-1deg); }
-        .logo img { width: 45px; height: 45px; border-radius: 12px; box-shadow: 0 0 15px rgba(138, 43, 226, 0.5); object-fit: cover; }
-        .logo span { font-size: 2.2rem; font-weight: 700; letter-spacing: 1.5px; background: linear-gradient(45deg, var(--accent-neon), #b55fe6, var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo img { width: 40px; height: 40px; border-radius: 10px; box-shadow: 0 0 10px rgba(138, 43, 226, 0.5); object-fit: cover; }
+        .logo span { font-size: 1.6rem; font-weight: 700; background: linear-gradient(45deg, var(--accent-neon), #b55fe6, var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-logout { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: 0.3s; }
+        .btn-logout:hover { color: white; background: rgba(255,255,255,0.1); }
 
         .container { max-width: 950px; margin: 30px auto; padding: 0 20px; }
         .page { display: none; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
@@ -48,13 +75,11 @@
 
         /* --- HOMEPAGE NAVIGATION --- */
         .grid-navigation { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; margin-top: 10px; }
-        .nav-card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.03); border-radius: 16px; padding: 25px; text-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; }
-        
+        .nav-card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.03); border-radius: 16px; padding: 25px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
         .nav-card.card-watched:hover { border-color: var(--accent-green); box-shadow: 0 10px 20px rgba(46, 204, 113, 0.12); }
         .nav-card.card-current:hover { border-color: var(--accent-neon); box-shadow: 0 10px 20px rgba(0, 245, 212, 0.12); }
         .nav-card.card-next:hover { border-color: var(--accent-purple); box-shadow: 0 10px 20px rgba(138, 43, 226, 0.12); }
         .nav-card.card-watchlist:hover { border-color: var(--accent-blue); box-shadow: 0 10px 20px rgba(58, 134, 255, 0.12); }
-        
         .nav-card:hover { transform: translateY(-6px); }
         .nav-card i { font-size: 2.3rem; margin-bottom: 12px; transition: transform 0.3s ease; }
         .nav-card.card-watched i { color: var(--accent-green); }
@@ -70,13 +95,7 @@
         .homepage-section h2 { font-size: 1.25rem; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
 
         .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-        .anime-grid-item { 
-            background: var(--card-bg); border-radius: 14px; padding: 18px; 
-            display: flex; flex-direction: column; justify-content: space-between; 
-            border: 1px solid rgba(255, 0, 85, 0.15);
-            background: linear-gradient(145deg, rgba(255, 0, 85, 0.04) 0%, var(--card-bg) 100%);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
+        .anime-grid-item { background: var(--card-bg); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(255, 0, 85, 0.15); background: linear-gradient(145deg, rgba(255, 0, 85, 0.04) 0%, var(--card-bg) 100%); box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s; }
         .anime-grid-item:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(255, 0, 85, 0.15); border-color: var(--accent-orange); }
         .anime-grid-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
         .anime-grid-header h4 { font-size: 1.05rem; font-weight: 600; line-height: 1.4; flex: 1; }
@@ -90,27 +109,15 @@
 
         /* --- ANIME LISTEN ITEMS & ANIMATIONS --- */
         .anime-list { display: flex; flex-direction: column; gap: 14px; }
-        .anime-item { 
-            background: var(--card-bg); border-radius: 12px; padding: 16px 20px; 
-            display: flex; justify-content: space-between; align-items: center; position: relative; 
-            border: 1px solid rgba(255,255,255,0.01);
-            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
+        .anime-item { background: var(--card-bg); border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; position: relative; border: 1px solid rgba(255,255,255,0.01); transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .anime-item:hover { transform: translateX(4px); background: #1d213a; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         
         .anime-item.fade-out { opacity: 0; transform: scale(0.95) translateX(30px); pointer-events: none; }
         .anime-item.success-pop { animation: popOut 0.4s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }
         .anime-item.highlight-pulse { animation: highlightPulse 0.5s forwards; }
 
-        @keyframes popOut { 
-            0% { transform: scale(1); opacity: 1; } 
-            50% { transform: scale(1.05); opacity: 0.8; } 
-            100% { transform: scale(0.8); opacity: 0; } 
-        }
-        @keyframes highlightPulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0.4); }
-            100% { box-shadow: 0 0 0 15px rgba(255, 0, 85, 0); }
-        }
+        @keyframes popOut { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } 100% { transform: scale(0.8); opacity: 0; } }
+        @keyframes highlightPulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0.4); } 100% { box-shadow: 0 0 0 15px rgba(255, 0, 85, 0); } }
 
         .item-watched { border-left: 4px solid var(--accent-green); }
         .item-waiting { border-left: 4px solid var(--accent-purple); }
@@ -119,7 +126,6 @@
         .item-current { border-left: 4px solid var(--accent-neon); }
 
         .anime-info-wrapper { display: flex; align-items: center; gap: 15px; width: 75%; }
-        
         .anime-number { font-weight: 700; font-size: 1.1rem; min-width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .num-watched { color: var(--accent-green); background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); }
         .num-waiting { color: var(--accent-purple); background: rgba(138, 43, 226, 0.08); border: 1px solid rgba(138, 43, 226, 0.2); }
@@ -145,8 +151,6 @@
         .status-badge.alert { background: rgba(255, 0, 85, 0.15); color: #ff6699; border: 1px solid rgba(255, 0, 85, 0.4); animation: pulse 2s infinite; margin-top: auto; align-self: flex-start; }
         .status-badge.current-badge { background: rgba(0, 245, 212, 0.1); color: var(--accent-neon); }
 
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(255, 0, 85, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0); } }
-
         .action-btns { display: flex; gap: 14px; align-items: center; }
         .btn-action { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.15rem; transition: all 0.2s; }
         .btn-action.delete:hover { color: var(--danger); transform: scale(1.1); }
@@ -159,26 +163,8 @@
         
         .sub-section-title { margin: 35px 0 15px 0; font-size: 0.95rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
 
-        /* --- TOAST NOTIFICATION (Das neue UI-Feedback) --- */
-        .toast {
-            position: fixed;
-            bottom: -80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(45deg, #a04ef6, var(--accent-purple));
-            color: white;
-            padding: 12px 26px;
-            border-radius: 30px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            box-shadow: 0 10px 25px rgba(138, 43, 226, 0.4);
-            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 1000;
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        /* --- TOAST NOTIFICATION --- */
+        .toast { position: fixed; bottom: -80px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #a04ef6, var(--accent-purple)); color: white; padding: 12px 26px; border-radius: 30px; font-size: 0.95rem; font-weight: 600; box-shadow: 0 10px 25px rgba(138, 43, 226, 0.4); transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; pointer-events: none; display: flex; align-items: center; gap: 10px; }
         .toast.show { bottom: 30px; }
         .toast i { font-size: 1.1rem; }
 
@@ -190,13 +176,11 @@
         .modal h3 { margin-bottom: 20px; font-size: 1.35rem; font-weight: 700; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
-        
         .form-group input, .form-group select { width: 100%; padding: 12px 15px; background: var(--bg-color); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: white; font-size: 1rem; outline: none; transition: all 0.3s; }
         .form-group input:focus, .form-group select:focus { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(138, 43, 226, 0.2); }
         .modal-footer { display: flex; justify-content: flex-end; gap: 15px; margin-top: 25px; }
         .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; }
         .btn-cancel:hover { color: white; }
-
         .empty-state { text-align: center; color: var(--text-muted); padding: 25px; font-style: italic; font-size: 0.9rem; background: rgba(255,255,255,0.01); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.05); width: 100%; }
         .loading-notice { text-align: center; padding: 40px; color: var(--accent-neon); font-weight: 600; font-size: 1.2rem; }
 
@@ -205,7 +189,7 @@
             .nav-card { padding: 18px 10px; }
             .nav-card i { font-size: 1.8rem; margin-bottom: 8px; }
             .nav-card h3 { font-size: 0.85rem; }
-            .logo span { font-size: 1.8rem; }
+            .logo span { font-size: 1.4rem; }
             .homepage-section h2 { font-size: 1.1rem; }
             .anime-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .anime-grid-item { padding: 12px; border-radius: 10px; }
@@ -218,81 +202,104 @@
 </head>
 <body>
 
-    <header>
-        <div class="logo" onclick="showPage('home')">
-            <img src="icon-192.png" alt="YP Logo" onerror="this.style.display='none'">
-            <span>YP AniTracker</span>
+    <div id="auth-layout">
+        <div class="auth-container">
+            <div class="auth-logo">
+                <img src="icon-192.png" alt="Logo" onerror="this.style.display='none'">
+                <h1>YP AniTracker</h1>
+            </div>
+            <div class="auth-form-group">
+                <label>E-Mail Adresse</label>
+                <input type="email" id="auth-email" placeholder="deine@email.de">
+            </div>
+            <div class="auth-form-group">
+                <label>Passwort</label>
+                <input type="password" id="auth-password" placeholder="••••••••">
+            </div>
+            <button class="btn-auth btn-login" onclick="handleLogin()">Einloggen</button>
+            <button class="btn-auth btn-register" onclick="handleRegister()">Neuen Account erstellen</button>
+            <div id="auth-error-msg" class="auth-error"></div>
         </div>
-    </header>
+    </div>
 
-    <div class="container">
-        <div id="page-home" class="page active">
-            <div class="grid-navigation">
-                <div class="nav-card card-watched" onclick="showPage('watched')">
-                    <i class="fa-solid fa-square-check"></i><h3>Geschaut</h3>
+    <div id="app-layout">
+        <header>
+            <div class="logo" onclick="showPage('home')">
+                <img src="icon-192.png" alt="YP Logo" onerror="this.style.display='none'">
+                <span>YP AniTracker</span>
+            </div>
+            <button class="btn-logout" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        </header>
+
+        <div class="container">
+            <div id="page-home" class="page active">
+                <div class="grid-navigation">
+                    <div class="nav-card card-watched" onclick="showPage('watched')">
+                        <i class="fa-solid fa-square-check"></i><h3>Geschaut</h3>
+                    </div>
+                    <div class="nav-card card-current" onclick="showPage('current')">
+                        <i class="fa-solid fa-play"></i><h3>Aktuell am Schauen</h3>
+                    </div>
+                    <div class="nav-card card-next" onclick="showPage('next-season')">
+                        <i class="fa-solid fa-calendar-plus"></i><h3>Folgestaffeln</h3>
+                    </div>
+                    <div class="nav-card card-watchlist" onclick="showPage('watchlist')">
+                        <i class="fa-solid fa-hourglass-start"></i><h3>Watchlist</h3>
+                    </div>
                 </div>
-                <div class="nav-card card-current" onclick="showPage('current')">
-                    <i class="fa-solid fa-play"></i><h3>Aktuell am Schauen</h3>
+
+                <div class="homepage-section current-section">
+                    <h2><i class="fa-solid fa-bolt" style="color: var(--accent-neon);"></i> Aktuell am Schauen</h2>
+                    <div id="hp-current-list" class="anime-list"></div>
                 </div>
-                <div class="nav-card card-next" onclick="showPage('next-season')">
-                    <i class="fa-solid fa-calendar-plus"></i><h3>Folgestaffeln</h3>
+
+                <div class="homepage-section alert-section">
+                    <h2><i class="fa-solid fa-fire" style="color: var(--accent-orange);"></i> Frische Releases verfügbar!</h2>
+                    <div id="hp-alerts-grid" class="anime-grid"></div>
                 </div>
-                <div class="nav-card card-watchlist" onclick="showPage('watchlist')">
-                    <i class="fa-solid fa-hourglass-start"></i><h3>Watchlist</h3>
+            </div>
+
+            <div id="page-watched" class="page">
+                <div class="page-header">
+                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
+                    <h2><i class="fa-solid fa-square-check" style="color: var(--accent-green);"></i> Geschaut (Gesamt)</h2>
+                    <button class="btn-add" onclick="openModal('watched')">+ Hinzufügen</button>
                 </div>
+                <div class="sub-section-title"><i class="fa-solid fa-check-double" style="color: var(--accent-green);"></i> Komplett Abgeschlossen</div>
+                <div id="list-watched-completed" class="anime-list"></div>
+                <div class="sub-section-title"><i class="fa-solid fa-forward-step" style="color: var(--accent-purple);"></i> Fortsetzung folgt (Wartet auf Staffel)</div>
+                <div id="list-watched-continuing" class="anime-list"></div>
             </div>
 
-            <div class="homepage-section current-section">
-                <h2><i class="fa-solid fa-bolt" style="color: var(--accent-neon);"></i> Aktuell am Schauen</h2>
-                <div id="hp-current-list" class="anime-list"></div>
+            <div id="page-next-season" class="page">
+                <div class="page-header">
+                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
+                    <h2><i class="fa-solid fa-calendar-plus" style="color: var(--accent-purple);"></i> Folgestaffeln</h2>
+                    <button class="btn-add" onclick="openModal('next-season')">+ Hinzufügen</button>
+                </div>
+                <div class="sub-section-title"><i class="fa-solid fa-hourglass"></i> In Warteschleife (Zukünftige Staffeln)</div>
+                <div id="list-next-waiting" class="anime-list"></div>
+                <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> Neue Releases verfügbar!</div>
+                <div id="list-next-released" class="anime-list"></div>
             </div>
 
-            <div class="homepage-section alert-section">
-                <h2><i class="fa-solid fa-fire" style="color: var(--accent-orange);"></i> Frische Releases verfügbar!</h2>
-                <div id="hp-alerts-grid" class="anime-grid"></div>
+            <div id="page-watchlist" class="page">
+                <div class="page-header">
+                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
+                    <h2><i class="fa-solid fa-hourglass-start" style="color: var(--accent-blue);"></i> Watchlist</h2>
+                    <button class="btn-add" onclick="openModal('watchlist')">+ Hinzufügen</button>
+                </div>
+                <div id="list-watchlist" class="anime-list"></div>
             </div>
-        </div>
 
-        <div id="page-watched" class="page">
-            <div class="page-header">
-                <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
-                <h2><i class="fa-solid fa-square-check" style="color: var(--accent-green);"></i> Geschaut (Gesamt)</h2>
-                <button class="btn-add" onclick="openModal('watched')">+ Hinzufügen</button>
+            <div id="page-current" class="page">
+                <div class="page-header">
+                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
+                    <h2><i class="fa-solid fa-play" style="color: var(--accent-neon);"></i> Aktuell am Schauen</h2>
+                    <button class="btn-add" onclick="openModal('current')">+ Hinzufügen</button>
+                </div>
+                <div id="list-current" class="anime-list"></div>
             </div>
-            <div class="sub-section-title"><i class="fa-solid fa-check-double" style="color: var(--accent-green);"></i> Komplett Abgeschlossen</div>
-            <div id="list-watched-completed" class="anime-list"></div>
-            <div class="sub-section-title"><i class="fa-solid fa-forward-step" style="color: var(--accent-purple);"></i> Fortsetzung folgt (Wartet auf Staffel)</div>
-            <div id="list-watched-continuing" class="anime-list"></div>
-        </div>
-
-        <div id="page-next-season" class="page">
-            <div class="page-header">
-                <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
-                <h2><i class="fa-solid fa-calendar-plus" style="color: var(--accent-purple);"></i> Folgestaffeln</h2>
-                <button class="btn-add" onclick="openModal('next-season')">+ Hinzufügen</button>
-            </div>
-            <div class="sub-section-title"><i class="fa-solid fa-hourglass"></i> In Warteschleife (Zukünftige Staffeln)</div>
-            <div id="list-next-waiting" class="anime-list"></div>
-            <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> Neue Releases verfügbar!</div>
-            <div id="list-next-released" class="anime-list"></div>
-        </div>
-
-        <div id="page-watchlist" class="page">
-            <div class="page-header">
-                <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
-                <h2><i class="fa-solid fa-hourglass-start" style="color: var(--accent-blue);"></i> Watchlist</h2>
-                <button class="btn-add" onclick="openModal('watchlist')">+ Hinzufügen</button>
-            </div>
-            <div id="list-watchlist" class="anime-list"></div>
-        </div>
-
-        <div id="page-current" class="page">
-            <div class="page-header">
-                <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
-                <h2><i class="fa-solid fa-play" style="color: var(--accent-neon);"></i> Aktuell am Schauen</h2>
-                <button class="btn-add" onclick="openModal('current')">+ Hinzufügen</button>
-            </div>
-            <div id="list-current" class="anime-list"></div>
         </div>
     </div>
 
@@ -336,29 +343,86 @@
     </div>
 
     <script>
-        const API_URL = "https://anyvdbweojvaztyiacwb.supabase.co/rest/v1/animes";
+        // ==========================================
+        // SUPABASE SDK SETUP
+        // ==========================================
+        const SUPABASE_URL = "https://anyvdbweojvaztyiacwb.supabase.co";
         const API_KEY = "sb_publishable_6A73CDl65UrCWWVbTz9z7A_nu3cIWME";
         
-        const reqHeaders = {
-            'apikey': API_KEY,
-            'Authorization': 'Bearer ' + API_KEY,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=representation'
-        };
+        // Erstellt den offiziellen Client
+        const supabase = window.supabase.createClient(SUPABASE_URL, API_KEY);
 
         let animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
         let toastTimeout;
 
-        // UI-Feedback Funktion
+        // ==========================================
+        // AUTHENTIFIKATION (LOGIN / REGISTER)
+        // ==========================================
+        
+        // Hört darauf, ob jemand eingeloggt ist oder nicht
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                // Eingeloggt -> Zeige App, verstecke Login
+                document.getElementById('auth-layout').style.display = 'none';
+                document.getElementById('app-layout').style.display = 'block';
+                loadDataFromCloud(); // Lade NUR die Daten dieses Users!
+            } else {
+                // Ausgeloggt -> Zeige Login, verstecke App
+                document.getElementById('auth-layout').style.display = 'flex';
+                document.getElementById('app-layout').style.display = 'none';
+            }
+        });
+
+        async function handleLogin() {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const errorMsg = document.getElementById('auth-error-msg');
+            
+            if(!email || !password) return errorMsg.innerText = "Bitte E-Mail und Passwort eingeben.";
+            
+            errorMsg.innerText = "Lade...";
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            
+            if (error) {
+                errorMsg.innerText = "Fehler: " + error.message;
+            } else {
+                errorMsg.innerText = "";
+            }
+        }
+
+        async function handleRegister() {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const errorMsg = document.getElementById('auth-error-msg');
+            
+            if(!email || !password) return errorMsg.innerText = "Bitte E-Mail und Passwort eingeben.";
+            if(password.length < 6) return errorMsg.innerText = "Passwort muss mind. 6 Zeichen haben.";
+            
+            errorMsg.innerText = "Registriere...";
+            const { error } = await supabase.auth.signUp({ email, password });
+            
+            if (error) {
+                errorMsg.innerText = "Fehler: " + error.message;
+            } else {
+                errorMsg.innerText = "Account erstellt! Du bist jetzt eingeloggt.";
+            }
+        }
+
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            animeData = { watched: [], nextSeason: [], watchlist: [], current: [] }; // Speicher leeren
+        }
+
+
+        // ==========================================
+        // UI FEEDBACK & NAVIGATION
+        // ==========================================
         function showToast(message) {
             const toast = document.getElementById('toast-notification');
             document.getElementById('toast-message').innerText = message;
             toast.classList.add('show');
-            
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 3000);
         }
 
         function showPage(pageId) {
@@ -372,11 +436,9 @@
             const metaGroup = document.getElementById('meta-field-group');
             const releaseGroup = document.getElementById('released-field-group');
             if (type === 'abgeschlossen') {
-                metaGroup.style.display = 'none';
-                releaseGroup.style.display = 'none';
+                metaGroup.style.display = 'none'; releaseGroup.style.display = 'none';
             } else {
-                metaGroup.style.display = 'block';
-                releaseGroup.style.display = 'flex';
+                metaGroup.style.display = 'block'; releaseGroup.style.display = 'flex';
             }
         }
 
@@ -451,7 +513,7 @@
         function closeModal() { document.getElementById('modal').classList.remove('active'); }
 
         function showLoadingStates() {
-            const loading = '<div class="loading-notice"><i class="fa-solid fa-spinner fa-spin"></i> Verbinde mit Cloud...</div>';
+            const loading = '<div class="loading-notice"><i class="fa-solid fa-spinner fa-spin"></i> Lade deine Animes...</div>';
             ['list-watched-completed', 'list-watched-continuing', 'list-next-waiting', 'list-next-released', 'list-watchlist', 'list-current'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) el.innerHTML = loading;
@@ -459,13 +521,18 @@
             document.getElementById('hp-alerts-grid').innerHTML = loading;
         }
 
+
+        // ==========================================
+        // DATENBANK LOGIK (MIT DEM NEUEN SDK)
+        // ==========================================
+        
         async function loadDataFromCloud(silent = false) {
             if(!silent) showLoadingStates();
             try {
-                const response = await fetch(API_URL + "?select=*&order=created_at.asc", { method: 'GET', headers: reqHeaders });
-                if (!response.ok) throw new Error("HTTP Status " + response.status);
+                // Das SDK schickt automatisch deinen Auth-Token mit!
+                const { data, error } = await supabase.from('animes').select('*').order('created_at', { ascending: true });
+                if (error) throw error;
                 
-                const data = await response.json();
                 animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
 
                 data.forEach(item => {
@@ -526,26 +593,25 @@
 
             try {
                 if (editId && (context === 'next-season' || context === 'archive-pipeline')) {
-                    await fetch(API_URL + "?id=eq." + editId, { method: 'PATCH', headers: reqHeaders, body: JSON.stringify(payload) });
+                    const { error } = await supabase.from('animes').update(payload).eq('id', editId);
+                    if(error) throw error;
                 } else {
-                    await fetch(API_URL, { method: 'POST', headers: reqHeaders, body: JSON.stringify(payload) });
+                    const { error } = await supabase.from('animes').insert([payload]);
+                    if(error) throw error;
                 }
                 closeModal(); 
-                
-                // Silent = true für butterweiches Speichern + Toast Trigger
                 await loadDataFromCloud(true);
                 showToast("Erfolgreich gespeichert! ✨");
-                
-            } catch(e) { alert(e.message); }
+            } catch(e) { alert("Fehler: " + e.message); }
         }
 
-        function animateAndExecute(elementId, animationClass, fetchLogic, successMessage) {
+        function animateAndExecute(elementId, animationClass, dbLogic, successMessage) {
             const element = document.getElementById(elementId);
             if (element) element.classList.add(animationClass);
             
             setTimeout(async () => {
                 try {
-                    await fetchLogic();
+                    await dbLogic();
                     await loadDataFromCloud(true);
                     if (successMessage) showToast(successMessage);
                 } catch(e) { alert("Aktion fehlgeschlagen."); await loadDataFromCloud(true); }
@@ -553,14 +619,16 @@
         }
 
         function moveWatchlistToCurrent(id, elementId) {
-            animateAndExecute(elementId, 'fade-out', () => {
-                return fetch(API_URL + "?id=eq." + id, { method: 'PATCH', headers: reqHeaders, body: JSON.stringify({ category: 'current', meta: 'Keine Info' }) });
+            animateAndExecute(elementId, 'fade-out', async () => {
+                const { error } = await supabase.from('animes').update({ category: 'current', meta: 'Keine Info' }).eq('id', id);
+                if(error) throw error;
             }, "Verschoben zu 'Aktuell am Schauen' ⚡");
         }
 
         function deleteAnime(context, id, elementId) {
-            animateAndExecute(elementId, 'fade-out', () => {
-                return fetch(API_URL + "?id=eq." + id, { method: 'DELETE', headers: reqHeaders });
+            animateAndExecute(elementId, 'fade-out', async () => {
+                const { error } = await supabase.from('animes').delete().eq('id', id);
+                if(error) throw error;
             }, "Anime gelöscht 🗑️");
         }
 
@@ -568,11 +636,15 @@
             const element = document.getElementById(elementId);
             if(element) element.classList.add('highlight-pulse');
 
-            animateAndExecute(elementId, 'success-pop', () => {
-                return fetch(API_URL + "?id=eq." + id, { method: 'PATCH', headers: reqHeaders, body: JSON.stringify({ is_released: !currentStatus }) });
+            animateAndExecute(elementId, 'success-pop', async () => {
+                const { error } = await supabase.from('animes').update({ is_released: !currentStatus }).eq('id', id);
+                if(error) throw error;
             });
         }
 
+        // ==========================================
+        // RENDER LOGIK
+        // ==========================================
         function createAnimeDOM(anime, context, listName, index = null) {
             const uniqueId = `anime-${context}-${anime.id}-${listName}`;
             let metaHTML = '', actionHTML = '', leadingIconHTML = '';
@@ -598,7 +670,6 @@
                 const badgeClass = anime.type === 'film' ? 'film-type' : 'staffel-type';
                 
                 let extraMeta = '';
-                // NEU: Keine Platzverschwendung, wenn bereits draußen
                 if (!anime.isReleased) {
                     const isGeneric = anime.meta.includes('angekündigt');
                     const calendarIcon = isGeneric ? '' : '<i class="fa-regular fa-calendar"></i>';
@@ -657,8 +728,6 @@
             
             document.getElementById('hp-alerts-grid').innerHTML = released.length ? released.map(a => `<div class="anime-grid-item"><div class="anime-grid-header"><i class="${a.type === 'film' ? 'fa-solid fa-film' : 'fa-solid fa-circle-exclamation'} color-released"></i><h4>${a.title}</h4></div><span class="status-badge alert">${a.type === 'film' ? 'NEUER FILM!' : 'NEUE STAFFEL!'}</span></div>`).join('') : '<div class="empty-state" style="border:none;">Keine neuen Releases aktiv.</div>';
         }
-
-        document.addEventListener('DOMContentLoaded', loadDataFromCloud);
     </script>
 </body>
 </html>
