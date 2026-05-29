@@ -136,7 +136,7 @@
         .anime-info { display: flex; flex-direction: column; gap: 4px; }
         .anime-info h4 { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.3px; line-height: 1.2; }
         
-        /* --- NEUES CLEAN DESIGN FÜR META-DATEN --- */
+        /* --- CLEAN DESIGN FÜR META-DATEN --- */
         .anime-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .meta-dot { font-size: 0.6rem; opacity: 0.5; margin: 0 2px; }
         .format-badge { padding: 3px 8px; border-radius: 6px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -421,7 +421,7 @@
             document.getElementById('hp-alerts-grid').innerHTML = loading;
         }
 
-        // SILENT LOAD: Lädt die Daten ohne flackerndes UI
+        // SILENT LOAD: Aktualisiert das UI ohne Flackern
         async function loadDataFromCloud(silent = false) {
             if(!silent) showLoadingStates();
             try {
@@ -494,8 +494,8 @@
                     await fetch(API_URL, { method: 'POST', headers: reqHeaders, body: JSON.stringify(payload) });
                 }
                 closeModal(); 
-                // Das Speichern darf klassisch laden, da hier ein neues Item entsteht
-                await loadDataFromCloud();
+                // Speichern ist jetzt ebenfalls SILENT - kein Flackern!
+                await loadDataFromCloud(true);
             } catch(e) { alert(e.message); }
         }
 
@@ -507,11 +507,10 @@
             const element = document.getElementById(elementId);
             if (element) element.classList.add(animationClass);
             
-            // Warte kurz bis die Animation durch ist, dann rufe die Cloud leise an
             setTimeout(async () => {
                 try {
                     await fetchLogic();
-                    await loadDataFromCloud(true); // Silent = true! Kein Flackern!
+                    await loadDataFromCloud(true);
                 } catch(e) { alert("Aktion fehlgeschlagen."); await loadDataFromCloud(true); }
             }, 350);
         }
@@ -529,7 +528,6 @@
         }
 
         function toggleRelease(id, currentStatus, elementId) {
-            // Button für sofortiges Feedback rot markieren
             const element = document.getElementById(elementId);
             if(element) element.classList.add('highlight-pulse');
 
@@ -558,21 +556,23 @@
                 leadingIconHTML = `<i class="${iconClass} anime-decor-icon color-${context === 'next-season' ? (anime.isReleased ? 'released' : 'waiting') : context}"></i>`;
             }
 
-            // --- DAS NEUE DESIGN FÜR DIE META-TAGS ---
+            // --- DAS CLEAN DESIGN FÜR DIE META-TAGS ---
             if(context === 'next-season') {
                 const badgeLabel = anime.type === 'film' ? 'Film' : 'Staffel';
                 const badgeClass = anime.type === 'film' ? 'film-type' : 'staffel-type';
                 
-                // Nur ein Kalendericon zeigen, wenn auch wirklich ein Datum (und nicht nur "angekündigt") drin steht
-                const isGeneric = anime.meta.includes('angekündigt');
-                const calendarIcon = isGeneric ? '' : '<i class="fa-regular fa-calendar"></i>';
+                let extraMeta = '';
+                // NEU: Nur anzeigen, wenn das Release NOCH NICHT draußen ist!
+                if (!anime.isReleased) {
+                    const isGeneric = anime.meta.includes('angekündigt');
+                    const calendarIcon = isGeneric ? '' : '<i class="fa-regular fa-calendar"></i>';
+                    extraMeta = `<span class="meta-dot">•</span> ${calendarIcon} <span>${anime.meta}</span>`;
+                }
 
                 metaHTML = `
                     <div class="anime-meta">
                         <span class="format-badge ${badgeClass}">${badgeLabel}</span>
-                        <span class="meta-dot">•</span>
-                        ${calendarIcon}
-                        <span>${anime.meta}</span>
+                        ${extraMeta}
                     </div>`;
                 
                 const releaseBtnClass = anime.isReleased ? 'btn-action release-check active' : 'btn-action release-check';
@@ -605,7 +605,6 @@
 
         function renderAll() {
             let globalWatchCounter = 0;
-            // .JOIN('') HINZUGEFÜGT BEI ALLEN LISTEN!
             document.getElementById('list-watched-completed').innerHTML = animeData.watched.length ? animeData.watched.map(a => { globalWatchCounter++; return createAnimeDOM(a, 'watched', 'p-w-c', globalWatchCounter); }).join('') : '<div class="empty-state">Noch keine komplett geschauten Animes eingetragen.</div>';
             document.getElementById('list-watched-continuing').innerHTML = animeData.nextSeason.length ? animeData.nextSeason.map(a => { globalWatchCounter++; return createAnimeDOM(a, 'next-season', 'p-w-cont', globalWatchCounter); }).join('') : '<div class="empty-state">Keine offenen Serien mit neuen Releases.</div>';
             
