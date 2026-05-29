@@ -175,7 +175,7 @@
         .color-watched { color: var(--accent-green); }
         .color-waiting { color: var(--accent-purple); }
         .color-released { color: var(--accent-orange); }
-        .color-watchlist { color: var(--accent-blue); font-size: 1.8rem; margin-bottom: 5px; } /* Icon im Watchlist-Grid größer */
+        .color-watchlist { color: var(--accent-blue); font-size: 1.8rem; margin-bottom: 5px; }
         .color-current { color: var(--accent-neon); }
 
         /* --- API COVER STYLING --- */
@@ -220,7 +220,6 @@
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
         
-        /* FIX FÜR DIE CHECKBOX */
         .form-group input[type="text"], .form-group input[type="password"], .form-group input[type="email"], .form-group select { width: 100%; padding: 12px 15px; background: var(--bg-color); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: white; font-size: 1rem; outline: none; transition: all 0.3s; }
         .form-group input:focus, .form-group select:focus { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(138, 43, 226, 0.2); }
         
@@ -275,7 +274,6 @@
             .btn-back { align-self: flex-start; }
             .btn-add { width: 100%; text-align: center; padding: 12px; }
             
-            /* Responsive Grid Anpassung */
             .grid-layout-watchlist { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
             .grid-layout-next { grid-template-columns: 1fr; }
         }
@@ -470,7 +468,7 @@
             
             <div class="form-group" style="position: relative;">
                 <label for="anime-title">Anime Name</label>
-                <input type="text" id="anime-title" placeholder="z.B. Attack on Titan..." oninput="searchAnime(this.value)" autocomplete="off">
+                <input type="text" id="anime-title" placeholder="z.B. Demon Slayer..." oninput="searchAnime(this.value)" autocomplete="off">
                 <div id="search-results" class="search-res"></div>
             </div>
             
@@ -806,7 +804,7 @@
         }
 
         // ==========================================
-        // API SUCHE (JIKAN)
+        // API SUCHE (JIKAN) - MIT DEUTSCHER ÜBERSETZUNG
         // ==========================================
         let searchTimeout;
         async function searchAnime(query) {
@@ -819,7 +817,6 @@
                 return; 
             }
 
-            // Minimaler Delay um API-Limits nicht zu sprengen
             searchTimeout = setTimeout(async () => {
                 resultsDiv.style.display = 'block';
                 resultsDiv.innerHTML = '<div style="padding:15px; text-align:center; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Suche in Anime-Datenbank...</div>';
@@ -834,12 +831,22 @@
                     }
                     
                     resultsDiv.innerHTML = data.map(anime => {
+                        // NEU: Logik zur Extraktion des besten Namens (Deutsch -> Englisch -> Default)
+                        let bestTitle = anime.title;
+                        if (anime.titles && anime.titles.length > 0) {
+                            const ger = anime.titles.find(t => t.type === 'German');
+                            const eng = anime.titles.find(t => t.type === 'English');
+                            if (ger) bestTitle = ger.title;
+                            else if (eng) bestTitle = eng.title;
+                        }
+
                         const cover = anime.images?.jpg?.small_image_url || '';
-                        const titleEscaped = anime.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        const titleEscaped = bestTitle.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        
                         return `
                         <div class="search-item" onclick="selectAnime('${titleEscaped}', '${cover}', ${anime.mal_id})">
                             <img src="${cover}" class="search-cover" onerror="this.style.display='none'">
-                            <span style="font-weight: 600; font-size: 0.9rem;">${anime.title}</span>
+                            <span style="font-weight: 600; font-size: 0.9rem;">${bestTitle}</span>
                         </div>
                     `}).join('');
                 } catch(e) { 
@@ -946,7 +953,6 @@
         }
 
         function finishCurrentAnime(id, title) {
-            // Finde das aktuelle Anime, um Cover-Daten zu behalten
             const anime = animeData.current.find(a => a.id === id);
             
             document.getElementById('modal-page-context').value = 'archive-pipeline';
@@ -1013,7 +1019,7 @@
                         meta: cleanMeta, 
                         isReleased: item.is_released, 
                         type: formatType,
-                        coverUrl: item.cover_url, // NEU: Cover und ID laden
+                        coverUrl: item.cover_url,
                         malId: item.mal_id
                     };
                     
@@ -1059,7 +1065,7 @@
                 category: targetCategory, 
                 meta: finalMeta, 
                 is_released: isReleasedStatus,
-                cover_url: document.getElementById('anime-cover-url').value || null, // NEU: API Cover speichern
+                cover_url: document.getElementById('anime-cover-url').value || null,
                 mal_id: parseInt(document.getElementById('anime-mal-id').value) || null
             };
 
@@ -1163,7 +1169,6 @@
                 actionHTML = `<button class="btn-action check" onclick="finishCurrentAnime('${anime.id}', '${anime.title.replace(/'/g, "\\'")}')" title="Serie abschließen"><i class="fa-solid fa-circle-check"></i></button>`;
             }
 
-            // NEU: Cover Bild hinzufügen falls vorhanden
             let coverHTML = anime.coverUrl ? `<img src="${anime.coverUrl}" class="anime-cover" alt="Cover" onerror="this.style.display='none'">` : '';
 
             return `
@@ -1197,7 +1202,6 @@
             document.getElementById('list-watchlist').innerHTML = animeData.watchlist.length ? animeData.watchlist.map(a => createAnimeDOM(a, 'watchlist', 'p-wl')).join('') : '<div class="empty-state">Deine Watchlist ist im Moment leer.</div>';
             document.getElementById('list-current').innerHTML = animeData.current.length ? animeData.current.map(a => createAnimeDOM(a, 'current', 'p-curr')).join('') : '<div class="empty-state">Du schaust gerade nichts aktiv.</div>';
             
-            // Homepage Listen auch mit Cover Update
             document.getElementById('hp-current-list').innerHTML = animeData.current.length ? animeData.current.map(a => `
                 <div class="anime-item item-current">
                     <div class="anime-info-wrapper">
