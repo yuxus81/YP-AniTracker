@@ -166,20 +166,24 @@
         .item-current { border-left: 4px solid var(--accent-neon); }
 
         .anime-info-wrapper { display: flex; align-items: center; gap: 15px; width: 75%; }
-        .anime-number { font-weight: 700; font-size: 1.1rem; min-width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .anime-number { font-weight: 700; font-size: 1.1rem; min-width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .num-watched { color: var(--accent-green); background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); }
         .num-waiting { color: var(--accent-purple); background: rgba(138, 43, 226, 0.08); border: 1px solid rgba(138, 43, 226, 0.2); }
         .num-released { color: #ff3377; background: rgba(255, 0, 85, 0.1); border: 1px solid rgba(255, 0, 85, 0.3); font-weight: 800; }
 
-        .anime-decor-icon { font-size: 1.1rem; opacity: 0.8; }
+        .anime-decor-icon { font-size: 1.1rem; opacity: 0.8; flex-shrink: 0; }
         .color-watched { color: var(--accent-green); }
         .color-waiting { color: var(--accent-purple); }
         .color-released { color: var(--accent-orange); }
         .color-watchlist { color: var(--accent-blue); font-size: 1.8rem; margin-bottom: 5px; } /* Icon im Watchlist-Grid größer */
         .color-current { color: var(--accent-neon); }
 
-        .anime-info { display: flex; flex-direction: column; gap: 4px; }
-        .anime-info h4 { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.3px; line-height: 1.2; }
+        /* --- API COVER STYLING --- */
+        .anime-cover { width: 45px; height: 65px; object-fit: cover; border-radius: 6px; margin-right: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); flex-shrink: 0; }
+        .grid-layout-watchlist .anime-cover { width: 80px; height: 115px; margin-right: 0; margin-bottom: 5px; }
+        
+        .anime-info { display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
+        .anime-info h4 { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.3px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
         .anime-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .meta-dot { font-size: 0.6rem; opacity: 0.5; margin: 0 2px; }
@@ -191,7 +195,7 @@
         .status-badge.alert { background: rgba(255, 0, 85, 0.15); color: #ff6699; border: 1px solid rgba(255, 0, 85, 0.4); animation: pulse 2s infinite; margin-top: auto; align-self: flex-start; }
         .status-badge.current-badge { background: rgba(0, 245, 212, 0.1); color: var(--accent-neon); }
 
-        .action-btns { display: flex; gap: 14px; align-items: center; }
+        .action-btns { display: flex; gap: 14px; align-items: center; flex-shrink: 0; }
         .btn-action { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.15rem; transition: all 0.2s; }
         .btn-action.delete:hover { color: var(--danger); transform: scale(1.1); }
         .btn-action.check:hover { color: var(--accent-green); transform: scale(1.1); }
@@ -208,15 +212,15 @@
         .toast.show { bottom: 30px; }
 
         /* --- MODALS --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 18, 0.85); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 100; }
-        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 18, 0.85); backdrop-filter: blur(6px); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-overlay.active { display: flex; }
         .modal { background: var(--card-bg); border-radius: 20px; padding: 30px; width: 90%; max-width: 450px; border: 1px solid rgba(138, 43, 226, 0.25); transform: scale(0.9) translateY(20px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 15px 35px rgba(0,0,0,0.4); max-height: 90vh; overflow-y: auto; }
         .modal-overlay.active .modal { transform: scale(1) translateY(0); }
         .modal h3 { margin-bottom: 20px; font-size: 1.35rem; font-weight: 700; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
         
-        /* FIX FÜR DIE CHECKBOX (Nicht 100% Breite!) */
+        /* FIX FÜR DIE CHECKBOX */
         .form-group input[type="text"], .form-group input[type="password"], .form-group input[type="email"], .form-group select { width: 100%; padding: 12px 15px; background: var(--bg-color); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: white; font-size: 1rem; outline: none; transition: all 0.3s; }
         .form-group input:focus, .form-group select:focus { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(138, 43, 226, 0.2); }
         
@@ -224,6 +228,12 @@
         .checkbox-group input[type="checkbox"] { width: auto; accent-color: var(--accent-purple); transform: scale(1.2); flex-shrink: 0; margin: 0; cursor: pointer; }
         .checkbox-group label { margin-bottom: 0; display: inline-block; width: auto; flex: 1; line-height: 1.4; }
         
+        /* --- SUCH-DROPDOWN --- */
+        .search-res { position: absolute; top: 100%; left: 0; width: 100%; background: #0d0f18; border: 1px solid var(--accent-purple); border-radius: 0 0 10px 10px; z-index: 2000; max-height: 250px; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: none; }
+        .search-item { padding: 10px 15px; display: flex; align-items: center; gap: 12px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s; }
+        .search-item:hover { background: rgba(138, 43, 226, 0.2); }
+        .search-cover { width: 35px; height: 50px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+
         .modal-footer { display: flex; justify-content: flex-end; gap: 15px; margin-top: 25px; }
         .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; padding: 10px; }
         .btn-cancel:hover { color: white; }
@@ -249,7 +259,7 @@
             .header-actions { flex-direction: column; align-items: center; gap: 4px; }
             .header-buttons { gap: 10px; }
             
-            .header-greeting { display: block !important; position: static; font-size: 0.75rem; color: var(--text-muted); opacity: 0.8; text-align: center; white-space: nowrap; }
+            .header-greeting { display: block !important; position: static; font-size: 0.75rem; color: var(--text-muted); opacity: 0.8; text-align: center; white-space: nowrap; margin-top: 5px; }
             
             .btn-icon-header { width: 35px; height: 35px; font-size: 1rem; }
             
@@ -267,7 +277,7 @@
             
             /* Responsive Grid Anpassung */
             .grid-layout-watchlist { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-            .grid-layout-next { grid-template-columns: 1fr; } /* Auf dem Handy wieder untereinander, damit es nicht gequetscht wird */
+            .grid-layout-next { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -424,8 +434,10 @@
                     <button class="btn-add" onclick="openModal('next-season')">+ Hinzufügen</button>
                 </div>
                 <div class="sub-section-title"><i class="fa-solid fa-hourglass"></i> In Warteschleife (Zukünftige Staffeln)</div>
-                <div id="list-next-waiting" class="grid-layout-next"></div> <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> Neue Releases verfügbar!</div>
-                <div id="list-next-released" class="grid-layout-next"></div> </div>
+                <div id="list-next-waiting" class="grid-layout-next"></div> 
+                <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> Neue Releases verfügbar!</div>
+                <div id="list-next-released" class="grid-layout-next"></div> 
+            </div>
 
             <div id="page-watchlist" class="page">
                 <div class="page-header">
@@ -433,7 +445,8 @@
                     <h2><i class="fa-solid fa-hourglass-start" style="color: var(--accent-blue);"></i> Watchlist</h2>
                     <button class="btn-add" onclick="openModal('watchlist')">+ Hinzufügen</button>
                 </div>
-                <div id="list-watchlist" class="grid-layout-watchlist"></div> </div>
+                <div id="list-watchlist" class="grid-layout-watchlist"></div> 
+            </div>
 
             <div id="page-current" class="page">
                 <div class="page-header">
@@ -452,9 +465,13 @@
             <input type="hidden" id="modal-page-context">
             <input type="hidden" id="anime-edit-id">
             
-            <div class="form-group">
+            <input type="hidden" id="anime-cover-url">
+            <input type="hidden" id="anime-mal-id">
+            
+            <div class="form-group" style="position: relative;">
                 <label for="anime-title">Anime Name</label>
-                <input type="text" id="anime-title" placeholder="z.B. Demon Slayer...">
+                <input type="text" id="anime-title" placeholder="z.B. Attack on Titan..." oninput="searchAnime(this.value)" autocomplete="off">
+                <div id="search-results" class="search-res"></div>
             </div>
             
             <div id="type-field-group" class="form-group" style="display: none;">
@@ -789,6 +806,59 @@
         }
 
         // ==========================================
+        // API SUCHE (JIKAN)
+        // ==========================================
+        let searchTimeout;
+        async function searchAnime(query) {
+            clearTimeout(searchTimeout);
+            const resultsDiv = document.getElementById('search-results');
+            
+            if(!query || query.trim().length < 3) { 
+                resultsDiv.innerHTML = ''; 
+                resultsDiv.style.display = 'none';
+                return; 
+            }
+
+            // Minimaler Delay um API-Limits nicht zu sprengen
+            searchTimeout = setTimeout(async () => {
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = '<div style="padding:15px; text-align:center; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Suche in Anime-Datenbank...</div>';
+                
+                try {
+                    const res = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=5`);
+                    const { data } = await res.json();
+                    
+                    if(!data || data.length === 0) {
+                        resultsDiv.innerHTML = '<div style="padding:15px; text-align:center; color:var(--text-muted);">Kein Anime gefunden.</div>';
+                        return;
+                    }
+                    
+                    resultsDiv.innerHTML = data.map(anime => {
+                        const cover = anime.images?.jpg?.small_image_url || '';
+                        const titleEscaped = anime.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        return `
+                        <div class="search-item" onclick="selectAnime('${titleEscaped}', '${cover}', ${anime.mal_id})">
+                            <img src="${cover}" class="search-cover" onerror="this.style.display='none'">
+                            <span style="font-weight: 600; font-size: 0.9rem;">${anime.title}</span>
+                        </div>
+                    `}).join('');
+                } catch(e) { 
+                    resultsDiv.innerHTML = '<div style="padding:15px; text-align:center; color:var(--danger);">Fehler bei der Suche.</div>';
+                }
+            }, 600);
+        }
+
+        function selectAnime(title, coverUrl, malId) {
+            document.getElementById('anime-title').value = title;
+            document.getElementById('anime-cover-url').value = coverUrl;
+            document.getElementById('anime-mal-id').value = malId;
+            
+            const resultsDiv = document.getElementById('search-results');
+            resultsDiv.innerHTML = '';
+            resultsDiv.style.display = 'none';
+        }
+
+        // ==========================================
         // APP LOGIK
         // ==========================================
         function showToast(message) {
@@ -823,6 +893,12 @@
             document.getElementById('anime-meta-input').value = '';
             document.getElementById('anime-is-released').checked = false;
             
+            // API Felder leeren
+            document.getElementById('anime-cover-url').value = '';
+            document.getElementById('anime-mal-id').value = '';
+            document.getElementById('search-results').innerHTML = '';
+            document.getElementById('search-results').style.display = 'none';
+            
             const typeSelect = document.getElementById('anime-type');
             typeSelect.innerHTML = `<option value="staffel">Neue Staffel</option><option value="film">Film</option>`;
             typeSelect.value = 'staffel';
@@ -849,6 +925,12 @@
             document.getElementById('anime-edit-id').value = anime.id;
             document.getElementById('anime-title').value = anime.title;
             
+            // API Felder füllen
+            document.getElementById('anime-cover-url').value = anime.coverUrl || '';
+            document.getElementById('anime-mal-id').value = anime.malId || '';
+            document.getElementById('search-results').innerHTML = '';
+            document.getElementById('search-results').style.display = 'none';
+            
             const typeSelect = document.getElementById('anime-type');
             typeSelect.innerHTML = `<option value="staffel">Neue Staffel</option><option value="film">Film</option>`;
             typeSelect.value = anime.type;
@@ -864,11 +946,19 @@
         }
 
         function finishCurrentAnime(id, title) {
+            // Finde das aktuelle Anime, um Cover-Daten zu behalten
+            const anime = animeData.current.find(a => a.id === id);
+            
             document.getElementById('modal-page-context').value = 'archive-pipeline';
             document.getElementById('anime-edit-id').value = id;
             document.getElementById('anime-title').value = title;
             document.getElementById('anime-meta-input').value = '';
             document.getElementById('anime-is-released').checked = false;
+            
+            document.getElementById('anime-cover-url').value = anime ? (anime.coverUrl || '') : '';
+            document.getElementById('anime-mal-id').value = anime ? (anime.malId || '') : '';
+            document.getElementById('search-results').innerHTML = '';
+            document.getElementById('search-results').style.display = 'none';
 
             const typeSelect = document.getElementById('anime-type');
             typeSelect.innerHTML = `
@@ -917,7 +1007,16 @@
                         if(cleanMeta === 'unangekündigt' || cleanMeta === '') cleanMeta = 'Fortsetzung angekündigt';
                     }
 
-                    const formatted = { id: item.id, title: item.title, meta: cleanMeta, isReleased: item.is_released, type: formatType };
+                    const formatted = { 
+                        id: item.id, 
+                        title: item.title, 
+                        meta: cleanMeta, 
+                        isReleased: item.is_released, 
+                        type: formatType,
+                        coverUrl: item.cover_url, // NEU: Cover und ID laden
+                        malId: item.mal_id
+                    };
+                    
                     let categoryKey = item.category === 'next-season' ? 'nextSeason' : item.category;
                     if(animeData[categoryKey]) animeData[categoryKey].push(formatted);
                 });
@@ -956,7 +1055,12 @@
             }
 
             const payload = {
-                title: title, category: targetCategory, meta: finalMeta, is_released: isReleasedStatus
+                title: title, 
+                category: targetCategory, 
+                meta: finalMeta, 
+                is_released: isReleasedStatus,
+                cover_url: document.getElementById('anime-cover-url').value || null, // NEU: API Cover speichern
+                mal_id: parseInt(document.getElementById('anime-mal-id').value) || null
             };
 
             try {
@@ -1059,10 +1163,14 @@
                 actionHTML = `<button class="btn-action check" onclick="finishCurrentAnime('${anime.id}', '${anime.title.replace(/'/g, "\\'")}')" title="Serie abschließen"><i class="fa-solid fa-circle-check"></i></button>`;
             }
 
+            // NEU: Cover Bild hinzufügen falls vorhanden
+            let coverHTML = anime.coverUrl ? `<img src="${anime.coverUrl}" class="anime-cover" alt="Cover" onerror="this.style.display='none'">` : '';
+
             return `
                 <div class="anime-item ${borderClass}" id="${uniqueId}">
                     <div class="anime-info-wrapper">
                         ${leadingIconHTML}
+                        ${coverHTML}
                         <div class="anime-info">
                             <h4 style="margin-bottom: ${context === 'next-season' ? '2px' : '0'};">${anime.title}</h4>
                             ${metaHTML}
@@ -1089,9 +1197,26 @@
             document.getElementById('list-watchlist').innerHTML = animeData.watchlist.length ? animeData.watchlist.map(a => createAnimeDOM(a, 'watchlist', 'p-wl')).join('') : '<div class="empty-state">Deine Watchlist ist im Moment leer.</div>';
             document.getElementById('list-current').innerHTML = animeData.current.length ? animeData.current.map(a => createAnimeDOM(a, 'current', 'p-curr')).join('') : '<div class="empty-state">Du schaust gerade nichts aktiv.</div>';
             
-            document.getElementById('hp-current-list').innerHTML = animeData.current.length ? animeData.current.map(a => `<div class="anime-item item-current"><div class="anime-info-wrapper"><i class="fa-solid fa-circle-play anime-decor-icon color-current"></i><div class="anime-info"><h4>${a.title}</h4></div></div><span class="status-badge current-badge">Folge läuft...</span></div>`).join('') : '<div class="empty-state" style="border:none;">Nichts aktiv am Schauen.</div>';
+            // Homepage Listen auch mit Cover Update
+            document.getElementById('hp-current-list').innerHTML = animeData.current.length ? animeData.current.map(a => `
+                <div class="anime-item item-current">
+                    <div class="anime-info-wrapper">
+                        <i class="fa-solid fa-circle-play anime-decor-icon color-current"></i>
+                        ${a.coverUrl ? `<img src="${a.coverUrl}" class="anime-cover" onerror="this.style.display='none'">` : ''}
+                        <div class="anime-info"><h4>${a.title}</h4></div>
+                    </div>
+                    <span class="status-badge current-badge">Folge läuft...</span>
+                </div>`).join('') : '<div class="empty-state" style="border:none;">Nichts aktiv am Schauen.</div>';
             
-            document.getElementById('hp-alerts-grid').innerHTML = released.length ? released.map(a => `<div class="anime-grid-item"><div class="anime-grid-header"><i class="${a.type === 'film' ? 'fa-solid fa-film' : 'fa-solid fa-circle-exclamation'} color-released"></i><h4>${a.title}</h4></div><span class="status-badge alert">${a.type === 'film' ? 'NEUER FILM!' : 'NEUE STAFFEL!'}</span></div>`).join('') : '<div class="empty-state" style="border:none;">Keine neuen Releases aktiv.</div>';
+            document.getElementById('hp-alerts-grid').innerHTML = released.length ? released.map(a => `
+                <div class="anime-grid-item">
+                    <div class="anime-grid-header">
+                        <i class="${a.type === 'film' ? 'fa-solid fa-film' : 'fa-solid fa-circle-exclamation'} color-released" style="font-size: 1.5rem;"></i>
+                        ${a.coverUrl ? `<img src="${a.coverUrl}" class="anime-cover" onerror="this.style.display='none'">` : ''}
+                        <h4>${a.title}</h4>
+                    </div>
+                    <span class="status-badge alert">${a.type === 'film' ? 'NEUER FILM!' : 'NEUE STAFFEL!'}</span>
+                </div>`).join('') : '<div class="empty-state" style="border:none;">Keine neuen Releases aktiv.</div>';
         }
     </script>
 </body>
