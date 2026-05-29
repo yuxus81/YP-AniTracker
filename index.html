@@ -114,15 +114,13 @@
         .anime-grid-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
         .anime-grid-header h4 { font-size: 1.05rem; font-weight: 600; line-height: 1.4; flex: 1; }
 
-        /* --- PAGES & BUTTONS --- */
+        /* --- PAGES --- */
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: rgba(22, 25, 43, 0.4); padding: 15px 20px; border-radius: 12px; }
         .page-header h2 { margin: 0; display: flex; align-items: center; gap: 10px; font-size: 1.4rem; }
         .btn-back { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; transition: color 0.3s; }
         .btn-back:hover { color: white; }
         .btn-add { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); transition: all 0.2s ease; }
         .btn-add:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
-        
-        .header-action-group { display: flex; gap: 10px; }
 
         /* --- ANIME LISTEN ITEMS (Standard Listen-Layout) --- */
         .anime-list { display: flex; flex-direction: column; gap: 14px; }
@@ -134,14 +132,21 @@
         }
         .anime-item:hover { transform: translateX(4px); background: #1d213a; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         
-        /* --- GRID LAYOUTS --- */
+        /* --- NEU: GRID LAYOUT FÜR WATCHLIST --- */
         .grid-layout-watchlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
-        .grid-layout-watchlist .anime-item { flex-direction: column; text-align: center; padding: 20px 15px; align-items: center; border-left: none; border-top: 4px solid var(--accent-blue); justify-content: flex-start; }
+        .grid-layout-watchlist .anime-item { 
+            flex-direction: column; text-align: center; padding: 20px 15px; align-items: center; 
+            border-left: none; border-top: 4px solid var(--accent-blue); justify-content: flex-start;
+        }
         .grid-layout-watchlist .anime-item:hover { transform: translateY(-4px); }
         .grid-layout-watchlist .anime-info-wrapper { flex-direction: column; width: 100%; gap: 10px; justify-content: center; }
         .grid-layout-watchlist .anime-title-row { justify-content: center; }
-        .grid-layout-watchlist .action-btns { width: 100%; justify-content: center; gap: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; margin-top: auto; }
+        .grid-layout-watchlist .action-btns { 
+            width: 100%; justify-content: center; gap: 20px; border-top: 1px solid rgba(255,255,255,0.05); 
+            padding-top: 15px; margin-top: auto; 
+        }
 
+        /* --- NEU: GRID LAYOUT FÜR FOLGESTAFFELN --- */
         .grid-layout-next { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px; }
         .grid-layout-next .anime-item { align-items: center; height: 100%; }
         .grid-layout-next .anime-item:hover { transform: translateY(-4px); }
@@ -207,7 +212,7 @@
         .toast.show { bottom: 30px; }
 
         /* --- MODALS --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 18, 0.85); backdrop-filter: blur(6px); display: none; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 100; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 18, 0.85); backdrop-filter: blur(6px); display: none; justify-content: center; align-items: center; z-index: 1000; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; display: flex; }
         .modal { background: var(--card-bg); border-radius: 20px; padding: 30px; width: 90%; max-width: 450px; border: 1px solid rgba(138, 43, 226, 0.25); transform: scale(0.9) translateY(20px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 15px 35px rgba(0,0,0,0.4); max-height: 90vh; overflow-y: auto; }
         .modal-overlay.active .modal { transform: scale(1) translateY(0); }
@@ -252,10 +257,8 @@
             
             .header-actions { flex-direction: column; align-items: center; gap: 4px; }
             .header-buttons { gap: 10px; }
-            .header-action-group { flex-direction: column; width: 100%; gap: 10px; }
-            .header-action-group button { width: 100%; }
             
-            .header-greeting { display: block !important; position: static; font-size: 0.75rem; color: var(--text-muted); opacity: 0.8; text-align: center; white-space: nowrap; }
+            .header-greeting { display: block !important; position: static; font-size: 0.75rem; color: var(--text-muted); opacity: 0.8; text-align: center; white-space: nowrap; margin-top: 5px; }
             
             .btn-icon-header { width: 35px; height: 35px; font-size: 1rem; }
             
@@ -273,7 +276,7 @@
             
             /* Responsive Grid Anpassung */
             .grid-layout-watchlist { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-            .grid-layout-next { grid-template-columns: 1fr; } 
+            .grid-layout-next { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -427,10 +430,7 @@
                 <div class="page-header">
                     <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
                     <h2><i class="fa-solid fa-calendar-plus" style="color: var(--accent-purple);"></i> Folgestaffeln</h2>
-                    <div class="header-action-group">
-                        <button class="btn-add" style="background: linear-gradient(45deg, var(--accent-neon), var(--accent-blue));" onclick="startRadarScan()"><i class="fa-solid fa-satellite-dish"></i> Radar</button>
-                        <button class="btn-add" onclick="openModal('next-season')">+ Hinzufügen</button>
-                    </div>
+                    <button class="btn-add" onclick="openModal('next-season')">+ Hinzufügen</button>
                 </div>
                 <div class="sub-section-title"><i class="fa-solid fa-hourglass"></i> In Warteschleife (Zukünftige Staffeln)</div>
                 <div id="list-next-waiting" class="grid-layout-next"></div> 
@@ -493,17 +493,6 @@
                 <button class="btn-cancel" onclick="closeModal()">Abbrechen</button>
                 <button class="btn-add" onclick="saveAnime()">Speichern</button>
             </div>
-        </div>
-    </div>
-
-    <div id="radar-modal" class="modal-overlay">
-        <div class="modal" style="text-align: center;">
-            <h3><i class="fa-solid fa-satellite-dish" style="color: var(--accent-neon); animation: pulse 2s infinite;"></i> Radar-Scan läuft...</h3>
-            <p id="radar-status" style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Initialisiere Scanner...</p>
-            <div style="width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; overflow: hidden;">
-                <div id="radar-progress" style="height: 100%; width: 0%; background: var(--accent-neon); transition: width 0.3s;"></div>
-            </div>
-            <button class="btn-cancel" style="margin-top: 20px;" onclick="cancelRadarScan()">Scan Abbrechen</button>
         </div>
     </div>
 
@@ -894,126 +883,6 @@
             resultsDiv.style.display = 'none';
         }
 
-        // ==========================================
-        // DAS NEUE RADAR-FEATURE
-        // ==========================================
-        let isRadarScanning = false;
-
-        async function startRadarScan() {
-            // Nur Animes prüfen, die im Archiv sind und eine API-ID haben
-            const completedAnimes = animeData.watched.filter(a => a.malId);
-            if (completedAnimes.length === 0) {
-                alert("Keine abgeschlossenen Animes mit Datenbank-ID gefunden. Bitte füge erst Animes mit der Suchfunktion hinzu, damit der Radar arbeiten kann.");
-                return;
-            }
-
-            isRadarScanning = true;
-            const radarModal = document.getElementById('radar-modal');
-            const radarStatus = document.getElementById('radar-status');
-            const radarProgress = document.getElementById('radar-progress');
-            
-            radarModal.classList.add('active');
-            let newSequelsCount = 0;
-
-            for (let i = 0; i < completedAnimes.length; i++) {
-                if (!isRadarScanning) break; // Bricht ab, wenn der User "Abbrechen" drückt
-
-                const anime = completedAnimes[i];
-                radarStatus.innerText = `Scanne Radar für: ${anime.title} (${i+1}/${completedAnimes.length})...`;
-                radarProgress.style.width = `${((i)/completedAnimes.length)*100}%`;
-
-                try {
-                    // API Call: Suche nach Fortsetzungen (Relations)
-                    const relRes = await fetch(`https://api.jikan.moe/v4/anime/${anime.malId}/relations`);
-                    if(!relRes.ok) throw new Error("Rate Limit überschritten");
-                    const relData = await relRes.json();
-                    
-                    const sequelNode = relData.data.find(r => r.relation === 'Sequel');
-                    if (sequelNode && sequelNode.entry.length > 0) {
-                        const sequelMalId = sequelNode.entry[0].mal_id;
-                        
-                        // Checken wir, ob wir die Fortsetzung vielleicht schon längst in der App haben
-                        const allAnimes = [...animeData.watched, ...animeData.nextSeason, ...animeData.current, ...animeData.watchlist];
-                        const exists = allAnimes.find(a => a.malId === sequelMalId);
-                        
-                        if (!exists) {
-                            radarStatus.innerText = `🚨 Fortsetzung gefunden! Importiere Daten...`;
-                            radarStatus.style.color = "var(--accent-orange)";
-                            await new Promise(r => setTimeout(r, 1000)); // Kurze Pause vor dem Detail-Abruf
-                            
-                            // API Call: Hole alle Infos zur gefundenen Fortsetzung
-                            const seqRes = await fetch(`https://api.jikan.moe/v4/anime/${sequelMalId}`);
-                            const seqDetail = await seqRes.json();
-                            const sData = seqDetail.data;
-
-                            let bestTitle = sData.title;
-                            if (sData.titles && sData.titles.length > 0) {
-                                const ger = sData.titles.find(t => t.type === 'German');
-                                const eng = sData.titles.find(t => t.type === 'English');
-                                if (ger) bestTitle = ger.title;
-                                else if (eng) bestTitle = eng.title;
-                            }
-
-                            let seasonText = '';
-                            if (sData.season && sData.year) {
-                                const seasonsDe = { 'spring': 'Frühling', 'summer': 'Sommer', 'fall': 'Herbst', 'winter': 'Winter' };
-                                seasonText = (seasonsDe[sData.season] || sData.season) + ' ' + sData.year;
-                            } else if (sData.aired && sData.aired.from) {
-                                seasonText = new Date(sData.aired.from).getFullYear().toString();
-                            }
-
-                            let isRel = false;
-                            let metaInfo = seasonText || 'Unbekanntes Datum';
-                            if (sData.status === 'Currently Airing' || sData.status === 'Finished Airing') {
-                                isRel = true;
-                                metaInfo = seasonText || '';
-                            }
-
-                            const formatType = sData.type === 'Movie' ? 'film' : 'staffel';
-                            const highResCover = sData.images?.webp?.large_image_url || sData.images?.jpg?.large_image_url || '';
-                            const finalMeta = (formatType === 'film' ? 'FILM|' : 'STAFFEL|') + metaInfo;
-
-                            const payload = {
-                                title: bestTitle,
-                                category: 'next-season',
-                                meta: finalMeta,
-                                is_released: isRel,
-                                cover_url: highResCover,
-                                mal_id: sequelMalId
-                            };
-
-                            // Speichere die Fortsetzung lautlos in die Datenbank
-                            await db.from('animes').insert([payload]);
-                            newSequelsCount++;
-                            radarStatus.style.color = "var(--text-muted)";
-                        }
-                    }
-                } catch (e) {
-                    console.log("Radar überspringt Anime wg. Timeout/Fehler:", anime.title);
-                }
-
-                // Strenge Pause von 1,5 Sekunden pro Anime, damit uns die API nicht blockiert!
-                await new Promise(r => setTimeout(r, 1500)); 
-            }
-
-            if (isRadarScanning) {
-                radarProgress.style.width = `100%`;
-                radarStatus.innerText = `Scan abgeschlossen! ${newSequelsCount} neue Fortsetzungen importiert.`;
-                radarStatus.style.color = "var(--accent-green)";
-                setTimeout(() => {
-                    radarModal.classList.remove('active');
-                    if(newSequelsCount > 0) loadDataFromCloud(false);
-                }, 3500);
-            }
-        }
-
-        function cancelRadarScan() {
-            isRadarScanning = false;
-            document.getElementById('radar-modal').classList.remove('active');
-            loadDataFromCloud(false);
-            showToast("Radar abgebrochen.");
-        }
-
 
         // ==========================================
         // APP LOGIK
@@ -1050,7 +919,6 @@
             document.getElementById('anime-meta-input').value = '';
             document.getElementById('anime-is-released').checked = false;
             
-            // API Felder leeren
             document.getElementById('anime-cover-url').value = '';
             document.getElementById('anime-mal-id').value = '';
             document.getElementById('search-results').innerHTML = '';
@@ -1075,7 +943,8 @@
         }
 
         function editAnime(id) {
-            const anime = animeData.nextSeason.find(a => a.id === id);
+            // FIX: Verwende '==' statt '===', da id als String aus HTML übergeben wird, aber eine Nummer in der DB ist.
+            const anime = animeData.nextSeason.find(a => a.id == id);
             if (!anime) return;
             
             document.getElementById('modal-page-context').value = 'next-season';
@@ -1102,19 +971,20 @@
         }
 
         function finishCurrentAnime(id, title) {
-            const anime = animeData.current.find(a => a.id === id);
+            // FIX: Auch hier '==' statt '===' verwenden!
+            const anime = animeData.current.find(a => a.id == id);
             
             document.getElementById('modal-page-context').value = 'archive-pipeline';
             document.getElementById('anime-edit-id').value = id;
             document.getElementById('anime-title').value = title;
             document.getElementById('anime-meta-input').value = '';
             document.getElementById('anime-is-released').checked = false;
-
+            
             document.getElementById('anime-cover-url').value = anime ? (anime.coverUrl || '') : '';
             document.getElementById('anime-mal-id').value = anime ? (anime.malId || '') : '';
             document.getElementById('search-results').innerHTML = '';
             document.getElementById('search-results').style.display = 'none';
-            
+
             const typeSelect = document.getElementById('anime-type');
             typeSelect.innerHTML = `
                 <option value="abgeschlossen">Komplett abgeschlossen (Archiv)</option>
