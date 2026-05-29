@@ -31,21 +31,16 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; overflow-x: hidden; }
         
-        /* --- LAYOUT CONTROLLER (Mit Fade-Animation) --- */
-        #auth-layout, #app-layout { 
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
+        /* --- LAYOUT CONTROLLER --- */
+        #auth-layout, #app-layout { transition: opacity 0.5s ease, transform 0.5s ease; }
         #auth-layout { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; opacity: 0; pointer-events: none; position: absolute; width: 100%; top: 0; left: 0; }
         #auth-layout.visible { opacity: 1; pointer-events: auto; position: relative; }
         
         #app-layout { opacity: 0; pointer-events: none; position: absolute; width: 100%; top: 0; left: 0; padding-bottom: 60px; transform: scale(0.98); }
         #app-layout.visible { opacity: 1; pointer-events: auto; position: relative; transform: scale(1); }
 
-        /* --- AUTH SCREEN STYLING --- */
-        .auth-container {
-            background: var(--card-bg); border-radius: 20px; padding: 40px 30px; width: 100%; max-width: 400px;
-            border: 1px solid rgba(138, 43, 226, 0.25); box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center;
-        }
+        /* --- AUTH SCREEN --- */
+        .auth-container { background: var(--card-bg); border-radius: 20px; padding: 40px 30px; width: 100%; max-width: 400px; border: 1px solid rgba(138, 43, 226, 0.25); box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center; }
         .auth-logo { margin-bottom: 30px; }
         .auth-logo img { width: 80px; border-radius: 20px; box-shadow: 0 0 20px rgba(138, 43, 226, 0.5); }
         .auth-logo h1 { font-size: 1.8rem; margin-top: 15px; background: linear-gradient(45deg, var(--accent-neon), #b55fe6, var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -54,7 +49,6 @@
         .auth-form-group input { width: 100%; padding: 14px; background: var(--bg-color); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: white; font-size: 1rem; outline: none; transition: 0.3s; }
         .auth-form-group input:focus { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(138, 43, 226, 0.2); }
         
-        /* Checkbox Angemeldet bleiben */
         .auth-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; }
         .auth-options input { accent-color: var(--accent-purple); transform: scale(1.2); margin-right: 8px; cursor: pointer; }
 
@@ -73,12 +67,12 @@
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 2px solid var(--accent-purple); box-shadow: 0 4px 25px rgba(138, 43, 226, 0.25);
         }
-        .logo { cursor: pointer; display: inline-flex; align-items: center; gap: 12px; transition: transform 0.3s; }
+        .logo { cursor: pointer; display: flex; align-items: center; gap: 12px; transition: transform 0.3s; text-decoration: none; }
         .logo:hover { transform: scale(1.05) rotate(-1deg); }
-        .logo img { width: 40px; height: 40px; border-radius: 10px; box-shadow: 0 0 10px rgba(138, 43, 226, 0.5); object-fit: cover; }
-        .logo span { font-size: 1.6rem; font-weight: 700; background: linear-gradient(45deg, var(--accent-neon), #b55fe6, var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo img { width: 45px; height: 45px; border-radius: 12px; box-shadow: 0 0 10px rgba(138, 43, 226, 0.5); object-fit: cover; flex-shrink: 0; display: block; }
+        .logo span { font-size: 1.8rem; font-weight: 700; background: linear-gradient(45deg, var(--accent-neon), #b55fe6, var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; }
         
-        .header-actions { display: flex; gap: 12px; }
+        .header-actions { display: flex; gap: 12px; flex-shrink: 0; }
         .btn-icon-header { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); width: 40px; height: 40px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
         .btn-icon-header:hover { color: white; background: rgba(255,255,255,0.1); transform: scale(1.05); }
 
@@ -128,7 +122,7 @@
             background: var(--card-bg); border-radius: 12px; padding: 16px 20px; 
             display: flex; justify-content: space-between; align-items: center; position: relative; 
             border: 1px solid rgba(255,255,255,0.01); transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
-            animation: slideIn 0.4s ease forwards; /* Weiches Einfliegen bei neuen Elementen */
+            animation: slideIn 0.4s ease forwards;
         }
         .anime-item:hover { transform: translateX(4px); background: #1d213a; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         
@@ -214,10 +208,13 @@
         .loading-notice { text-align: center; padding: 40px; color: var(--accent-neon); font-weight: 600; font-size: 1.2rem; }
 
         @media (max-width: 600px) {
+            header { padding: 15px; }
+            .logo img { width: 35px; height: 35px; }
+            .logo span { font-size: 1.3rem; }
+            .btn-icon-header { width: 35px; height: 35px; font-size: 1rem; }
             .grid-navigation { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .nav-card { padding: 18px 10px; }
             .nav-card i { font-size: 1.8rem; margin-bottom: 8px; }
-            .logo span { font-size: 1.4rem; }
             .anime-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .anime-grid-item { padding: 12px; border-radius: 10px; }
         }
@@ -462,7 +459,7 @@
                     appLayout.style.display = 'block'; 
                     setTimeout(() => appLayout.classList.add('visible'), 50);
                     loadDataFromCloud(); 
-                }, 400); // Warten bis Fade Out fertig ist
+                }, 400);
             } else {
                 appLayout.classList.remove('visible');
                 setTimeout(() => { 
@@ -472,7 +469,6 @@
             }
         }
 
-        // Angemeldet bleiben Logik (Session Storage Flag)
         window.addEventListener('beforeunload', () => {
             if (sessionStorage.getItem('tempSessionActive') === 'true') {
                 db.auth.signOut();
@@ -561,7 +557,6 @@
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Lösche...';
             
             try {
-                // Löscht durch RLS alle eigenen Reihen (neq 0 ist immer true)
                 const { error } = await db.from('animes').delete().neq('id', 0);
                 if (error) throw error;
                 
@@ -755,7 +750,7 @@
                     if(error) throw error;
                 }
                 closeModal(); 
-                await loadDataFromCloud(true); // Silent Load
+                await loadDataFromCloud(true);
                 showToast("Erfolgreich gespeichert! ✨");
             } catch(e) { alert("Fehler: " + e.message); }
         }
