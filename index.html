@@ -30,7 +30,7 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         
-        /* OVERSCROLL FIX: Normales Scrollen wieder erlaubt */
+        /* OVERSCROLL FIX: Normales Scrollen erlaubt */
         body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; overflow-x: hidden; margin: 0; }
         
         /* APPLE AUTOCORRECT / PASSWORD HACK */
@@ -130,7 +130,7 @@
         .btn-add { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); transition: all 0.2s ease; }
         .btn-add:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
         
-        /* --- KOMETEN-ZÄHLER --- */
+        /* --- GESAMT-ZÄHLER BADGE --- */
         .watched-stats { display: flex; justify-content: center; margin-bottom: 20px; }
         
         .stat-wrapper {
@@ -561,7 +561,7 @@
                 <div class="sub-section-title"><i class="fa-solid fa-check-double" style="color: var(--accent-green);"></i> Komplett Abgeschlossen</div>
                 <div id="list-watched-completed" class="anime-list"></div>
                 
-                <div class="sub-section-title"><i class="fa-solid fa-hourglass-half" style="color: var(--accent-purple);"></i> Fortsetzung folgt</div>
+                <div class="sub-section-title"><i class="fa-solid fa-tv" style="color: var(--accent-purple);"></i> Fortsetzung folgt</div>
                 <div id="list-watched-continuing" class="anime-list"></div>
                 
                 <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> Neue Staffel verfügbar!</div>
@@ -574,7 +574,7 @@
                     <h2><i class="fa-solid fa-calendar-plus" style="color: var(--accent-purple);"></i> Folgestaffeln</h2>
                     <button class="btn-add" onclick="openModal('next-season')">+ Hinzufügen</button>
                 </div>
-                <div class="sub-section-title"><i class="fa-solid fa-hourglass"></i> Zukünftige Staffeln</div>
+                <div class="sub-section-title"><i class="fa-solid fa-tv"></i> Zukünftige Staffeln</div>
                 <div id="list-next-waiting" class="grid-layout-next"></div> 
                 <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> Neue Releases verfügbar!</div>
                 <div id="list-next-released" class="grid-layout-next"></div> 
@@ -762,7 +762,11 @@
                 authLayout.style.opacity = '0';
                 setTimeout(() => { 
                     authLayout.classList.remove('active-layout');
-                    authLayout.style.display = 'none'; 
+                    
+                    // DOM NUKE: Wenn der User eingeloggt ist, vernichten wir alle Login Formulare, 
+                    // damit Apple im Hintergrund nichts mehr scannen kann.
+                    authLayout.innerHTML = ''; 
+                    authLayout.style.display = 'none';
 
                     appLayout.classList.add('active-layout'); 
                     setTimeout(() => {
@@ -1085,7 +1089,7 @@
             
             // 🔥 POP-UP FIX FÜR "NEUE STAFFEL/FILM IST DRAUßEN"
             const metaBadge = document.getElementById('detail-meta');
-            if ((anime.category === 'next-season' || anime.category === 'watched') && anime.isReleased) { 
+            if (anime.isReleased) { 
                 metaDisplay = anime.type === 'film' ? '🔥 NEUER FILM IST DRAUßEN!' : '🔥 NEUE STAFFEL IST DRAUßEN!';
                 metaBadge.style.background = 'rgba(255, 0, 85, 0.15)';
                 metaBadge.style.color = 'var(--accent-orange)';
@@ -1345,13 +1349,11 @@
                 leadingIconHTML = `<div class="anime-number ${numClass}">${displayIndex}</div>`;
             } else {
                 let iconClass = 'fa-solid fa-bookmark';
-                // 🔥 TV-SYMBOL FÜR RELEASED STAFFELN STATT AUSRUFEZEICHEN
-                if (context === 'next-season') iconClass = anime.type === 'film' ? 'fa-solid fa-film' : (anime.isReleased ? 'fa-solid fa-tv' : 'fa-solid fa-hourglass-half');
+                if (context === 'next-season') iconClass = anime.type === 'film' ? 'fa-solid fa-film' : 'fa-solid fa-tv'; // HIER IST DIE SANDUHR WEG!
                 if (context === 'current') iconClass = 'fa-solid fa-circle-play';
                 
-                // 🔥 KEIN LESEZEICHEN-SYMBOL FÜR WATCHLIST
                 if (context === 'watchlist') {
-                    leadingIconHTML = ''; 
+                    leadingIconHTML = ''; // HIER IST DAS LESEZEICHEN WEG!
                 } else {
                     leadingIconHTML = `<i class="${iconClass} anime-decor-icon color-${context === 'next-season' ? (anime.isReleased ? 'released' : 'waiting') : context}"></i>`;
                 }
