@@ -31,13 +31,14 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; overflow-x: hidden; }
         
-        /* --- LAYOUT CONTROLLER --- */
-        #auth-layout, #app-layout { transition: opacity 0.5s ease, transform 0.5s ease; }
-        #auth-layout { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; opacity: 0; pointer-events: none; position: absolute; width: 100%; top: 0; left: 0; }
-        #auth-layout.visible { opacity: 1; pointer-events: auto; position: relative; }
+        /* --- LAYOUT CONTROLLER (FIXED FÜR IOS AUTOFILL) --- */
+        #auth-layout { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; opacity: 0; transition: opacity 0.5s ease; }
+        #auth-layout.active-layout { display: flex; }
+        #auth-layout.visible { opacity: 1; }
         
-        #app-layout { opacity: 0; pointer-events: none; position: absolute; width: 100%; top: 0; left: 0; padding-bottom: 60px; transform: scale(0.98); }
-        #app-layout.visible { opacity: 1; pointer-events: auto; position: relative; transform: scale(1); }
+        #app-layout { display: none; padding-bottom: 60px; opacity: 0; transition: opacity 0.5s ease; }
+        #app-layout.active-layout { display: block; }
+        #app-layout.visible { opacity: 1; }
 
         /* --- AUTH SCREEN STYLING --- */
         .auth-container { background: var(--card-bg); border-radius: 20px; padding: 40px 30px; width: 100%; max-width: 400px; border: 1px solid rgba(138, 43, 226, 0.25); box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center; }
@@ -128,12 +129,12 @@
         .btn-back:hover { color: white; }
         .btn-add { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); transition: all 0.2s ease; }
         .btn-add:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
-
-        /* --- NEU: GESAMT-ZÄHLER BADGE --- */
-        .watched-stats { display: flex; justify-content: center; margin-bottom: 30px; }
-        .stat-box { background: linear-gradient(145deg, rgba(46, 204, 113, 0.1) 0%, rgba(46, 204, 113, 0.02) 100%); border: 1px solid rgba(46, 204, 113, 0.3); padding: 15px 35px; border-radius: 16px; text-align: center; display: inline-flex; flex-direction: column; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .stat-number { font-size: 2.2rem; font-weight: 700; color: var(--accent-green); line-height: 1; margin-bottom: 5px; text-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
-        .stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        
+        /* --- GESAMT-ZÄHLER BADGE (DEZENTER) --- */
+        .watched-stats { display: flex; justify-content: center; margin-bottom: 20px; }
+        .stat-box { background: linear-gradient(145deg, rgba(46, 204, 113, 0.1) 0%, rgba(46, 204, 113, 0.02) 100%); border: 1px solid rgba(46, 204, 113, 0.3); padding: 8px 25px; border-radius: 12px; text-align: center; display: inline-flex; flex-direction: column; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        .stat-number { font-size: 1.6rem; font-weight: 700; color: var(--accent-green); line-height: 1.2; margin-bottom: 2px; text-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
+        .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
         /* --- ANIME LISTEN ITEMS (Standard Listen-Layout) --- */
         .anime-list { display: flex; flex-direction: column; gap: 14px; }
@@ -230,24 +231,11 @@
         .toast { position: fixed; bottom: -80px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #a04ef6, var(--accent-purple)); color: white; padding: 12px 26px; border-radius: 30px; font-size: 0.95rem; font-weight: 600; box-shadow: 0 10px 25px rgba(138, 43, 226, 0.4); transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; pointer-events: none; display: flex; align-items: center; gap: 10px; }
         .toast.show { bottom: 30px; }
 
-        /* --- MODALS (ANIMIERT & SOFT) --- */
-        .modal-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(10, 11, 18, 0.85); backdrop-filter: blur(6px); 
-            display: flex; justify-content: center; align-items: center; 
-            opacity: 0; pointer-events: none; transition: opacity 0.35s ease; z-index: 1000; 
-        }
-        .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        
-        .modal { 
-            background: var(--card-bg); border-radius: 20px; padding: 30px; 
-            width: 90%; max-width: 450px; border: 1px solid rgba(138, 43, 226, 0.25); 
-            transform: scale(0.85) translateY(20px); opacity: 0; 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4); max-height: 90vh; overflow-y: auto; 
-        }
+        /* --- MODALS --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 18, 0.85); backdrop-filter: blur(6px); display: none; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.35s ease; z-index: 1000; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; display: flex; }
+        .modal { background: var(--card-bg); border-radius: 20px; padding: 30px; width: 90%; max-width: 450px; border: 1px solid rgba(138, 43, 226, 0.25); transform: scale(0.85) translateY(20px); opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 15px 35px rgba(0,0,0,0.4); max-height: 90vh; overflow-y: auto; }
         .modal-overlay.active .modal { transform: scale(1) translateY(0); opacity: 1; }
-
         .modal h3 { margin-bottom: 20px; font-size: 1.35rem; font-weight: 700; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
@@ -330,7 +318,7 @@
 <body>
 
     <div id="auth-layout">
-        <form id="login-form" class="auth-container" onsubmit="event.preventDefault(); handleLogin();">
+        <form class="auth-container" id="login-form" onsubmit="event.preventDefault(); handleLogin();">
             <div class="auth-logo">
                 <img src="icon-192.png" alt="Logo" onerror="this.style.display='none'">
                 <h1>YP AniTracker</h1>
@@ -539,7 +527,7 @@
             
             <div class="form-group" style="position: relative;">
                 <label for="anime-title">Anime Name</label>
-                <input type="text" id="anime-title" placeholder="z.B. Demon Slayer..." oninput="searchAnime(this.value)" autocomplete="off" name="search_anime">
+                <input type="text" id="anime-title" placeholder="z.B. Demon Slayer..." oninput="searchAnime(this.value)" autocomplete="nope" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true">
                 <div id="search-results" class="search-res"></div>
             </div>
             
@@ -554,7 +542,7 @@
 
             <div id="meta-field-group" class="form-group" style="display: none;">
                 <label id="meta-label" for="anime-meta-input">Wann kommt das Release? (Optional)</label>
-                <input type="text" id="anime-meta-input" placeholder="z.B. Winter 2027 oder leer lassen" autocomplete="off">
+                <input type="text" id="anime-meta-input" placeholder="z.B. Winter 2027 oder leer lassen" autocomplete="nope" autocorrect="off">
             </div>
             <div id="released-field-group" class="form-group checkbox-group" style="display: none;">
                 <input type="checkbox" id="anime-is-released">
@@ -662,15 +650,19 @@
 
                 authLayout.classList.remove('visible');
                 setTimeout(() => { 
-                    appLayout.style.display = 'block'; 
-                    setTimeout(() => appLayout.classList.add('visible'), 50);
-                    loadDataFromCloud(); 
+                    authLayout.classList.remove('active-layout');
+                    appLayout.classList.add('active-layout'); 
+                    setTimeout(() => {
+                        appLayout.classList.add('visible');
+                        loadDataFromCloud(); 
+                    }, 50);
                 }, 400);
             } else {
                 appLayout.classList.remove('visible');
                 setTimeout(() => { 
-                    appLayout.style.display = 'none'; 
-                    authLayout.classList.add('visible'); 
+                    appLayout.classList.remove('active-layout');
+                    authLayout.classList.add('active-layout'); 
+                    setTimeout(() => authLayout.classList.add('visible'), 50);
                 }, 400);
             }
         }
@@ -869,7 +861,7 @@
         }
 
         // ==========================================
-        // API SUCHE (JIKAN) - HOHE AUFLÖSUNG & ÜBERSETZUNG & AUTO-FILL
+        // API SUCHE (JIKAN)
         // ==========================================
         let searchTimeout;
         async function searchAnime(query) {
@@ -1271,14 +1263,14 @@
                 
                 const releaseBtnClass = anime.isReleased ? 'btn-action release-check active' : 'btn-action release-check';
                 actionHTML = `
-                    <button class="btn-action edit" onclick="editAnime('${anime.id}')" title="Bearbeiten"><i class="fa-solid fa-pen"></i></button>
-                    <button class="${releaseBtnClass}" onclick="toggleRelease('${anime.id}', ${anime.isReleased}, '${uniqueId}')" title="Status umschalten"><i class="fa-solid ${anime.isReleased ? 'fa-circle-check' : 'fa-circle'}"></i></button>`;
+                    <button type="button" class="btn-action edit" onclick="editAnime('${anime.id}')" title="Bearbeiten"><i class="fa-solid fa-pen"></i></button>
+                    <button type="button" class="${releaseBtnClass}" onclick="toggleRelease('${anime.id}', ${anime.isReleased}, '${uniqueId}')" title="Status umschalten"><i class="fa-solid ${anime.isReleased ? 'fa-circle-check' : 'fa-circle'}"></i></button>`;
             } 
             else if(context === 'watchlist') {
-                actionHTML = `<button class="btn-action start-watching" onclick="moveWatchlistToCurrent('${anime.id}', '${uniqueId}')" title="Jetzt schauen"><i class="fa-solid fa-circle-play"></i></button>`;
+                actionHTML = `<button type="button" class="btn-action start-watching" onclick="moveWatchlistToCurrent('${anime.id}', '${uniqueId}')" title="Jetzt schauen"><i class="fa-solid fa-circle-play"></i></button>`;
             }
             else if(context === 'current') {
-                actionHTML = `<button class="btn-action check" onclick="finishCurrentAnime('${anime.id}', '${anime.title.replace(/'/g, "\\'")}')" title="Serie abschließen"><i class="fa-solid fa-circle-check"></i></button>`;
+                actionHTML = `<button type="button" class="btn-action check" onclick="finishCurrentAnime('${anime.id}', '${anime.title.replace(/'/g, "\\'")}')" title="Serie abschließen"><i class="fa-solid fa-circle-check"></i></button>`;
             }
 
             let coverHTML = anime.coverUrl ? `<img src="${anime.coverUrl}" class="anime-cover" alt="Cover" onerror="this.style.display='none'">` : '';
@@ -1295,7 +1287,7 @@
                     </div>
                     <div class="action-btns" onclick="event.stopPropagation()">
                         ${actionHTML}
-                        <button class="btn-action delete" onclick="deleteAnime('${context === 'next-season' ? 'next-season' : context}', '${anime.id}', '${uniqueId}')"><i class="fa-solid fa-trash"></i></button>
+                        <button type="button" class="btn-action delete" onclick="deleteAnime('${context === 'next-season' ? 'next-season' : context}', '${anime.id}', '${uniqueId}')"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>`;
         }
@@ -1341,7 +1333,6 @@
         function renderAll() {
             let globalWatchCounter = 0;
             
-            // NEU: Berechne die absolute Gesamtzahl (Abgeschlossen + Fortsetzungen)
             const totalWatched = animeData.watched.length + animeData.nextSeason.length;
             const totalDisplay = document.getElementById('total-watched-count');
             if(totalDisplay) totalDisplay.innerText = totalWatched;
