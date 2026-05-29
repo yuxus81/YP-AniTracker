@@ -50,7 +50,7 @@
         .auth-form-group input:focus { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(138, 43, 226, 0.2); }
         
         .auth-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; }
-        .auth-options input { accent-color: var(--accent-purple); transform: scale(1.2); margin-right: 8px; cursor: pointer; }
+        .auth-options input { accent-color: var(--accent-purple); transform: scale(1.2); margin-right: 8px; cursor: pointer; width: auto; }
 
         .btn-auth { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; }
         .btn-login { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); }
@@ -122,7 +122,7 @@
         .btn-add { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); transition: all 0.2s ease; }
         .btn-add:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
 
-        /* --- ANIME LISTEN ITEMS & ANIMATIONS --- */
+        /* --- ANIME LISTEN ITEMS (Standard Listen-Layout) --- */
         .anime-list { display: flex; flex-direction: column; gap: 14px; }
         .anime-item { 
             background: var(--card-bg); border-radius: 12px; padding: 16px 20px; 
@@ -131,6 +131,25 @@
             animation: slideIn 0.4s ease forwards;
         }
         .anime-item:hover { transform: translateX(4px); background: #1d213a; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        
+        /* --- NEU: GRID LAYOUT FÜR WATCHLIST --- */
+        .grid-layout-watchlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        .grid-layout-watchlist .anime-item { 
+            flex-direction: column; text-align: center; padding: 20px 15px; align-items: center; 
+            border-left: none; border-top: 4px solid var(--accent-blue); justify-content: flex-start;
+        }
+        .grid-layout-watchlist .anime-item:hover { transform: translateY(-4px); }
+        .grid-layout-watchlist .anime-info-wrapper { flex-direction: column; width: 100%; gap: 10px; justify-content: center; }
+        .grid-layout-watchlist .anime-title-row { justify-content: center; }
+        .grid-layout-watchlist .action-btns { 
+            width: 100%; justify-content: center; gap: 20px; border-top: 1px solid rgba(255,255,255,0.05); 
+            padding-top: 15px; margin-top: auto; 
+        }
+
+        /* --- NEU: GRID LAYOUT FÜR FOLGESTAFFELN --- */
+        .grid-layout-next { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px; }
+        .grid-layout-next .anime-item { align-items: center; height: 100%; }
+        .grid-layout-next .anime-item:hover { transform: translateY(-4px); }
         
         @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
         
@@ -144,7 +163,6 @@
         .item-watched { border-left: 4px solid var(--accent-green); }
         .item-waiting { border-left: 4px solid var(--accent-purple); }
         .item-released { border-left: 4px solid var(--accent-orange); background: linear-gradient(90deg, rgba(255, 0, 85, 0.05) 0%, var(--card-bg) 100%); }
-        .item-watchlist { border-left: 4px solid var(--accent-blue); }
         .item-current { border-left: 4px solid var(--accent-neon); }
 
         .anime-info-wrapper { display: flex; align-items: center; gap: 15px; width: 75%; }
@@ -157,7 +175,7 @@
         .color-watched { color: var(--accent-green); }
         .color-waiting { color: var(--accent-purple); }
         .color-released { color: var(--accent-orange); }
-        .color-watchlist { color: var(--accent-blue); }
+        .color-watchlist { color: var(--accent-blue); font-size: 1.8rem; margin-bottom: 5px; } /* Icon im Watchlist-Grid größer */
         .color-current { color: var(--accent-neon); }
 
         .anime-info { display: flex; flex-direction: column; gap: 4px; }
@@ -197,8 +215,15 @@
         .modal h3 { margin-bottom: 20px; font-size: 1.35rem; font-weight: 700; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
-        .form-group input, .form-group select { width: 100%; padding: 12px 15px; background: var(--bg-color); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: white; font-size: 1rem; outline: none; transition: all 0.3s; }
+        
+        /* FIX FÜR DIE CHECKBOX (Nicht 100% Breite!) */
+        .form-group input[type="text"], .form-group input[type="password"], .form-group input[type="email"], .form-group select { width: 100%; padding: 12px 15px; background: var(--bg-color); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: white; font-size: 1rem; outline: none; transition: all 0.3s; }
         .form-group input:focus, .form-group select:focus { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(138, 43, 226, 0.2); }
+        
+        .checkbox-group { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; flex-direction: row; }
+        .checkbox-group input[type="checkbox"] { width: auto; accent-color: var(--accent-purple); transform: scale(1.2); flex-shrink: 0; margin: 0; cursor: pointer; }
+        .checkbox-group label { margin-bottom: 0; display: inline-block; width: auto; flex: 1; line-height: 1.4; }
+        
         .modal-footer { display: flex; justify-content: flex-end; gap: 15px; margin-top: 25px; }
         .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; padding: 10px; }
         .btn-cancel:hover { color: white; }
@@ -212,8 +237,8 @@
         
         .settings-divider { border: 0; height: 1px; background: rgba(255,255,255,0.1); margin: 25px 0; }
 
-        .empty-state { text-align: center; color: var(--text-muted); padding: 25px; font-style: italic; font-size: 0.9rem; background: rgba(255,255,255,0.01); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.05); width: 100%; }
-        .loading-notice { text-align: center; padding: 40px; color: var(--accent-neon); font-weight: 600; font-size: 1.2rem; }
+        .empty-state { text-align: center; color: var(--text-muted); padding: 25px; font-style: italic; font-size: 0.9rem; background: rgba(255,255,255,0.01); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.05); width: 100%; grid-column: 1 / -1; }
+        .loading-notice { text-align: center; padding: 40px; color: var(--accent-neon); font-weight: 600; font-size: 1.2rem; grid-column: 1 / -1; }
 
         /* ================= MOBILE OPTIMIERUNG ================= */
         @media (max-width: 600px) {
@@ -221,24 +246,10 @@
             .logo img { width: 35px; height: 35px; }
             .logo span { font-size: 1.3rem; }
             
-            /* NEU: Flex-Container für Mobile Buttons & Gruß formatiert */
-            .header-actions { 
-                flex-direction: column; 
-                align-items: center; /* Zentriert den Namen exakt unter den Buttons */
-                gap: 4px; 
-            }
+            .header-actions { flex-direction: column; align-items: center; gap: 4px; }
             .header-buttons { gap: 10px; }
             
-            /* Begrüßung ohne Emoji, mittig zentriert unter den Buttons */
-            .header-greeting { 
-                display: block !important; 
-                position: static; 
-                font-size: 0.75rem; 
-                color: var(--text-muted); 
-                opacity: 0.8;
-                text-align: center;
-                white-space: nowrap;
-            }
+            .header-greeting { display: block !important; position: static; font-size: 0.75rem; color: var(--text-muted); opacity: 0.8; text-align: center; white-space: nowrap; }
             
             .btn-icon-header { width: 35px; height: 35px; font-size: 1rem; }
             
@@ -253,6 +264,10 @@
             .page-header h2 { font-size: 1.35rem; text-align: center; width: 100%; justify-content: center; }
             .btn-back { align-self: flex-start; }
             .btn-add { width: 100%; text-align: center; padding: 12px; }
+            
+            /* Responsive Grid Anpassung */
+            .grid-layout-watchlist { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+            .grid-layout-next { grid-template-columns: 1fr; } /* Auf dem Handy wieder untereinander, damit es nicht gequetscht wird */
         }
     </style>
 </head>
@@ -409,10 +424,8 @@
                     <button class="btn-add" onclick="openModal('next-season')">+ Hinzufügen</button>
                 </div>
                 <div class="sub-section-title"><i class="fa-solid fa-hourglass"></i> In Warteschleife (Zukünftige Staffeln)</div>
-                <div id="list-next-waiting" class="anime-list"></div>
-                <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> Neue Releases verfügbar!</div>
-                <div id="list-next-released" class="anime-list"></div>
-            </div>
+                <div id="list-next-waiting" class="grid-layout-next"></div> <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> Neue Releases verfügbar!</div>
+                <div id="list-next-released" class="grid-layout-next"></div> </div>
 
             <div id="page-watchlist" class="page">
                 <div class="page-header">
@@ -420,8 +433,7 @@
                     <h2><i class="fa-solid fa-hourglass-start" style="color: var(--accent-blue);"></i> Watchlist</h2>
                     <button class="btn-add" onclick="openModal('watchlist')">+ Hinzufügen</button>
                 </div>
-                <div id="list-watchlist" class="anime-list"></div>
-            </div>
+                <div id="list-watchlist" class="grid-layout-watchlist"></div> </div>
 
             <div id="page-current" class="page">
                 <div class="page-header">
