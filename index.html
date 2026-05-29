@@ -66,6 +66,7 @@
             background: linear-gradient(135deg, #180f2b 0%, #0d0f18 100%); padding: 20px;
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 2px solid var(--accent-purple); box-shadow: 0 4px 25px rgba(138, 43, 226, 0.25);
+            position: relative;
         }
         .logo { cursor: pointer; display: flex; align-items: center; gap: 12px; transition: transform 0.3s; text-decoration: none; }
         .logo:hover { transform: scale(1.05) rotate(-1deg); }
@@ -213,11 +214,25 @@
         .empty-state { text-align: center; color: var(--text-muted); padding: 25px; font-style: italic; font-size: 0.9rem; background: rgba(255,255,255,0.01); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.05); width: 100%; }
         .loading-notice { text-align: center; padding: 40px; color: var(--accent-neon); font-weight: 600; font-size: 1.2rem; }
 
+        /* ================= MOBILE OPTIMIERUNG ================= */
         @media (max-width: 600px) {
-            header { padding: 15px; }
+            header { 
+                padding: 15px 15px 35px 15px; /* Extra Platz unten für den Text */
+            }
             .logo img { width: 35px; height: 35px; }
             .logo span { font-size: 1.3rem; }
-            .header-greeting { display: none; }
+            
+            /* NEU: Zentrierte Begrüßung unten im Header */
+            .header-greeting { 
+                display: flex; 
+                position: absolute; 
+                bottom: 8px; 
+                left: 0; 
+                width: 100%; 
+                justify-content: center; 
+                font-size: 0.8rem; 
+            }
+            
             .btn-icon-header { width: 35px; height: 35px; font-size: 1rem; }
             
             .grid-navigation { grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -516,9 +531,8 @@
         let toastTimeout;
 
         // ==========================================
-        // AUTHENTIFIKATION & FADE-TRANSITIONS
+        // AUTHENTIFIKATION
         // ==========================================
-        
         db.auth.getSession().then(({ data: { session } }) => {
             toggleLayout(session);
         });
@@ -676,10 +690,9 @@
         }
 
         // ==========================================
-        // EINSTELLUNGEN (USERNAME & PW)
+        // EINSTELLUNGEN
         // ==========================================
         function openSettingsModal() { 
-            // Aktuellen Namen ins Feld laden
             document.getElementById('settings-new-username').value = document.getElementById('header-username-display').innerText;
             document.getElementById('settings-new-password').value = '';
             document.getElementById('settings-modal').classList.add('active'); 
@@ -755,7 +768,7 @@
         }
 
         // ==========================================
-        // UI & APP LOGIK
+        // APP LOGIK
         // ==========================================
         function showToast(message) {
             const toast = document.getElementById('toast-notification');
