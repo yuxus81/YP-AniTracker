@@ -217,7 +217,7 @@
             header { padding: 15px; }
             .logo img { width: 35px; height: 35px; }
             .logo span { font-size: 1.3rem; }
-            .header-greeting { display: none; } /* Versteckt "Hey, Name" auf kleinen Bildschirmen für mehr Platz */
+            .header-greeting { display: none; }
             .btn-icon-header { width: 35px; height: 35px; font-size: 1rem; }
             
             .grid-navigation { grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -450,6 +450,18 @@
             <h3><i class="fa-solid fa-gear" style="color: var(--text-muted);"></i> Einstellungen</h3>
             
             <div style="margin-top: 20px;">
+                <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Benutzername ändern</h4>
+                <div class="form-group">
+                    <input type="text" id="settings-new-username" placeholder="Neuer Benutzername">
+                </div>
+                <button class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsUsernameChange()" id="btn-settings-user">
+                    Namen aktualisieren
+                </button>
+            </div>
+
+            <hr class="settings-divider">
+            
+            <div>
                 <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Passwort ändern</h4>
                 <div class="form-group">
                     <input type="password" id="settings-new-password" placeholder="Neues Passwort (min. 6 Zeichen)">
@@ -512,7 +524,6 @@
         });
 
         db.auth.onAuthStateChange((event, session) => {
-            // Spezieller Event, wenn man aus der "Passwort vergessen"-Mail kommt
             if (event === 'PASSWORD_RECOVERY') {
                 document.getElementById('recovery-modal').classList.add('active');
             }
@@ -524,7 +535,6 @@
             const appLayout = document.getElementById('app-layout');
             
             if (session) {
-                // Username im Header setzen
                 const metadata = session.user.user_metadata || {};
                 const displayUser = metadata.username || session.user.email.split('@')[0];
                 document.getElementById('header-username-display').innerText = displayUser;
@@ -602,7 +612,7 @@
             const { error } = await db.auth.signUp({ 
                 email, 
                 password,
-                options: { data: { username: username } } // Username in der Cloud speichern
+                options: { data: { username: username } }
             });
             
             if (error) {
@@ -634,7 +644,6 @@
             if(!email) return errorMsg.innerText = "Bitte E-Mail eingeben.";
             
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-            // Schickt die Mail und leitet zurück zur App
             const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
             
             if(error) {
@@ -666,31 +675,60 @@
             }
         }
 
+        // ==========================================
+        // EINSTELLUNGEN (USERNAME & PW)
+        // ==========================================
+        function openSettingsModal() { 
+            // Aktuellen Namen ins Feld laden
+            document.getElementById('settings-new-username').value = document.getElementById('header-username-display').innerText;
+            document.getElementById('settings-new-password').value = '';
+            document.getElementById('settings-modal').classList.add('active'); 
+        }
+        function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
+
+        async function handleSettingsUsernameChange() {
+            const newUsername = document.getElementById('settings-new-username').value.trim();
+            const btn = document.getElementById('btn-settings-user');
+            
+            if(!newUsername) return alert("Bitte einen gültigen Namen eingeben.");
+            
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            
+            const { error } = await db.auth.updateUser({ data: { username: newUsername } });
+            
+            if(error) {
+                alert("Fehler beim Ändern des Namens: " + error.message);
+                btn.innerHTML = originalText;
+            } else {
+                document.getElementById('header-username-display').innerText = newUsername;
+                btn.innerHTML = originalText;
+                closeSettingsModal();
+                showToast("Benutzername erfolgreich geändert! 👤");
+            }
+        }
+
         async function handleSettingsPasswordChange() {
             const newPassword = document.getElementById('settings-new-password').value;
             const btn = document.getElementById('btn-settings-pw');
             
             if(newPassword.length < 6) return alert("Das neue Passwort muss mindestens 6 Zeichen lang sein.");
             
+            const originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            
             const { error } = await db.auth.updateUser({ password: newPassword });
             
             if(error) {
                 alert("Fehler beim Ändern des Passworts.");
-                btn.innerHTML = 'Passwort aktualisieren';
+                btn.innerHTML = originalText;
             } else {
                 document.getElementById('settings-new-password').value = '';
-                btn.innerHTML = 'Passwort aktualisieren';
+                btn.innerHTML = originalText;
                 closeSettingsModal();
                 showToast("Passwort erfolgreich geändert! 🔐");
             }
         }
-
-        // ==========================================
-        // ACCOUNT LÖSCHEN LOGIK
-        // ==========================================
-        function openSettingsModal() { document.getElementById('settings-modal').classList.add('active'); document.getElementById('settings-new-password').value = ''; }
-        function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
         
         function openDeleteConfirmModal() { 
             closeSettingsModal();
