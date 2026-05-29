@@ -345,13 +345,13 @@
         .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; padding: 10px; }
         .btn-cancel:hover { color: white; }
 
-        /* --- DETAILS POPUP MODAL (Perfektes Bild Format) --- */
+        /* --- DETAILS POPUP MODAL --- */
         #detail-modal .modal { padding: 30px; text-align: center; }
         .detail-cover-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 25px; }
         .detail-cover-wrapper img { width: auto; max-width: 100%; height: auto; max-height: 400px; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
         .detail-content { position: relative; z-index: 10; }
         .detail-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 15px; line-height: 1.3; }
-        .detail-badges { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .detail-badges { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
         
         /* Danger Modal & Einstellungen */
         .modal-danger { border-color: rgba(255, 0, 85, 0.4); }
@@ -410,91 +410,91 @@
         <h1 style="margin:0;">YP AniTracker</h1>
     </div>
 
-    <div id="auth-modals-wrapper">
-        <div id="auth-layout" class="layout-section">
-            <div class="auth-container">
-                <div class="auth-logo">
-                    <img src="icon-192.png" alt="Logo" onerror="this.style.display='none'">
-                    <h1>YP AniTracker</h1>
-                </div>
-                <div>
-                    <div class="auth-form-group">
-                        <label>E-Mail Adresse</label>
-                        <input type="text" id="login-email" placeholder="deine@email.de" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true">
-                    </div>
-                    <div class="auth-form-group">
-                        <label>Passwort</label>
-                        <input type="text" id="login-password" class="pw-input" placeholder="••••••••" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true">
-                    </div>
-                    <label class="auth-options">
-                        <div style="display: flex; align-items: center;">
-                            <input type="checkbox" id="auth-remember" checked>
-                            <span>Angemeldet bleiben</span>
-                        </div>
-                    </label>
-                    <button type="button" class="btn-auth btn-login" onclick="handleLogin()">
-                        <i class="fa-solid fa-right-to-bracket"></i> Einloggen
-                    </button>
-                    <div class="auth-switch">
-                        <a onclick="openForgotPasswordModal()" style="font-weight: 400; font-size: 0.85rem;">Passwort vergessen?</a>
-                        <div style="margin-top: 10px;">Neu hier? <a onclick="toggleAuthMode('register')">Account erstellen</a></div>
-                    </div>
-                </div>
-                <div id="auth-error-msg" class="auth-error"></div>
+    <div id="auth-layout" class="layout-section">
+        <div class="auth-container" onkeydown="if(event.key === 'Enter') handleLogin();">
+            <div class="auth-logo">
+                <img src="icon-192.png" alt="Logo" onerror="this.style.display='none'">
+                <h1>YP AniTracker</h1>
             </div>
-        </div>
-
-        <div id="register-modal" class="modal-overlay">
-            <div class="modal">
-                <h3><i class="fa-solid fa-user-plus" style="color: var(--accent-neon);"></i> Account erstellen</h3>
-                <div class="form-group">
-                    <label>Benutzername</label>
-                    <input type="text" id="reg-username" placeholder="Wie sollen wir dich nennen?" autocomplete="off" data-lpignore="true">
-                </div>
-                <div class="form-group">
+            
+            <div>
+                <div class="auth-form-group">
                     <label>E-Mail Adresse</label>
-                    <input type="text" id="reg-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true">
+                    <input type="text" id="login-email" placeholder="deine@email.de" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true">
                 </div>
-                <div class="form-group">
-                    <label>Passwort (Min. 6 Zeichen)</label>
-                    <input type="text" id="reg-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true">
+                <div class="auth-form-group">
+                    <label>Passwort</label>
+                    <input type="text" id="login-password" class="pw-input" placeholder="••••••••" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true">
                 </div>
-                <div id="reg-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-cancel" onclick="closeRegisterModal()">Abbrechen</button>
-                    <button type="button" class="btn-add" onclick="handleRegister()">Erstellen</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="forgot-password-modal" class="modal-overlay">
-            <div class="modal">
-                <h3><i class="fa-solid fa-key" style="color: var(--accent-blue);"></i> Passwort zurücksetzen</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Gib deine E-Mail ein. Wir senden dir einen Link, um ein neues Passwort festzulegen.</p>
-                <div class="form-group">
-                    <label>E-Mail Adresse</label>
-                    <input type="text" id="forgot-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true">
-                </div>
-                <div id="forgot-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-cancel" onclick="closeForgotPasswordModal()">Abbrechen</button>
-                    <button type="button" class="btn-add" onclick="handlePasswordResetRequest()">Link senden</button>
+                <label class="auth-options">
+                    <div style="display: flex; align-items: center;">
+                        <input type="checkbox" id="auth-remember" checked>
+                        <span>Angemeldet bleiben</span>
+                    </div>
+                </label>
+                <button type="button" class="btn-auth btn-login" onclick="handleLogin()">
+                    <i class="fa-solid fa-right-to-bracket"></i> Einloggen
+                </button>
+                <div class="auth-switch">
+                    <a onclick="openForgotPasswordModal()" style="font-weight: 400; font-size: 0.85rem;">Passwort vergessen?</a>
+                    <div style="margin-top: 10px;">Neu hier? <a onclick="toggleAuthMode('register')">Account erstellen</a></div>
                 </div>
             </div>
-        </div>
 
-        <div id="recovery-modal" class="modal-overlay">
-            <div class="modal">
-                <h3><i class="fa-solid fa-unlock-keyhole" style="color: var(--accent-green);"></i> Neues Passwort</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Bitte vergib jetzt dein neues Passwort.</p>
-                <div class="form-group">
-                    <label>Neues Passwort</label>
-                    <input type="text" id="recovery-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true">
-                </div>
-                <div id="recovery-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-add" onclick="handleRecoveryUpdate()">Speichern & Einloggen</button>
-                </div>
+            <div id="auth-error-msg" class="auth-error"></div>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal-overlay">
+        <div class="modal" onkeydown="if(event.key === 'Enter') handleRegister();">
+            <h3><i class="fa-solid fa-user-plus" style="color: var(--accent-neon);"></i> Account erstellen</h3>
+            <div class="form-group">
+                <label>Benutzername</label>
+                <input type="text" id="reg-username" placeholder="Wie sollen wir dich nennen?" autocomplete="off" data-lpignore="true">
+            </div>
+            <div class="form-group">
+                <label>E-Mail Adresse</label>
+                <input type="text" id="reg-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true">
+            </div>
+            <div class="form-group">
+                <label>Passwort (Min. 6 Zeichen)</label>
+                <input type="text" id="reg-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true">
+            </div>
+            <div id="reg-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeRegisterModal()">Abbrechen</button>
+                <button type="button" class="btn-add" onclick="handleRegister()">Erstellen</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="forgot-password-modal" class="modal-overlay">
+        <div class="modal" onkeydown="if(event.key === 'Enter') handlePasswordResetRequest();">
+            <h3><i class="fa-solid fa-key" style="color: var(--accent-blue);"></i> Passwort zurücksetzen</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Gib deine E-Mail ein. Wir senden dir einen Link, um ein neues Passwort festzulegen.</p>
+            <div class="form-group">
+                <label>E-Mail Adresse</label>
+                <input type="text" id="forgot-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true">
+            </div>
+            <div id="forgot-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeForgotPasswordModal()">Abbrechen</button>
+                <button type="button" class="btn-add" onclick="handlePasswordResetRequest()">Link senden</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="recovery-modal" class="modal-overlay">
+        <div class="modal" onkeydown="if(event.key === 'Enter') handleRecoveryUpdate();">
+            <h3><i class="fa-solid fa-unlock-keyhole" style="color: var(--accent-green);"></i> Neues Passwort</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Bitte vergib jetzt dein neues Passwort.</p>
+            <div class="form-group">
+                <label>Neues Passwort</label>
+                <input type="text" id="recovery-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true">
+            </div>
+            <div id="recovery-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn-add" onclick="handleRecoveryUpdate()">Speichern & Einloggen</button>
             </div>
         </div>
     </div>
@@ -610,13 +610,16 @@
                     <span id="detail-format" class="format-badge" style="background: rgba(138, 43, 226, 0.2); color: #c18eff;">Format</span>
                     <span id="detail-meta" class="status-badge" style="background: rgba(0, 245, 212, 0.15); color: var(--accent-neon);">Meta</span>
                 </div>
+                
+                <div id="detail-action-container" style="display: flex; gap: 10px; margin-bottom: 15px; justify-content: center; width: 100%;"></div>
+
                 <button class="btn-auth" style="background: rgba(255,255,255,0.1); color: white; width: 100%; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600;" onclick="closeDetailModal()">Schließen</button>
             </div>
         </div>
     </div>
 
     <div id="modal" class="modal-overlay">
-        <div class="modal">
+        <div class="modal" onkeydown="if(event.key === 'Enter') saveAnime();">
             <h3 id="modal-title">Anime hinzufügen</h3>
             <input type="hidden" id="modal-page-context">
             <input type="hidden" id="anime-edit-id">
@@ -655,8 +658,44 @@
     </div>
 
     <div id="settings-modal" class="modal-overlay">
-        <div class="modal" id="settings-content-container">
+        <div class="modal">
+            <h3><i class="fa-solid fa-gear" style="color: var(--text-muted);"></i> Einstellungen</h3>
+            
+            <div style="margin-top: 20px;" onkeydown="if(event.key === 'Enter') handleSettingsUsernameChange();">
+                <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Benutzername ändern</h4>
+                <div class="form-group">
+                    <input type="text" id="settings-new-username" placeholder="Neuer Benutzername" autocomplete="off" data-lpignore="true">
+                </div>
+                <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsUsernameChange()">
+                    Namen aktualisieren
+                </button>
             </div>
+
+            <hr class="settings-divider">
+            
+            <div onkeydown="if(event.key === 'Enter') handleSettingsPasswordChange();">
+                <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Passwort ändern</h4>
+                <div class="form-group">
+                    <input type="text" id="settings-new-password" class="pw-input" placeholder="Neues Passwort (min. 6 Zeichen)" autocomplete="off" data-lpignore="true">
+                </div>
+                <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()">
+                    Passwort aktualisieren
+                </button>
+            </div>
+
+            <hr class="settings-divider">
+
+            <div>
+                <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--danger);">Gefahrenzone</h4>
+                <button class="btn-auth" style="background: rgba(255,0,85,0.1); color: var(--danger); border: 1px solid rgba(255,0,85,0.3); padding: 10px;" onclick="openDeleteConfirmModal()">
+                    <i class="fa-solid fa-trash-can"></i> Account & Daten löschen
+                </button>
+            </div>
+
+            <div class="modal-footer" style="margin-top: 20px;">
+                <button type="button" class="btn-cancel" onclick="closeSettingsModal()">Schließen</button>
+            </div>
+        </div>
     </div>
 
     <div id="delete-confirm-modal" class="modal-overlay">
@@ -715,7 +754,7 @@
         });
 
         function toggleLayout(session) {
-            const authModals = document.getElementById('auth-modals-wrapper');
+            const authLayout = document.getElementById('auth-layout');
             const appLayout = document.getElementById('app-layout');
             
             if (session) {
@@ -723,31 +762,26 @@
                 const displayUser = metadata.username || session.user.email.split('@')[0];
                 document.getElementById('header-username-display').innerText = displayUser;
 
-                if (authModals) {
-                    // DER ULTIMATIVE FIX: Wir löschen alle Login-Modals physisch aus dem Dokument!
-                    authModals.innerHTML = ''; 
-                }
+                authLayout.style.opacity = '0';
+                setTimeout(() => { 
+                    authLayout.classList.remove('active-layout');
+                    authLayout.innerHTML = ''; 
 
-                appLayout.classList.add('active-layout'); 
-                setTimeout(() => {
-                    appLayout.classList.add('visible');
-                    // SCROLL FIX: Die Seite fängt immer exakt oben an
-                    window.scrollTo(0, 0); 
-                    if(isInitialLoad) loadDataFromCloud(); 
-                    isInitialLoad = false;
-                }, 50);
+                    appLayout.classList.add('active-layout'); 
+                    setTimeout(() => {
+                        appLayout.classList.add('visible');
+                        window.scrollTo(0, 0); 
+                        if(isInitialLoad) loadDataFromCloud(); 
+                        isInitialLoad = false;
+                    }, 50);
+                }, isInitialLoad ? 0 : 400);
             } else {
                 appLayout.style.opacity = '0';
                 setTimeout(() => { 
                     appLayout.classList.remove('active-layout');
                     appLayout.style.display = 'none';
-                    if (authModals && !authModals.innerHTML.trim()) {
-                        // Notfall: Falls der User sich ausloggt und die Seite nicht neu geladen hat
-                        location.reload();
-                    } else if (authModals) {
-                        document.getElementById('auth-layout').classList.add('active-layout'); 
-                        setTimeout(() => document.getElementById('auth-layout').classList.add('visible'), 50);
-                    }
+                    authLayout.classList.add('active-layout'); 
+                    setTimeout(() => authLayout.classList.add('visible'), 50);
                     isInitialLoad = false;
                 }, isInitialLoad ? 0 : 400);
             }
@@ -783,8 +817,6 @@
                     sessionStorage.removeItem('tempSessionActive');
                 }
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> Eingeloggt!';
-                
-                // Wir laden die Seite hart neu, um das DOM komplett von Passwörtern zu bereinigen!
                 location.reload(); 
             }
         }
@@ -864,64 +896,15 @@
             }
         }
 
-        // ==========================================
-        // EINSTELLUNGEN MODAL (DYNAMISCH & SICHER)
-        // ==========================================
         function openSettingsModal() { 
-            const container = document.getElementById('settings-content-container');
-            container.innerHTML = `
-                <h3><i class="fa-solid fa-gear" style="color: var(--text-muted);"></i> Einstellungen</h3>
-                
-                <div style="margin-top: 20px;">
-                    <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Name ändern</h4>
-                    <div class="form-group">
-                        <input type="text" id="setting-name-val" placeholder="Neuer Name" autocomplete="off" data-lpignore="true">
-                    </div>
-                    <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsUsernameChange()">
-                        Namen aktualisieren
-                    </button>
-                </div>
-
-                <hr class="settings-divider">
-                
-                <div>
-                    <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Sicherheit ändern</h4>
-                    <div class="form-group">
-                        <input type="text" id="setting-sec-val" class="pw-input" placeholder="Neuer Code (min. 6 Zeichen)" autocomplete="off" data-lpignore="true">
-                    </div>
-                    <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()">
-                        Sicherheit aktualisieren
-                    </button>
-                </div>
-
-                <hr class="settings-divider">
-
-                <div>
-                    <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--danger);">Gefahrenzone</h4>
-                    <button class="btn-auth" style="background: rgba(255,0,85,0.1); color: var(--danger); border: 1px solid rgba(255,0,85,0.3); padding: 10px;" onclick="openDeleteConfirmModal()">
-                        <i class="fa-solid fa-trash-can"></i> Account & Daten löschen
-                    </button>
-                </div>
-
-                <div class="modal-footer" style="margin-top: 20px;">
-                    <button type="button" class="btn-cancel" onclick="closeSettingsModal()">Schließen</button>
-                </div>
-            `;
-            
-            document.getElementById('setting-name-val').value = document.getElementById('header-username-display').innerText;
+            document.getElementById('settings-new-username').value = document.getElementById('header-username-display').innerText;
+            document.getElementById('settings-new-password').value = '';
             document.getElementById('settings-modal').classList.add('active'); 
         }
-        
-        function closeSettingsModal() { 
-            document.getElementById('settings-modal').classList.remove('active'); 
-            // Nach der CSS Animation löschen wir die Box, damit iOS nicht scannt
-            setTimeout(() => {
-                document.getElementById('settings-content-container').innerHTML = '';
-            }, 400);
-        }
+        function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
 
         async function handleSettingsUsernameChange() {
-            const newUsername = document.getElementById('setting-name-val').value.trim();
+            const newUsername = document.getElementById('settings-new-username').value.trim();
             if(!newUsername) return alert("Bitte einen gültigen Namen eingeben.");
             
             const { error } = await db.auth.updateUser({ data: { username: newUsername } });
@@ -931,21 +914,22 @@
             } else {
                 document.getElementById('header-username-display').innerText = newUsername;
                 closeSettingsModal();
-                showToast("Name erfolgreich geändert! 👤");
+                showToast("Benutzername erfolgreich geändert! 👤");
             }
         }
 
         async function handleSettingsPasswordChange() {
-            const newPassword = document.getElementById('setting-sec-val').value;
+            const newPassword = document.getElementById('settings-new-password').value;
             if(newPassword.length < 6) return alert("Das neue Passwort muss mindestens 6 Zeichen lang sein.");
             
             const { error } = await db.auth.updateUser({ password: newPassword });
             
             if(error) {
-                alert("Fehler beim Ändern.");
+                alert("Fehler beim Ändern des Passworts.");
             } else {
+                document.getElementById('settings-new-password').value = '';
                 closeSettingsModal();
-                showToast("Erfolgreich geändert! 🔐");
+                showToast("Passwort erfolgreich geändert! 🔐");
             }
         }
         
@@ -1027,7 +1011,7 @@
                         </div>
                     `}).join('');
                 } catch(e) { 
-                    resultsDiv.innerHTML = '<div style="padding:15px; text-align:center; color:var(--danger);">Fehler bei class der Suche.</div>';
+                    resultsDiv.innerHTML = '<div style="padding:15px; text-align:center; color:var(--danger);">Fehler bei der Suche.</div>';
                 }
             }, 600);
         }
@@ -1100,12 +1084,15 @@
             document.getElementById('detail-format').innerText = formatText;
             
             let metaDisplay = anime.meta.replace('STAFFEL|', '').replace('FILM|', '');
-            if(metaDisplay === 'Keine Info') metaDisplay = 'Abgeschlossen';
+            if(metaDisplay === 'Keine Info') {
+                if (anime.category === 'watchlist') metaDisplay = 'Auf der Watchlist';
+                else if (anime.category === 'current') metaDisplay = 'Wird aktuell geschaut';
+                else metaDisplay = 'Abgeschlossen';
+            }
             
             const metaBadge = document.getElementById('detail-meta');
             const modalBox = document.querySelector('#detail-modal .modal');
             
-            // INDIVIDUELLE RAHMEN & ALARM-FARBEN
             if (anime.isReleased) { 
                 metaDisplay = anime.type === 'film' ? '🔥 NEUER FILM IST DRAUßEN!' : '🔥 NEUE STAFFEL IST DRAUßEN!';
                 metaBadge.style.background = 'rgba(255, 0, 85, 0.15)';
@@ -1114,7 +1101,6 @@
                 modalBox.style.borderColor = 'rgba(255, 0, 85, 0.4)';
             } else {
                 metaBadge.style.border = 'none';
-                
                 if (anime.category === 'watched') {
                     modalBox.style.borderColor = 'rgba(46, 204, 113, 0.4)'; 
                     metaBadge.style.color = 'var(--accent-green)';
@@ -1127,7 +1113,6 @@
                     modalBox.style.borderColor = 'rgba(58, 134, 255, 0.4)'; 
                     metaBadge.style.color = 'var(--accent-blue)';
                     metaBadge.style.background = 'rgba(58, 134, 255, 0.15)';
-                    if(metaDisplay === 'Abgeschlossen') metaDisplay = 'Auf der Watchlist';
                 } else {
                     modalBox.style.borderColor = 'rgba(138, 43, 226, 0.4)'; 
                     metaBadge.style.color = 'var(--accent-purple)';
@@ -1136,6 +1121,22 @@
             }
             
             metaBadge.innerText = metaDisplay;
+            
+            // --- NEU: DYNAMISCHE BUTTONS IM POP-UP ---
+            let modalActions = '';
+            if (anime.category === 'watchlist' || anime.category === 'next-season') {
+                modalActions = `<button type="button" class="btn-auth" style="background: var(--accent-neon); color: var(--bg-color); margin: 0; flex: 1;" onclick="modalActionMoveToCurrent('${anime.id}')"><i class="fa-solid fa-circle-play"></i> Jetzt schauen</button>`;
+            } else if (anime.category === 'current') {
+                modalActions = `<button type="button" class="btn-auth" style="background: var(--accent-green); color: var(--bg-color); margin: 0; flex: 1;" onclick="modalActionFinishCurrent('${anime.id}', '${anime.title.replace(/'/g, "\\'")}')"><i class="fa-solid fa-circle-check"></i> Abschließen</button>`;
+            }
+            
+            const actionContainer = document.getElementById('detail-action-container');
+            if(modalActions) {
+                actionContainer.innerHTML = modalActions;
+                actionContainer.style.display = 'flex';
+            } else {
+                actionContainer.style.display = 'none';
+            }
 
             document.getElementById('detail-modal').classList.add('active');
         }
@@ -1143,6 +1144,30 @@
         function closeDetailModal(event) {
             if (event) event.stopPropagation();
             document.getElementById('detail-modal').classList.remove('active');
+        }
+        
+        // NEU: SMoothe Funktionen für Modal-Buttons
+        function modalActionMoveToCurrent(id) {
+            closeDetailModal();
+            // Finde das Element in der Liste im Hintergrund für einen weichen Übergang
+            const elements = document.querySelectorAll(`[id*="-${id}-"]`);
+            elements.forEach(el => el.classList.add('fade-out'));
+            
+            setTimeout(async () => {
+                try {
+                    const { error } = await db.from('animes').update({ category: 'current', meta: 'Keine Info' }).eq('id', id);
+                    if(error) throw error;
+                    await loadDataFromCloud(true);
+                    showToast("Verschoben zu 'Aktuell am Schauen' ⚡");
+                } catch(e) { alert("Aktion fehlgeschlagen."); await loadDataFromCloud(true); }
+            }, 350);
+        }
+
+        function modalActionFinishCurrent(id, title) {
+            closeDetailModal();
+            setTimeout(() => {
+                finishCurrentAnime(id, title);
+            }, 350);
         }
 
         function openModal(pageContext) {
@@ -1347,7 +1372,8 @@
             }, 350);
         }
 
-        function moveWatchlistToCurrent(id, elementId) {
+        // --- NEU BENANNT: FÜR WATCHLIST UND FOLGESTAFFELN GÜLTIG ---
+        function moveToCurrent(id, elementId) {
             animateAndExecute(elementId, 'fade-out', async () => {
                 const { error } = await db.from('animes').update({ category: 'current', meta: 'Keine Info' }).eq('id', id);
                 if(error) throw error;
@@ -1415,11 +1441,12 @@
                 
                 const releaseBtnClass = anime.isReleased ? 'btn-action release-check active' : 'btn-action release-check';
                 actionHTML = `
+                    <button type="button" class="btn-action start-watching" onclick="moveToCurrent('${anime.id}', '${uniqueId}')" title="Jetzt schauen"><i class="fa-solid fa-circle-play"></i></button>
                     <button type="button" class="btn-action edit" onclick="editAnime('${anime.id}')" title="Bearbeiten"><i class="fa-solid fa-pen"></i></button>
                     <button type="button" class="${releaseBtnClass}" onclick="toggleRelease('${anime.id}', ${anime.isReleased}, '${uniqueId}')" title="Status umschalten"><i class="fa-solid ${anime.isReleased ? 'fa-circle-check' : 'fa-circle'}"></i></button>`;
             } 
             else if(context === 'watchlist') {
-                actionHTML = `<button type="button" class="btn-action start-watching" onclick="moveWatchlistToCurrent('${anime.id}', '${uniqueId}')" title="Jetzt schauen"><i class="fa-solid fa-circle-play"></i></button>`;
+                actionHTML = `<button type="button" class="btn-action start-watching" onclick="moveToCurrent('${anime.id}', '${uniqueId}')" title="Jetzt schauen"><i class="fa-solid fa-circle-play"></i></button>`;
             }
             else if(context === 'current') {
                 actionHTML = `<button type="button" class="btn-action check" onclick="finishCurrentAnime('${anime.id}', '${anime.title.replace(/'/g, "\\'")}')" title="Serie abschließen"><i class="fa-solid fa-circle-check"></i></button>`;
