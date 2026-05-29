@@ -175,10 +175,10 @@
         .color-watched { color: var(--accent-green); }
         .color-waiting { color: var(--accent-purple); }
         .color-released { color: var(--accent-orange); }
-        .color-watchlist { color: var(--accent-blue); font-size: 1.8rem; margin-bottom: 5px; }
+        .color-watchlist { color: var(--accent-blue); font-size: 1.8rem; margin-bottom: 5px; } 
         .color-current { color: var(--accent-neon); }
 
-        /* --- API COVER STYLING --- */
+        /* --- API COVER STYLING (Verbessert für HD) --- */
         .anime-cover { width: 45px; height: 65px; object-fit: cover; border-radius: 6px; margin-right: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); flex-shrink: 0; }
         .grid-layout-watchlist .anime-cover { width: 80px; height: 115px; margin-right: 0; margin-bottom: 5px; }
         
@@ -804,7 +804,7 @@
         }
 
         // ==========================================
-        // API SUCHE (JIKAN) - MIT DEUTSCHER ÜBERSETZUNG
+        // API SUCHE (JIKAN) - HOHE AUFLÖSUNG & ÜBERSETZUNG
         // ==========================================
         let searchTimeout;
         async function searchAnime(query) {
@@ -831,7 +831,6 @@
                     }
                     
                     resultsDiv.innerHTML = data.map(anime => {
-                        // NEU: Logik zur Extraktion des besten Namens (Deutsch -> Englisch -> Default)
                         let bestTitle = anime.title;
                         if (anime.titles && anime.titles.length > 0) {
                             const ger = anime.titles.find(t => t.type === 'German');
@@ -840,12 +839,14 @@
                             else if (eng) bestTitle = eng.title;
                         }
 
-                        const cover = anime.images?.jpg?.small_image_url || '';
+                        // NEU: HIER WIRD DIE HOHE AUFLÖSUNG GELADEN
+                        const highResCover = anime.images?.webp?.large_image_url || anime.images?.jpg?.large_image_url || '';
+                        
                         const titleEscaped = bestTitle.replace(/'/g, "\\'").replace(/"/g, "&quot;");
                         
                         return `
-                        <div class="search-item" onclick="selectAnime('${titleEscaped}', '${cover}', ${anime.mal_id})">
-                            <img src="${cover}" class="search-cover" onerror="this.style.display='none'">
+                        <div class="search-item" onclick="selectAnime('${titleEscaped}', '${highResCover}', ${anime.mal_id})">
+                            <img src="${highResCover}" class="search-cover" onerror="this.style.display='none'">
                             <span style="font-weight: 600; font-size: 0.9rem;">${bestTitle}</span>
                         </div>
                     `}).join('');
@@ -900,7 +901,6 @@
             document.getElementById('anime-meta-input').value = '';
             document.getElementById('anime-is-released').checked = false;
             
-            // API Felder leeren
             document.getElementById('anime-cover-url').value = '';
             document.getElementById('anime-mal-id').value = '';
             document.getElementById('search-results').innerHTML = '';
@@ -932,7 +932,6 @@
             document.getElementById('anime-edit-id').value = anime.id;
             document.getElementById('anime-title').value = anime.title;
             
-            // API Felder füllen
             document.getElementById('anime-cover-url').value = anime.coverUrl || '';
             document.getElementById('anime-mal-id').value = anime.malId || '';
             document.getElementById('search-results').innerHTML = '';
