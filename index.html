@@ -39,7 +39,7 @@
         #app-layout { opacity: 0; pointer-events: none; position: absolute; width: 100%; top: 0; left: 0; padding-bottom: 60px; transform: scale(0.98); }
         #app-layout.visible { opacity: 1; pointer-events: auto; position: relative; transform: scale(1); }
 
-        /* --- AUTH SCREEN --- */
+        /* --- AUTH SCREEN STYLING --- */
         .auth-container { background: var(--card-bg); border-radius: 20px; padding: 40px 30px; width: 100%; max-width: 400px; border: 1px solid rgba(138, 43, 226, 0.25); box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center; }
         .auth-logo { margin-bottom: 30px; }
         .auth-logo img { width: 80px; border-radius: 20px; box-shadow: 0 0 20px rgba(138, 43, 226, 0.5); }
@@ -56,7 +56,7 @@
         .btn-login { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); }
         .btn-login:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
         
-        .auth-switch { color: var(--text-muted); font-size: 0.9rem; margin-top: 10px; }
+        .auth-switch { color: var(--text-muted); font-size: 0.9rem; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
         .auth-switch a { color: var(--accent-neon); text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .auth-switch a:hover { color: white; }
         .auth-error { color: var(--accent-orange); font-size: 0.85rem; margin-top: 15px; min-height: 20px; font-weight: 600; }
@@ -72,7 +72,10 @@
         .logo img { width: 45px; height: 45px; border-radius: 12px; box-shadow: 0 0 10px rgba(138, 43, 226, 0.5); object-fit: cover; flex-shrink: 0; display: block; }
         .logo span { font-size: 1.8rem; font-weight: 700; background: linear-gradient(45deg, var(--accent-neon), #b55fe6, var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; }
         
-        .header-actions { display: flex; gap: 12px; flex-shrink: 0; }
+        .header-actions { display: flex; gap: 15px; align-items: center; flex-shrink: 0; }
+        .header-greeting { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        .header-greeting b { color: var(--text-color); }
+        
         .btn-icon-header { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); width: 40px; height: 40px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
         .btn-icon-header:hover { color: white; background: rgba(255,255,255,0.1); transform: scale(1.05); }
 
@@ -187,7 +190,7 @@
         /* --- MODALS --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 18, 0.85); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 100; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal { background: var(--card-bg); border-radius: 20px; padding: 30px; width: 90%; max-width: 450px; border: 1px solid rgba(138, 43, 226, 0.25); transform: scale(0.9) translateY(20px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
+        .modal { background: var(--card-bg); border-radius: 20px; padding: 30px; width: 90%; max-width: 450px; border: 1px solid rgba(138, 43, 226, 0.25); transform: scale(0.9) translateY(20px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 15px 35px rgba(0,0,0,0.4); max-height: 90vh; overflow-y: auto; }
         .modal-overlay.active .modal { transform: scale(1) translateY(0); }
         .modal h3 { margin-bottom: 20px; font-size: 1.35rem; font-weight: 700; }
         .form-group { margin-bottom: 20px; }
@@ -198,21 +201,23 @@
         .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; padding: 10px; }
         .btn-cancel:hover { color: white; }
 
-        /* Danger Modal */
+        /* Danger Modal & Einstellungen */
         .modal-danger { border-color: rgba(255, 0, 85, 0.4); }
         .btn-danger-action { background: linear-gradient(45deg, var(--danger), var(--accent-orange)); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 0, 85, 0.3); transition: all 0.2s ease; }
         .btn-danger-action:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 0, 85, 0.5); }
         .danger-text { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 25px; }
         .danger-text strong { color: var(--danger); }
+        
+        .settings-divider { border: 0; height: 1px; background: rgba(255,255,255,0.1); margin: 25px 0; }
 
         .empty-state { text-align: center; color: var(--text-muted); padding: 25px; font-style: italic; font-size: 0.9rem; background: rgba(255,255,255,0.01); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.05); width: 100%; }
         .loading-notice { text-align: center; padding: 40px; color: var(--accent-neon); font-weight: 600; font-size: 1.2rem; }
 
-        /* ================= MOBILE OPTIMIERUNG (GEFIXT) ================= */
         @media (max-width: 600px) {
             header { padding: 15px; }
             .logo img { width: 35px; height: 35px; }
             .logo span { font-size: 1.3rem; }
+            .header-greeting { display: none; } /* Versteckt "Hey, Name" auf kleinen Bildschirmen für mehr Platz */
             .btn-icon-header { width: 35px; height: 35px; font-size: 1rem; }
             
             .grid-navigation { grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -222,7 +227,6 @@
             .anime-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .anime-grid-item { padding: 12px; border-radius: 10px; }
             
-            /* NEUES MOBILE LAYOUT FÜR DIE KOPFZEILEN DER UNTERSEITEN */
             .page-header { flex-direction: column; align-items: center; gap: 15px; padding: 20px 15px; }
             .page-header h2 { font-size: 1.35rem; text-align: center; width: 100%; justify-content: center; }
             .btn-back { align-self: flex-start; }
@@ -258,7 +262,8 @@
                     <i class="fa-solid fa-right-to-bracket"></i> Einloggen
                 </button>
                 <div class="auth-switch">
-                    Neu hier? <a onclick="toggleAuthMode('register')">Account erstellen</a>
+                    <a onclick="openForgotPasswordModal()" style="font-weight: 400; font-size: 0.85rem;">Passwort vergessen?</a>
+                    <div style="margin-top: 10px;">Neu hier? <a onclick="toggleAuthMode('register')">Account erstellen</a></div>
                 </div>
             </div>
 
@@ -269,6 +274,10 @@
     <div id="register-modal" class="modal-overlay">
         <div class="modal">
             <h3><i class="fa-solid fa-user-plus" style="color: var(--accent-neon);"></i> Account erstellen</h3>
+            <div class="form-group">
+                <label>Benutzername</label>
+                <input type="text" id="reg-username" placeholder="Wie sollen wir dich nennen?">
+            </div>
             <div class="form-group">
                 <label>E-Mail Adresse</label>
                 <input type="email" id="reg-email" placeholder="deine@email.de">
@@ -285,6 +294,37 @@
         </div>
     </div>
 
+    <div id="forgot-password-modal" class="modal-overlay">
+        <div class="modal">
+            <h3><i class="fa-solid fa-key" style="color: var(--accent-blue);"></i> Passwort zurücksetzen</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Gib deine E-Mail ein. Wir senden dir einen Link, um ein neues Passwort festzulegen.</p>
+            <div class="form-group">
+                <label>E-Mail Adresse</label>
+                <input type="email" id="forgot-email" placeholder="deine@email.de">
+            </div>
+            <div id="forgot-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeForgotPasswordModal()">Abbrechen</button>
+                <button class="btn-add" onclick="handlePasswordResetRequest()" id="btn-forgot-submit">Link senden</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="recovery-modal" class="modal-overlay">
+        <div class="modal">
+            <h3><i class="fa-solid fa-unlock-keyhole" style="color: var(--accent-green);"></i> Neues Passwort</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Bitte vergib jetzt dein neues Passwort.</p>
+            <div class="form-group">
+                <label>Neues Passwort</label>
+                <input type="password" id="recovery-password" placeholder="••••••••">
+            </div>
+            <div id="recovery-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
+            <div class="modal-footer">
+                <button class="btn-add" onclick="handleRecoveryUpdate()" id="btn-recovery-submit">Speichern & Einloggen</button>
+            </div>
+        </div>
+    </div>
+
     <div id="app-layout">
         <header>
             <a class="logo" onclick="showPage('home')">
@@ -292,6 +332,7 @@
                 <span>YP AniTracker</span>
             </a>
             <div class="header-actions">
+                <div class="header-greeting">Hey, <b id="header-username-display">User</b> 👋</div>
                 <button class="btn-icon-header" onclick="openSettingsModal()" title="Einstellungen"><i class="fa-solid fa-gear"></i></button>
                 <button class="btn-icon-header" onclick="handleLogout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></button>
             </div>
@@ -407,12 +448,27 @@
     <div id="settings-modal" class="modal-overlay">
         <div class="modal">
             <h3><i class="fa-solid fa-gear" style="color: var(--text-muted);"></i> Einstellungen</h3>
-            <div style="margin-top: 30px;">
-                <button class="btn-auth" style="background: rgba(255,0,85,0.1); color: var(--danger); border: 1px solid rgba(255,0,85,0.3);" onclick="openDeleteConfirmModal()">
+            
+            <div style="margin-top: 20px;">
+                <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Passwort ändern</h4>
+                <div class="form-group">
+                    <input type="password" id="settings-new-password" placeholder="Neues Passwort (min. 6 Zeichen)">
+                </div>
+                <button class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()" id="btn-settings-pw">
+                    Passwort aktualisieren
+                </button>
+            </div>
+
+            <hr class="settings-divider">
+
+            <div>
+                <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--danger);">Gefahrenzone</h4>
+                <button class="btn-auth" style="background: rgba(255,0,85,0.1); color: var(--danger); border: 1px solid rgba(255,0,85,0.3); padding: 10px;" onclick="openDeleteConfirmModal()">
                     <i class="fa-solid fa-trash-can"></i> Account & Daten löschen
                 </button>
             </div>
-            <div class="modal-footer">
+
+            <div class="modal-footer" style="margin-top: 20px;">
                 <button class="btn-cancel" onclick="closeSettingsModal()">Schließen</button>
             </div>
         </div>
@@ -456,6 +512,10 @@
         });
 
         db.auth.onAuthStateChange((event, session) => {
+            // Spezieller Event, wenn man aus der "Passwort vergessen"-Mail kommt
+            if (event === 'PASSWORD_RECOVERY') {
+                document.getElementById('recovery-modal').classList.add('active');
+            }
             toggleLayout(session);
         });
 
@@ -464,6 +524,11 @@
             const appLayout = document.getElementById('app-layout');
             
             if (session) {
+                // Username im Header setzen
+                const metadata = session.user.user_metadata || {};
+                const displayUser = metadata.username || session.user.email.split('@')[0];
+                document.getElementById('header-username-display').innerText = displayUser;
+
                 authLayout.classList.remove('visible');
                 setTimeout(() => { 
                     appLayout.style.display = 'block'; 
@@ -524,16 +589,21 @@
         }
 
         async function handleRegister() {
-            const email = document.getElementById('reg-email').value;
+            const username = document.getElementById('reg-username').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
             const password = document.getElementById('reg-password').value;
             const errorMsg = document.getElementById('reg-error-msg');
             const btn = document.getElementById('btn-reg-submit');
             
-            if(!email || !password) return errorMsg.innerText = "Bitte Felder ausfüllen.";
+            if(!email || !password || !username) return errorMsg.innerText = "Bitte alle Felder ausfüllen.";
             if(password.length < 6) return errorMsg.innerText = "Passwort muss mind. 6 Zeichen haben.";
             
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-            const { error } = await db.auth.signUp({ email, password });
+            const { error } = await db.auth.signUp({ 
+                email, 
+                password,
+                options: { data: { username: username } } // Username in der Cloud speichern
+            });
             
             if (error) {
                 errorMsg.innerText = "Fehler: " + error.message;
@@ -551,9 +621,75 @@
         }
 
         // ==========================================
+        // PASSWORT VERGESSEN & ÄNDERN
+        // ==========================================
+        function openForgotPasswordModal() { document.getElementById('forgot-password-modal').classList.add('active'); }
+        function closeForgotPasswordModal() { document.getElementById('forgot-password-modal').classList.remove('active'); document.getElementById('forgot-error-msg').innerText = ''; }
+
+        async function handlePasswordResetRequest() {
+            const email = document.getElementById('forgot-email').value;
+            const errorMsg = document.getElementById('forgot-error-msg');
+            const btn = document.getElementById('btn-forgot-submit');
+            
+            if(!email) return errorMsg.innerText = "Bitte E-Mail eingeben.";
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            // Schickt die Mail und leitet zurück zur App
+            const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
+            
+            if(error) {
+                errorMsg.innerText = "Fehler: " + error.message;
+                btn.innerHTML = 'Link senden';
+            } else {
+                closeForgotPasswordModal();
+                alert("E-Mail gesendet! Bitte überprüfe deinen Posteingang (auch Spam).");
+                btn.innerHTML = 'Link senden';
+            }
+        }
+
+        async function handleRecoveryUpdate() {
+            const newPassword = document.getElementById('recovery-password').value;
+            const errorMsg = document.getElementById('recovery-error-msg');
+            const btn = document.getElementById('btn-recovery-submit');
+            
+            if(newPassword.length < 6) return errorMsg.innerText = "Mindestens 6 Zeichen.";
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            const { error } = await db.auth.updateUser({ password: newPassword });
+            
+            if(error) {
+                errorMsg.innerText = "Fehler: " + error.message;
+                btn.innerHTML = 'Speichern & Einloggen';
+            } else {
+                document.getElementById('recovery-modal').classList.remove('active');
+                showToast("Passwort erfolgreich geändert! 🔐");
+            }
+        }
+
+        async function handleSettingsPasswordChange() {
+            const newPassword = document.getElementById('settings-new-password').value;
+            const btn = document.getElementById('btn-settings-pw');
+            
+            if(newPassword.length < 6) return alert("Das neue Passwort muss mindestens 6 Zeichen lang sein.");
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            const { error } = await db.auth.updateUser({ password: newPassword });
+            
+            if(error) {
+                alert("Fehler beim Ändern des Passworts.");
+                btn.innerHTML = 'Passwort aktualisieren';
+            } else {
+                document.getElementById('settings-new-password').value = '';
+                btn.innerHTML = 'Passwort aktualisieren';
+                closeSettingsModal();
+                showToast("Passwort erfolgreich geändert! 🔐");
+            }
+        }
+
+        // ==========================================
         // ACCOUNT LÖSCHEN LOGIK
         // ==========================================
-        function openSettingsModal() { document.getElementById('settings-modal').classList.add('active'); }
+        function openSettingsModal() { document.getElementById('settings-modal').classList.add('active'); document.getElementById('settings-new-password').value = ''; }
         function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
         
         function openDeleteConfirmModal() { 
