@@ -221,17 +221,23 @@
             .logo img { width: 35px; height: 35px; }
             .logo span { font-size: 1.3rem; }
             
-            /* NEU: Flex-Direction auf Column für Mobile */
-            .header-actions { flex-direction: column; align-items: flex-end; gap: 4px; }
+            /* NEU: Flex-Container für Mobile Buttons & Gruß formatiert */
+            .header-actions { 
+                flex-direction: column; 
+                align-items: center; /* Zentriert den Namen exakt unter den Buttons */
+                gap: 4px; 
+            }
             .header-buttons { gap: 10px; }
             
-            /* Begrüßung sitzt jetzt perfekt unter den Buttons auf der rechten Seite */
+            /* Begrüßung ohne Emoji, mittig zentriert unter den Buttons */
             .header-greeting { 
-                display: flex !important; 
+                display: block !important; 
                 position: static; 
                 font-size: 0.75rem; 
                 color: var(--text-muted); 
                 opacity: 0.8;
+                text-align: center;
+                white-space: nowrap;
             }
             
             .btn-icon-header { width: 35px; height: 35px; font-size: 1rem; }
@@ -352,7 +358,7 @@
                     <button class="btn-icon-header" onclick="openSettingsModal()" title="Einstellungen"><i class="fa-solid fa-gear"></i></button>
                     <button class="btn-icon-header" onclick="handleLogout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></button>
                 </div>
-                <div class="header-greeting">Hey, <b id="header-username-display">User</b> 👋</div>
+                <div class="header-greeting">Hey, <b id="header-username-display">User</b></div>
             </div>
         </header>
 
