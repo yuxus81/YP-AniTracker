@@ -74,6 +74,7 @@
         .logo span { font-size: 1.8rem; font-weight: 700; background: linear-gradient(45deg, var(--accent-neon), #b55fe6, var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; }
         
         .header-actions { display: flex; gap: 15px; align-items: center; flex-shrink: 0; }
+        .header-buttons { display: flex; gap: 12px; }
         .header-greeting { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 5px; }
         .header-greeting b { color: var(--text-color); }
         
@@ -216,21 +217,21 @@
 
         /* ================= MOBILE OPTIMIERUNG ================= */
         @media (max-width: 600px) {
-            header { 
-                padding: 15px 15px 35px 15px; /* Extra Platz unten für den Text */
-            }
+            header { padding: 15px; }
             .logo img { width: 35px; height: 35px; }
             .logo span { font-size: 1.3rem; }
             
-            /* NEU: Zentrierte Begrüßung unten im Header - Mit !important erzwungen! */
+            /* NEU: Flex-Direction auf Column für Mobile */
+            .header-actions { flex-direction: column; align-items: flex-end; gap: 4px; }
+            .header-buttons { gap: 10px; }
+            
+            /* Begrüßung sitzt jetzt perfekt unter den Buttons auf der rechten Seite */
             .header-greeting { 
                 display: flex !important; 
-                position: absolute; 
-                bottom: 8px; 
-                left: 0; 
-                width: 100%; 
-                justify-content: center; 
-                font-size: 0.8rem; 
+                position: static; 
+                font-size: 0.75rem; 
+                color: var(--text-muted); 
+                opacity: 0.8;
             }
             
             .btn-icon-header { width: 35px; height: 35px; font-size: 1rem; }
@@ -347,9 +348,11 @@
                 <span>YP AniTracker</span>
             </a>
             <div class="header-actions">
+                <div class="header-buttons">
+                    <button class="btn-icon-header" onclick="openSettingsModal()" title="Einstellungen"><i class="fa-solid fa-gear"></i></button>
+                    <button class="btn-icon-header" onclick="handleLogout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></button>
+                </div>
                 <div class="header-greeting">Hey, <b id="header-username-display">User</b> 👋</div>
-                <button class="btn-icon-header" onclick="openSettingsModal()" title="Einstellungen"><i class="fa-solid fa-gear"></i></button>
-                <button class="btn-icon-header" onclick="handleLogout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></button>
             </div>
         </header>
 
