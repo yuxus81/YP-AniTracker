@@ -3,15 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YP AniTracker (Cloud)</title>
+    <title>YP AniTracker</title>
     
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0d0f18">
-    <link rel="apple-touch-icon" href="icon-192.png">
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
@@ -20,212 +15,187 @@
             --card-bg: #16192b;
             --accent-purple: #8a2be2;
             --accent-neon: #00f5d4;
-            --accent-green: #2ecc71;
-            --accent-blue: #3a86ff;
-            --accent-orange: #ff0055;
-            --danger: #ff4757;
             --text-color: #f1f3f9;
-            --text-muted: #7e8da6;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; overflow-x: hidden; }
+        body { background-color: var(--bg-color); color: var(--text-color); margin: 0; min-height: 100vh; }
         
-        /* Layouts */
-        #auth-layout, #app-layout { transition: opacity 0.5s ease; }
-        #auth-layout { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; opacity: 0; pointer-events: none; position: absolute; width: 100%; top: 0; left: 0; }
-        #auth-layout.visible { opacity: 1; pointer-events: auto; position: relative; }
-        #app-layout { opacity: 0; pointer-events: none; position: absolute; width: 100%; top: 0; left: 0; padding-bottom: 60px; }
-        #app-layout.visible { opacity: 1; pointer-events: auto; position: relative; }
+        /* Layouts - nicht mehr absolute positioniert! */
+        #auth-layout { display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        #app-layout { display: none; padding-bottom: 60px; }
 
-        /* Auth */
-        .auth-container { background: var(--card-bg); border-radius: 20px; padding: 40px 30px; width: 100%; max-width: 400px; border: 1px solid rgba(138, 43, 226, 0.25); box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center; }
-        .auth-logo { margin-bottom: 30px; }
-        .auth-logo h1 { font-size: 1.8rem; margin-top: 15px; background: linear-gradient(45deg, var(--accent-neon), #b55fe6, var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .auth-form-group { margin-bottom: 20px; text-align: left; }
-        .auth-form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
-        .auth-form-group input { width: 100%; padding: 14px; background: var(--bg-color); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: white; }
-        .auth-form-group input:focus { border-color: var(--accent-purple); }
-        .btn-auth { width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-bottom: 10px; }
-        .btn-login { background: var(--accent-purple); color: white; }
-        .auth-switch { color: var(--text-muted); font-size: 0.9rem; margin-top: 10px; }
-        .auth-switch a { color: var(--accent-neon); cursor: pointer; }
+        /* Auth Container */
+        .auth-container { background: var(--card-bg); border-radius: 20px; padding: 40px; width: 100%; max-width: 400px; border: 1px solid var(--accent-purple); text-align: center; }
+        .auth-form-group { margin-bottom: 15px; text-align: left; }
+        .auth-form-group input { width: 100%; padding: 12px; background: #0d0f18; border: 1px solid #333; border-radius: 8px; color: white; }
+        .btn-auth { width: 100%; padding: 12px; border: none; border-radius: 8px; background: var(--accent-purple); color: white; cursor: pointer; margin-top: 10px; }
 
         /* Header */
-        header { background: linear-gradient(135deg, #180f2b 0%, #0d0f18 100%); padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--accent-purple); }
-        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer; }
-        .logo img { width: 45px; height: 45px; border-radius: 12px; object-fit: cover; }
-        .logo span { font-size: 1.8rem; font-weight: 700; background: linear-gradient(45deg, var(--accent-neon), #b55fe6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .header-actions { display: flex; gap: 15px; align-items: center; }
-        .btn-icon-header { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); width: 40px; height: 40px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; }
+        header { background: #16192b; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .logo span { font-weight: 700; font-size: 1.5rem; background: linear-gradient(to right, var(--accent-neon), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
+        .header-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+        .header-greeting { font-size: 0.8rem; color: var(--text-muted); }
+        .header-buttons { display: flex; gap: 10px; }
+        .btn-icon { background: none; border: 1px solid #333; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+
         /* Pages */
-        .container { max-width: 950px; margin: 30px auto; padding: 0 20px; }
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; }
         .page { display: none; } .page.active { display: block; }
         
-        /* Items */
-        .anime-item { background: var(--card-bg); border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-left: 4px solid var(--accent-purple); transition: 0.3s; }
-        .anime-cover { width: 60px; height: 85px; border-radius: 6px; object-fit: cover; margin-right: 15px; }
-        .anime-info-wrapper { display: flex; align-items: center; }
+        /* Anime Item */
+        .anime-item { background: var(--card-bg); padding: 15px; border-radius: 10px; display: flex; align-items: center; margin-bottom: 10px; border-left: 4px solid var(--accent-purple); }
+        .anime-cover { width: 50px; height: 70px; object-fit: cover; border-radius: 4px; margin-right: 15px; }
         
-        /* Modal & Search */
+        /* Utilities */
         .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 1000; }
         .modal-overlay.active { display: flex; }
-        .modal { background: var(--card-bg); padding: 30px; border-radius: 20px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; border: 1px solid var(--accent-purple); }
-        .search-res { position: absolute; top: 100%; left: 0; width: 100%; background: #1a1e36; border-radius: 0 0 10px 10px; max-height: 200px; overflow-y: auto; z-index: 2000; }
-        .search-item { padding: 10px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .search-item:hover { background: var(--accent-purple); }
+        .modal { background: var(--card-bg); padding: 20px; border-radius: 15px; width: 90%; max-width: 400px; }
         
-        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--accent-purple); color: white; padding: 12px 25px; border-radius: 30px; display: none; }
-        .toast.show { display: block; }
+        @media (max-width: 600px) {
+            .header-greeting { font-size: 0.7rem; }
+        }
     </style>
 </head>
 <body>
 
     <div id="auth-layout">
         <div class="auth-container">
-            <h1>YP AniTracker</h1>
-            <div id="login-form">
-                <div class="auth-form-group">
-                    <label>E-Mail</label>
-                    <input type="email" id="login-email">
-                </div>
-                <div class="auth-form-group">
-                    <label>Passwort</label>
-                    <input type="password" id="login-password">
-                </div>
-                <button class="btn-auth btn-login" onclick="handleLogin()">Einloggen</button>
+            <h2>Willkommen zurück</h2>
+            <div class="auth-form-group">
+                <label>E-Mail</label>
+                <input type="email" id="login-email">
             </div>
+            <div class="auth-form-group">
+                <label>Passwort</label>
+                <input type="password" id="login-password">
+            </div>
+            <button class="btn-auth" onclick="handleLogin()">Einloggen</button>
+            <div class="auth-switch"><a onclick="toggleAuthMode('register')">Noch keinen Account?</a></div>
+            <div id="auth-error-msg" style="color:red; margin-top:10px;"></div>
         </div>
     </div>
 
     <div id="app-layout">
         <header>
-            <a class="logo" onclick="showPage('home')">
-                <img src="icon-192.png" alt="Logo">
-                <span>YP AniTracker</span>
-            </a>
+            <div class="logo" onclick="showPage('home')">
+                <img src="icon-192.png" style="width: 30px;" onerror="this.style.display='none'">
+                <span>AniTracker</span>
+            </div>
             <div class="header-actions">
+                <div class="header-buttons">
+                    <button class="btn-icon" onclick="openSettingsModal()"><i class="fa-solid fa-gear"></i></button>
+                    <button class="btn-icon" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i></button>
+                </div>
                 <div class="header-greeting">Hey, <b id="header-username-display">User</b></div>
-                <button class="btn-icon-header" onclick="openSettingsModal()"><i class="fa-solid fa-gear"></i></button>
-                <button class="btn-icon-header" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i></button>
             </div>
         </header>
 
         <div class="container">
             <div id="page-home" class="page active">
-                <button class="btn-add" onclick="openModal('next-season')">+ Anime hinzufügen</button>
-                <div id="list-current" class="anime-list" style="margin-top: 20px;"></div>
+                <button class="btn-auth" style="width: auto; padding: 10px 20px;" onclick="openModal('current')">+ Anime hinzufügen</button>
+                <div id="list-current" style="margin-top: 20px;"></div>
             </div>
         </div>
     </div>
 
     <div id="modal" class="modal-overlay">
         <div class="modal">
-            <h3 id="modal-title">Anime hinzufügen</h3>
+            <h3>Anime hinzufügen</h3>
             <input type="hidden" id="modal-page-context">
             <input type="hidden" id="anime-cover-url">
             <input type="hidden" id="anime-mal-id">
             
-            <div class="form-group" style="position: relative;">
-                <label>Suche Anime</label>
-                <input type="text" id="anime-title" placeholder="Tippe zum Suchen..." oninput="searchAnime(this.value)">
-                <div id="search-results" class="search-res"></div>
+            <div class="auth-form-group" style="position: relative;">
+                <label>Name</label>
+                <input type="text" id="anime-title" oninput="searchAnime(this.value)">
+                <div id="search-results" style="position: absolute; width: 100%; background: #0d0f18; border: 1px solid #333; z-index: 10;"></div>
             </div>
-            
-            <div id="type-field-group" class="form-group" style="display: none;">
-                <label>Format</label>
-                <select id="anime-type">
-                    <option value="staffel">Neue Staffel</option>
-                    <option value="film">Film</option>
-                </select>
-            </div>
-
-            <div class="modal-footer" style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="btn-cancel" onclick="closeModal()">Abbrechen</button>
-                <button class="btn-add" onclick="saveAnime()">Speichern</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-auth" onclick="closeModal()">Abbrechen</button>
+                <button class="btn-auth" style="background: var(--accent-green);" onclick="saveAnime()">Speichern</button>
             </div>
         </div>
     </div>
-
-    <div id="toast-notification" class="toast">Erfolgreich!</div>
 
     <script>
         const SUPABASE_URL = "https://anyvdbweojvaztyiacwb.supabase.co";
         const API_KEY = "sb_publishable_6A73CDl65UrCWWVbTz9z7A_nu3cIWME";
         const db = window.supabase.createClient(SUPABASE_URL, API_KEY);
 
-        // API Suche
-        let searchTimeout;
-        async function searchAnime(query) {
-            clearTimeout(searchTimeout);
-            const resultsDiv = document.getElementById('search-results');
-            if(query.length < 3) { resultsDiv.innerHTML = ''; return; }
+        // Auth Logic
+        db.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                document.getElementById('auth-layout').style.display = 'none';
+                document.getElementById('app-layout').style.display = 'block';
+                document.getElementById('app-layout').classList.add('visible');
+                document.getElementById('header-username-display').innerText = session.user.user_metadata.username || "User";
+                loadDataFromCloud();
+            } else {
+                document.getElementById('auth-layout').style.display = 'flex';
+                document.getElementById('auth-layout').classList.add('visible');
+            }
+        });
 
-            searchTimeout = setTimeout(async () => {
-                try {
-                    const res = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=5`);
-                    const { data } = await res.json();
-                    resultsDiv.innerHTML = data.map(anime => `
-                        <div class="search-item" onclick="selectAnime('${anime.title.replace(/'/g, "\\'")}', '${anime.images.jpg.image_url}', ${anime.mal_id})">
-                            <img src="${anime.images.jpg.small_image_url}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
-                            <span>${anime.title}</span>
-                        </div>
-                    `).join('');
-                } catch(e) { resultsDiv.innerHTML = '<div class="search-item">Fehler bei Suche</div>'; }
-            }, 500);
+        async function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const { error } = await db.auth.signInWithPassword({ email, password });
+            if (error) document.getElementById('auth-error-msg').innerText = error.message;
+            else location.reload();
         }
 
-        function selectAnime(title, coverUrl, malId) {
-            document.getElementById('anime-title').value = title;
-            document.getElementById('anime-cover-url').value = coverUrl;
-            document.getElementById('anime-mal-id').value = malId;
+        async function handleLogout() {
+            await db.auth.signOut();
+            location.reload();
+        }
+
+        // Suche & Speichern
+        async function searchAnime(query) {
+            if(query.length < 3) return;
+            const res = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=5`);
+            const { data } = await res.json();
+            document.getElementById('search-results').innerHTML = data.map(a => `
+                <div style="padding: 10px; cursor: pointer; border-bottom: 1px solid #333;" onclick="selectAnime('${a.title.replace(/'/g, "\\'")}', '${a.images.jpg.image_url}', ${a.mal_id})">
+                    ${a.title}
+                </div>
+            `).join('');
+        }
+
+        function selectAnime(t, c, m) {
+            document.getElementById('anime-title').value = t;
+            document.getElementById('anime-cover-url').value = c;
+            document.getElementById('anime-mal-id').value = m;
             document.getElementById('search-results').innerHTML = '';
         }
 
         async function saveAnime() {
             const payload = {
                 title: document.getElementById('anime-title').value,
-                category: document.getElementById('modal-page-context').value,
+                category: 'current',
                 cover_url: document.getElementById('anime-cover-url').value,
                 mal_id: parseInt(document.getElementById('anime-mal-id').value) || null
             };
-            
-            const { error } = await db.from('animes').insert([payload]);
-            if (!error) {
-                closeModal();
-                showToast("Gespeichert!");
-                loadDataFromCloud(true);
-            } else {
-                alert("Fehler: " + error.message);
-            }
+            await db.from('animes').insert([payload]);
+            closeModal();
+            loadDataFromCloud();
         }
 
         async function loadDataFromCloud() {
             const { data } = await db.from('animes').select('*');
-            const list = document.getElementById('list-current');
-            list.innerHTML = data.map(anime => `
+            document.getElementById('list-current').innerHTML = data.map(a => `
                 <div class="anime-item">
-                    <div class="anime-info-wrapper">
-                        ${anime.cover_url ? `<img src="${anime.cover_url}" class="anime-cover">` : ''}
-                        <h4>${anime.title}</h4>
-                    </div>
+                    ${a.cover_url ? `<img src="${a.cover_url}" class="anime-cover">` : ''}
+                    <h4>${a.title}</h4>
                 </div>
             `).join('');
         }
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast-notification');
-            toast.innerText = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
-        }
-
         function closeModal() { document.getElementById('modal').classList.remove('active'); }
-        function openModal(ctx) { 
-            document.getElementById('modal-page-context').value = ctx;
-            document.getElementById('modal').classList.add('active'); 
-        }
+        function openModal(ctx) { document.getElementById('modal').classList.add('active'); }
+        function showPage(p) { document.querySelectorAll('.page').forEach(el => el.classList.remove('active')); document.getElementById('page-'+p).classList.add('active'); }
+        function openSettingsModal() { alert("Einstellungen Modul folgt."); }
     </script>
 </body>
 </html>
