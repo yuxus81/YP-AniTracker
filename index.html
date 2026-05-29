@@ -92,17 +92,16 @@
 
         @keyframes fadeInPage { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- PERFEKTIONIERTE RELAX GLOW ANIMATION (KEIN VIBRIEREN MEHR) --- */
+        /* --- PERFEKTIONIERTE RELAX GLOW ANIMATION --- */
         @keyframes relaxGlow {
             0% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 3px rgba(var(--glow-rgb), 0.1); }
             100% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 14px rgba(var(--glow-rgb), 0.45); }
         }
         
-        /* Basis mit Hardware-Beschleunigung (will-change) um Ruckeln zu vermeiden */
         .anime-item { --glow-rgb: 255, 255, 255; animation: relaxGlow 3s infinite alternate ease-in-out; will-change: box-shadow; }
         .anime-grid-item { --glow-rgb: 255, 0, 85; animation: relaxGlow 3s infinite alternate ease-in-out; will-change: box-shadow; }
 
-        /* Saubere RGB Zuweisung für weiche Farbübergänge ohne Black-Shifting */
+        /* Individuelle Farben */
         .item-watched { --glow-rgb: 46, 204, 113; border-left: 4px solid var(--accent-green); }
         .item-waiting { --glow-rgb: 138, 43, 226; border-left: 4px solid var(--accent-purple); }
         .item-released { --glow-rgb: 255, 0, 85; border-left: 4px solid var(--accent-orange); background: linear-gradient(90deg, rgba(255, 0, 85, 0.05) 0%, var(--card-bg) 100%); }
@@ -112,7 +111,15 @@
         .grid-layout-next .anime-item.item-waiting { --glow-rgb: 138, 43, 226; border-top: 4px solid var(--accent-purple); border-left: none; }
         .grid-layout-next .anime-item.item-released { --glow-rgb: 255, 0, 85; border-top: 4px solid var(--accent-orange); border-left: none; }
 
-        /* Hover Status mit RGB Variablen */
+        /* --- NEU: STATISCHER GLOW FÜR "GESCHAUT" SEITE --- */
+        #page-watched .anime-item {
+            animation: none !important; /* Blockiert die Puls-Animation */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 12px rgba(var(--glow-rgb), 0.25) !important; /* Statischer, weicher Glow */
+        }
+        #page-watched .anime-item:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(var(--glow-rgb), 0.4) !important;
+        }
+
         .anime-item:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(var(--glow-rgb), 0.6) !important; border-color: rgba(var(--glow-rgb), 0.8); z-index: 10; }
         .anime-grid-item:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(255, 0, 85, 0.15), 0 0 20px rgba(var(--glow-rgb), 0.6) !important; border-color: var(--accent-orange); z-index: 10; }
 
@@ -150,54 +157,24 @@
         .btn-add { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); transition: all 0.2s ease; }
         .btn-add:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
         
-        /* --- PERFEKTER BEFRIEDIGENDER ROTIERENDER KOMETEN-RAHMEN (Gesamt-Zähler) --- */
+        /* --- GESAMT-ZÄHLER BADGE --- */
         .watched-stats { display: flex; justify-content: center; margin-bottom: 20px; }
-        
-        .stat-wrapper {
-            position: relative;
-            border-radius: 16px;
-            padding: 2px;
-            overflow: hidden;
-            display: inline-flex;
-            box-shadow: 0 0 15px rgba(46, 204, 113, 0.15);
-        }
-
-        .stat-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(from 0deg, transparent 70%, rgba(46, 204, 113, 0.8) 95%, var(--accent-green) 100%);
-            animation: borderRotate 2.5s linear infinite;
-            z-index: 0;
-        }
-
-        .stat-box { 
-            position: relative;
-            background: var(--card-bg);
-            padding: 10px 30px; 
-            border-radius: 14px; 
-            text-align: center; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            z-index: 1;
-            width: 100%;
-            height: 100%;
-        }
-
-        @keyframes borderRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
+        .stat-wrapper { position: relative; border-radius: 16px; padding: 2px; overflow: hidden; display: inline-flex; box-shadow: 0 0 15px rgba(46, 204, 113, 0.15); }
+        .stat-wrapper::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(from 0deg, transparent 70%, rgba(46, 204, 113, 0.8) 95%, var(--accent-green) 100%); animation: borderRotate 2.5s linear infinite; z-index: 0; }
+        .stat-box { position: relative; background: var(--card-bg); padding: 10px 30px; border-radius: 14px; text-align: center; display: flex; flex-direction: column; align-items: center; z-index: 1; width: 100%; height: 100%; }
+        @keyframes borderRotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--accent-green); line-height: 1.2; margin-bottom: 2px; text-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
         .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
-        /* --- ANIME LISTEN ITEMS (Standard Listen-Layout) --- */
+        /* --- ANIME LISTEN ITEMS --- */
         .anime-list { display: flex; flex-direction: column; gap: 14px; }
         .anime-item { 
+            background: var(--card-bg); border-radius: 12px; 
+            /* NEU: Etwas mehr Padding rechts, damit der Mülleimer Luft hat */
+            padding: 16px 25px 16px 20px; 
             display: flex; justify-content: space-between; align-items: center; position: relative; 
             border: 1px solid rgba(255,255,255,0.01); transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
         }
         
         /* --- GRID LAYOUTS (Desktop) --- */
@@ -208,12 +185,15 @@
             overflow: hidden; max-width: 100%;
         }
 
-        .grid-layout-watchlist .anime-item:hover, .grid-layout-next .anime-item:hover { transform: translateY(-6px); }
         .grid-layout-watchlist .anime-info-wrapper, .grid-layout-next .anime-info-wrapper { flex-direction: column; width: 100%; max-width: 100%; gap: 10px; justify-content: center; }
         .grid-layout-watchlist .anime-title-row, .grid-layout-next .anime-title-row { justify-content: center; }
+        
+        /* NEU: margin-right für den Action-Container im Listen-Layout (Mülleimer) */
+        .action-btns { display: flex; gap: 14px; align-items: center; flex-shrink: 0; margin-right: 8px; }
+        
         .grid-layout-watchlist .action-btns, .grid-layout-next .action-btns { 
             width: 100%; justify-content: center; gap: 20px; border-top: 1px solid rgba(255,255,255,0.05); 
-            padding-top: 15px; margin-top: auto; 
+            padding-top: 15px; margin-top: auto; margin-right: 0; 
         }
         
         @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
@@ -260,7 +240,6 @@
         .status-badge.alert { background: rgba(255, 0, 85, 0.15); color: #ff6699; border: 1px solid rgba(255, 0, 85, 0.4); animation: pulse 2s infinite; margin-top: auto; align-self: flex-start; }
         .status-badge.current-badge { background: rgba(0, 245, 212, 0.1); color: var(--accent-neon); }
 
-        .action-btns { display: flex; gap: 14px; align-items: center; flex-shrink: 0; }
         .btn-action { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.15rem; transition: all 0.2s; }
         .btn-action.delete:hover { color: var(--danger); transform: scale(1.1); }
         .btn-action.check:hover { color: var(--accent-green); transform: scale(1.1); }
@@ -315,7 +294,7 @@
         .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; padding: 10px; }
         .btn-cancel:hover { color: white; }
 
-        /* --- DETAILS POPUP MODAL (Perfektes Bild Format) --- */
+        /* --- DETAILS POPUP MODAL --- */
         #detail-modal .modal { padding: 30px; text-align: center; }
         .detail-cover-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 25px; }
         .detail-cover-wrapper img { width: auto; max-width: 100%; height: auto; max-height: 400px; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
@@ -561,7 +540,7 @@
             
             <div class="form-group" style="position: relative;">
                 <label for="anime-title">Anime Name</label>
-                <input type="text" id="anime-title" placeholder="z.B. Demon Slayer..." oninput="searchAnime(this.value)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true">
+                <input type="text" id="anime-title" placeholder="z.B. Demon Slayer..." oninput="searchAnime(this.value)" autocomplete="nope" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true">
                 <div id="search-results" class="search-res"></div>
             </div>
             
@@ -576,7 +555,7 @@
 
             <div id="meta-field-group" class="form-group" style="display: none;">
                 <label id="meta-label" for="anime-meta-input">Wann kommt das Release? (Optional)</label>
-                <input type="text" id="anime-meta-input" placeholder="z.B. Winter 2027 oder leer lassen" autocomplete="off" autocorrect="off">
+                <input type="text" id="anime-meta-input" placeholder="z.B. Winter 2027 oder leer lassen" autocomplete="nope" autocorrect="off">
             </div>
             <div id="released-field-group" class="form-group checkbox-group" style="display: none;">
                 <input type="checkbox" id="anime-is-released">
@@ -734,7 +713,10 @@
                 authLayout.style.opacity = '0';
                 setTimeout(() => { 
                     authLayout.classList.remove('active-layout');
-                    authLayout.innerHTML = ''; // LÖSCHE LOGIN FORMular komplett, wenn eingeloggt
+                    
+                    // DOM NUKE: Wenn der User eingeloggt ist, vernichten wir alle Login Formulare, 
+                    // damit Apple im Hintergrund nichts mehr scannen kann.
+                    authLayout.innerHTML = ''; 
 
                     appLayout.classList.add('active-layout'); 
                     setTimeout(() => {
@@ -785,6 +767,8 @@
                     sessionStorage.removeItem('tempSessionActive');
                 }
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> Eingeloggt!';
+                
+                // Hard-Reload um das DOM von allen versteckten PW-Feldern zu befreien
                 location.reload(); 
             }
         }
@@ -877,7 +861,7 @@
         function openSettingsModal() { 
             document.getElementById('settings-new-username').value = document.getElementById('header-username-display').innerText;
             document.getElementById('settings-new-password').value = '';
-            document.getElementById('settings-new-password').type = 'text';
+            document.getElementById('settings-new-password').type = 'text'; // Zurücksetzen des Hacks
             document.getElementById('settings-modal').classList.add('active'); 
         }
         function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
@@ -952,7 +936,7 @@
         }
 
         // ==========================================
-        // API SUCHE (JIKAN)
+        // API SUCHE (JIKAN) - HOHE AUFLÖSUNG & ÜBERSETZUNG & AUTO-FILL
         // ==========================================
         let searchTimeout;
         async function searchAnime(query) {
