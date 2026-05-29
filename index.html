@@ -345,7 +345,7 @@
         .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; padding: 10px; }
         .btn-cancel:hover { color: white; }
 
-        /* --- DETAILS POPUP MODAL --- */
+        /* --- DETAILS POPUP MODAL (Perfektes Bild Format) --- */
         #detail-modal .modal { padding: 30px; text-align: center; }
         .detail-cover-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 25px; }
         .detail-cover-wrapper img { width: auto; max-width: 100%; height: auto; max-height: 400px; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
@@ -1081,7 +1081,17 @@
             document.getElementById('detail-format').innerText = formatText;
             
             let metaDisplay = anime.meta.replace('STAFFEL|', '').replace('FILM|', '');
-            if(metaDisplay === 'Keine Info') metaDisplay = 'Abgeschlossen';
+            
+            // 🔥 FIX: Richtiges Wording für Watchlist und Current (vorher fälschlich "Abgeschlossen")
+            if(metaDisplay === 'Keine Info') {
+                if (anime.category === 'watchlist') {
+                    metaDisplay = 'Auf der Watchlist';
+                } else if (anime.category === 'current') {
+                    metaDisplay = 'Wird aktuell geschaut';
+                } else {
+                    metaDisplay = 'Abgeschlossen';
+                }
+            }
             
             const metaBadge = document.getElementById('detail-meta');
             const modalBox = document.querySelector('#detail-modal .modal');
@@ -1095,7 +1105,6 @@
             } else {
                 metaBadge.style.border = 'none';
                 
-                // Hier greift nun sauber die Kategorie dank des Fixes in loadDataFromCloud
                 if (anime.category === 'watched') {
                     modalBox.style.borderColor = 'rgba(46, 204, 113, 0.4)'; 
                     metaBadge.style.color = 'var(--accent-green)';
@@ -1251,7 +1260,7 @@
                         type: formatType,
                         coverUrl: item.cover_url,
                         malId: item.mal_id,
-                        category: item.category // 🔥 HIER WAR DER FEHLER: Die Kategorie wurde für das Popup nicht gemerkt!
+                        category: item.category
                     };
                     
                     let categoryKey = item.category === 'next-season' ? 'nextSeason' : item.category;
