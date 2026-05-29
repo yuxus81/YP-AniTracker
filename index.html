@@ -178,7 +178,7 @@
         .color-watchlist { color: var(--accent-blue); font-size: 1.8rem; margin-bottom: 5px; } 
         .color-current { color: var(--accent-neon); }
 
-        /* --- API COVER STYLING (Verbessert für HD) --- */
+        /* --- API COVER STYLING --- */
         .anime-cover { width: 45px; height: 65px; object-fit: cover; border-radius: 6px; margin-right: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); flex-shrink: 0; }
         .grid-layout-watchlist .anime-cover { width: 80px; height: 115px; margin-right: 0; margin-bottom: 5px; }
         
@@ -274,6 +274,7 @@
             .btn-back { align-self: flex-start; }
             .btn-add { width: 100%; text-align: center; padding: 12px; }
             
+            /* Responsive Grid Anpassung */
             .grid-layout-watchlist { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
             .grid-layout-next { grid-template-columns: 1fr; }
         }
@@ -448,8 +449,7 @@
 
             <div id="page-current" class="page">
                 <div class="page-header">
-                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
-                    <h2><i class="fa-solid fa-play" style="color: var(--accent-neon);"></i> Aktuell am Schauen</h2>
+                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-play" style="color: var(--accent-neon);"></i> Aktuell am Schauen</h2>
                     <button class="btn-add" onclick="openModal('current')">+ Hinzufügen</button>
                 </div>
                 <div id="list-current" class="anime-list"></div>
@@ -804,7 +804,7 @@
         }
 
         // ==========================================
-        // API SUCHE (JIKAN) - HOHE AUFLÖSUNG & ÜBERSETZUNG
+        // API SUCHE (JIKAN) - MIT SMART AUTO-FILL
         // ==========================================
         let searchTimeout;
         async function searchAnime(query) {
@@ -839,13 +839,21 @@
                             else if (eng) bestTitle = eng.title;
                         }
 
-                        // NEU: HIER WIRD DIE HOHE AUFLÖSUNG GELADEN
                         const highResCover = anime.images?.webp?.large_image_url || anime.images?.jpg?.large_image_url || '';
-                        
                         const titleEscaped = bestTitle.replace(/'/g, "\\'").replace(/"/g, "&quot;");
                         
+                        // Smart Fill: Extract Release Date
+                        let seasonText = '';
+                        if (anime.season && anime.year) {
+                            const seasonsDe = { 'spring': 'Frühling', 'summer': 'Sommer', 'fall': 'Herbst', 'winter': 'Winter' };
+                            seasonText = (seasonsDe[anime.season] || anime.season) + ' ' + anime.year;
+                        } else if (anime.aired && anime.aired.from) {
+                            seasonText = new Date(anime.aired.from).getFullYear().toString();
+                        }
+                        
+                        // Pass API Status & Type to selectAnime
                         return `
-                        <div class="search-item" onclick="selectAnime('${titleEscaped}', '${highResCover}', ${anime.mal_id})">
+                        <div class="search-item" onclick="selectAnime('${titleEscaped}', '${highResCover}', ${anime.mal_id}, '${anime.status}', '${anime.type}', '${seasonText}')">
                             <img src="${highResCover}" class="search-cover" onerror="this.style.display='none'">
                             <span style="font-weight: 600; font-size: 0.9rem;">${bestTitle}</span>
                         </div>
@@ -856,14 +864,40 @@
             }, 600);
         }
 
-        function selectAnime(title, coverUrl, malId) {
+        // SMART AUTO-FILL LOGIK
+        function selectAnime(title, coverUrl, malId, apiStatus, apiType, apiDate) {
             document.getElementById('anime-title').value = title;
             document.getElementById('anime-cover-url').value = coverUrl;
             document.getElementById('anime-mal-id').value = malId;
             
+            // Format anpassen (Film oder Staffel)
+            const typeSelect = document.getElementById('anime-type');
+            if (apiType === 'Movie') {
+                typeSelect.value = 'film';
+            } else {
+                typeSelect.value = 'staffel';
+            }
+            
+            // Status und Meta-Text anpassen
+            const metaInput = document.getElementById('anime-meta-input');
+            const releasedCheck = document.getElementById('anime-is-released');
+            
+            if (apiStatus === 'Not yet aired') {
+                metaInput.value = apiDate || 'Unbekanntes Datum';
+                releasedCheck.checked = false;
+            } else if (apiStatus === 'Currently Airing' || apiStatus === 'Finished Airing') {
+                metaInput.value = apiDate || '';
+                releasedCheck.checked = true;
+            }
+            
+            // Felder entsprechend ein-/ausblenden
+            handleTypeChange();
+            
             const resultsDiv = document.getElementById('search-results');
             resultsDiv.innerHTML = '';
             resultsDiv.style.display = 'none';
+            
+            showToast("Infos automatisch ausgefüllt! 🤖");
         }
 
         // ==========================================
@@ -901,6 +935,7 @@
             document.getElementById('anime-meta-input').value = '';
             document.getElementById('anime-is-released').checked = false;
             
+            // API Felder leeren
             document.getElementById('anime-cover-url').value = '';
             document.getElementById('anime-mal-id').value = '';
             document.getElementById('search-results').innerHTML = '';
@@ -932,6 +967,7 @@
             document.getElementById('anime-edit-id').value = anime.id;
             document.getElementById('anime-title').value = anime.title;
             
+            // API Felder füllen
             document.getElementById('anime-cover-url').value = anime.coverUrl || '';
             document.getElementById('anime-mal-id').value = anime.malId || '';
             document.getElementById('search-results').innerHTML = '';
