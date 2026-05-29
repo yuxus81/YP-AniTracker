@@ -31,9 +31,15 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; overflow-x: hidden; }
         
-        /* --- LAYOUT CONTROLLER --- */
-        #auth-layout { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        #app-layout { display: none; padding-bottom: 60px; } 
+        /* --- LAYOUT CONTROLLER (Mit Fade-Animation) --- */
+        #auth-layout, #app-layout { 
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        #auth-layout { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; opacity: 0; pointer-events: none; position: absolute; width: 100%; top: 0; left: 0; }
+        #auth-layout.visible { opacity: 1; pointer-events: auto; position: relative; }
+        
+        #app-layout { opacity: 0; pointer-events: none; position: absolute; width: 100%; top: 0; left: 0; padding-bottom: 60px; transform: scale(0.98); }
+        #app-layout.visible { opacity: 1; pointer-events: auto; position: relative; transform: scale(1); }
 
         /* --- AUTH SCREEN STYLING --- */
         .auth-container {
@@ -47,12 +53,19 @@
         .auth-form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
         .auth-form-group input { width: 100%; padding: 14px; background: var(--bg-color); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: white; font-size: 1rem; outline: none; transition: 0.3s; }
         .auth-form-group input:focus { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(138, 43, 226, 0.2); }
-        .btn-auth { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-bottom: 15px; }
+        
+        /* Checkbox Angemeldet bleiben */
+        .auth-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; }
+        .auth-options input { accent-color: var(--accent-purple); transform: scale(1.2); margin-right: 8px; cursor: pointer; }
+
+        .btn-auth { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; }
         .btn-login { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); }
         .btn-login:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
-        .btn-register { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); }
-        .btn-register:hover { color: white; border-color: white; }
-        .auth-error { color: var(--accent-orange); font-size: 0.85rem; margin-top: 10px; min-height: 20px; font-weight: 600; }
+        
+        .auth-switch { color: var(--text-muted); font-size: 0.9rem; margin-top: 10px; }
+        .auth-switch a { color: var(--accent-neon); text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .auth-switch a:hover { color: white; }
+        .auth-error { color: var(--accent-orange); font-size: 0.85rem; margin-top: 15px; min-height: 20px; font-weight: 600; }
 
         /* --- APP HEADER --- */
         header {
@@ -64,14 +77,16 @@
         .logo:hover { transform: scale(1.05) rotate(-1deg); }
         .logo img { width: 40px; height: 40px; border-radius: 10px; box-shadow: 0 0 10px rgba(138, 43, 226, 0.5); object-fit: cover; }
         .logo span { font-size: 1.6rem; font-weight: 700; background: linear-gradient(45deg, var(--accent-neon), #b55fe6, var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .btn-logout { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: 0.3s; }
-        .btn-logout:hover { color: white; background: rgba(255,255,255,0.1); }
+        
+        .header-actions { display: flex; gap: 12px; }
+        .btn-icon-header { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); width: 40px; height: 40px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .btn-icon-header:hover { color: white; background: rgba(255,255,255,0.1); transform: scale(1.05); }
 
         .container { max-width: 950px; margin: 30px auto; padding: 0 20px; }
-        .page { display: none; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .page { display: none; animation: fadeInPage 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .page.active { display: block; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInPage { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- HOMEPAGE NAVIGATION --- */
         .grid-navigation { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; margin-top: 10px; }
@@ -95,7 +110,7 @@
         .homepage-section h2 { font-size: 1.25rem; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
 
         .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-        .anime-grid-item { background: var(--card-bg); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(255, 0, 85, 0.15); background: linear-gradient(145deg, rgba(255, 0, 85, 0.04) 0%, var(--card-bg) 100%); box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s; }
+        .anime-grid-item { background: var(--card-bg); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(255, 0, 85, 0.15); background: linear-gradient(145deg, rgba(255, 0, 85, 0.04) 0%, var(--card-bg) 100%); box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s; animation: slideIn 0.4s ease; }
         .anime-grid-item:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(255, 0, 85, 0.15); border-color: var(--accent-orange); }
         .anime-grid-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
         .anime-grid-header h4 { font-size: 1.05rem; font-weight: 600; line-height: 1.4; flex: 1; }
@@ -109,8 +124,15 @@
 
         /* --- ANIME LISTEN ITEMS & ANIMATIONS --- */
         .anime-list { display: flex; flex-direction: column; gap: 14px; }
-        .anime-item { background: var(--card-bg); border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; position: relative; border: 1px solid rgba(255,255,255,0.01); transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .anime-item { 
+            background: var(--card-bg); border-radius: 12px; padding: 16px 20px; 
+            display: flex; justify-content: space-between; align-items: center; position: relative; 
+            border: 1px solid rgba(255,255,255,0.01); transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            animation: slideIn 0.4s ease forwards; /* Weiches Einfliegen bei neuen Elementen */
+        }
         .anime-item:hover { transform: translateX(4px); background: #1d213a; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
         
         .anime-item.fade-out { opacity: 0; transform: scale(0.95) translateX(30px); pointer-events: none; }
         .anime-item.success-pop { animation: popOut 0.4s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }
@@ -166,21 +188,28 @@
         /* --- TOAST NOTIFICATION --- */
         .toast { position: fixed; bottom: -80px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #a04ef6, var(--accent-purple)); color: white; padding: 12px 26px; border-radius: 30px; font-size: 0.95rem; font-weight: 600; box-shadow: 0 10px 25px rgba(138, 43, 226, 0.4); transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; pointer-events: none; display: flex; align-items: center; gap: 10px; }
         .toast.show { bottom: 30px; }
-        .toast i { font-size: 1.1rem; }
 
-        /* --- MODAL --- */
+        /* --- MODALS (ALLGEMEIN) --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 18, 0.85); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 100; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal { background: var(--card-bg); border-radius: 20px; padding: 30px; width: 90%; max-width: 450px; border: 1px solid rgba(138, 43, 226, 0.25); transform: scale(0.9); transition: transform 0.3s ease; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
-        .modal-overlay.active .modal { transform: scale(1); }
+        .modal { background: var(--card-bg); border-radius: 20px; padding: 30px; width: 90%; max-width: 450px; border: 1px solid rgba(138, 43, 226, 0.25); transform: scale(0.9) translateY(20px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
+        .modal-overlay.active .modal { transform: scale(1) translateY(0); }
         .modal h3 { margin-bottom: 20px; font-size: 1.35rem; font-weight: 700; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
         .form-group input, .form-group select { width: 100%; padding: 12px 15px; background: var(--bg-color); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: white; font-size: 1rem; outline: none; transition: all 0.3s; }
         .form-group input:focus, .form-group select:focus { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(138, 43, 226, 0.2); }
         .modal-footer { display: flex; justify-content: flex-end; gap: 15px; margin-top: 25px; }
-        .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; }
+        .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; padding: 10px; }
         .btn-cancel:hover { color: white; }
+
+        /* Danger Modal (Löschen) */
+        .modal-danger { border-color: rgba(255, 0, 85, 0.4); }
+        .btn-danger-action { background: linear-gradient(45deg, var(--danger), var(--accent-orange)); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 0, 85, 0.3); transition: all 0.2s ease; }
+        .btn-danger-action:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 0, 85, 0.5); }
+        .danger-text { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 25px; }
+        .danger-text strong { color: var(--danger); }
+
         .empty-state { text-align: center; color: var(--text-muted); padding: 25px; font-style: italic; font-size: 0.9rem; background: rgba(255,255,255,0.01); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.05); width: 100%; }
         .loading-notice { text-align: center; padding: 40px; color: var(--accent-neon); font-weight: 600; font-size: 1.2rem; }
 
@@ -188,15 +217,9 @@
             .grid-navigation { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .nav-card { padding: 18px 10px; }
             .nav-card i { font-size: 1.8rem; margin-bottom: 8px; }
-            .nav-card h3 { font-size: 0.85rem; }
             .logo span { font-size: 1.4rem; }
-            .homepage-section h2 { font-size: 1.1rem; }
             .anime-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .anime-grid-item { padding: 12px; border-radius: 10px; }
-            .anime-grid-header h4 { font-size: 0.9rem; }
-            .status-badge.alert { font-size: 0.65rem; padding: 4px 6px; }
-            .page-header { flex-direction: column; gap: 15px; align-items: flex-start; }
-            .btn-add { width: 100%; text-align: center; }
         }
     </style>
 </head>
@@ -208,17 +231,50 @@
                 <img src="icon-192.png" alt="Logo" onerror="this.style.display='none'">
                 <h1>YP AniTracker</h1>
             </div>
-            <div class="auth-form-group">
-                <label>E-Mail Adresse</label>
-                <input type="email" id="auth-email" placeholder="deine@email.de">
+            
+            <div id="login-form">
+                <div class="auth-form-group">
+                    <label>E-Mail Adresse</label>
+                    <input type="email" id="login-email" placeholder="deine@email.de">
+                </div>
+                <div class="auth-form-group">
+                    <label>Passwort</label>
+                    <input type="password" id="login-password" placeholder="••••••••">
+                </div>
+                <label class="auth-options">
+                    <div style="display: flex; align-items: center;">
+                        <input type="checkbox" id="auth-remember" checked>
+                        <span>Angemeldet bleiben</span>
+                    </div>
+                </label>
+                <button class="btn-auth btn-login" onclick="handleLogin()" id="btn-login-submit">
+                    <i class="fa-solid fa-right-to-bracket"></i> Einloggen
+                </button>
+                <div class="auth-switch">
+                    Neu hier? <a onclick="toggleAuthMode('register')">Account erstellen</a>
+                </div>
             </div>
-            <div class="auth-form-group">
-                <label>Passwort</label>
-                <input type="password" id="auth-password" placeholder="••••••••">
-            </div>
-            <button class="btn-auth btn-login" onclick="handleLogin()">Einloggen</button>
-            <button class="btn-auth btn-register" onclick="handleRegister()">Neuen Account erstellen</button>
+
             <div id="auth-error-msg" class="auth-error"></div>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal-overlay">
+        <div class="modal">
+            <h3><i class="fa-solid fa-user-plus" style="color: var(--accent-neon);"></i> Account erstellen</h3>
+            <div class="form-group">
+                <label>E-Mail Adresse</label>
+                <input type="email" id="reg-email" placeholder="deine@email.de">
+            </div>
+            <div class="form-group">
+                <label>Passwort (Min. 6 Zeichen)</label>
+                <input type="password" id="reg-password" placeholder="••••••••">
+            </div>
+            <div id="reg-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeRegisterModal()">Abbrechen</button>
+                <button class="btn-add" onclick="handleRegister()" id="btn-reg-submit">Erstellen</button>
+            </div>
         </div>
     </div>
 
@@ -228,7 +284,10 @@
                 <img src="icon-192.png" alt="YP Logo" onerror="this.style.display='none'">
                 <span>YP AniTracker</span>
             </div>
-            <button class="btn-logout" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+            <div class="header-actions">
+                <button class="btn-icon-header" onclick="openSettingsModal()" title="Einstellungen"><i class="fa-solid fa-gear"></i></button>
+                <button class="btn-icon-header" onclick="handleLogout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </div>
         </header>
 
         <div class="container">
@@ -338,97 +397,186 @@
         </div>
     </div>
 
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal">
+            <h3><i class="fa-solid fa-gear" style="color: var(--text-muted);"></i> Einstellungen</h3>
+            <div style="margin-top: 30px;">
+                <button class="btn-auth" style="background: rgba(255,0,85,0.1); color: var(--danger); border: 1px solid rgba(255,0,85,0.3);" onclick="openDeleteConfirmModal()">
+                    <i class="fa-solid fa-trash-can"></i> Account & Daten löschen
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeSettingsModal()">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="delete-confirm-modal" class="modal-overlay">
+        <div class="modal modal-danger">
+            <h3><i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i> Bist du sicher?</h3>
+            <p class="danger-text">
+                Wenn du fortfährst, werden <strong>alle deine gespeicherten Animes unwiderruflich aus der Datenbank gelöscht</strong>. Dein Account wird geleert und du wirst ausgeloggt.
+            </p>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeDeleteConfirmModal()">Abbrechen</button>
+                <button class="btn-danger-action" onclick="wipeAccountData()">Ja, alles löschen!</button>
+            </div>
+        </div>
+    </div>
+
     <div id="toast-notification" class="toast">
         <i class="fa-solid fa-circle-check"></i> <span id="toast-message">Erfolgreich!</span>
     </div>
 
     <script>
-        // ==========================================
-        // SUPABASE SDK SETUP
-        // ==========================================
-        
-        // Sicherheits-Check: Konnte die externe Bibliothek überhaupt geladen werden?
-        if (typeof supabase === 'undefined') {
-            alert("Ladefehler: Die Datenbank-Schnittstelle konnte nicht geladen werden. Bitte überprüfe deine Internetverbindung oder deaktiviere mögliche Adblocker.");
+        if (typeof window.supabase === 'undefined') {
+            alert("Ladefehler: Datenbank-Schnittstelle blockiert.");
         }
 
         const SUPABASE_URL = "https://anyvdbweojvaztyiacwb.supabase.co";
         const API_KEY = "sb_publishable_6A73CDl65UrCWWVbTz9z7A_nu3cIWME";
-        
-        // Umbenennung in "db" anstelle von "supabase", um JS-Namenskonflikte zu vermeiden
-        const db = supabase.createClient(SUPABASE_URL, API_KEY);
+        const db = window.supabase.createClient(SUPABASE_URL, API_KEY);
 
         let animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
         let toastTimeout;
 
         // ==========================================
-        // AUTHENTIFIKATION (LOGIN / REGISTER)
+        // AUTHENTIFIKATION & FADE-TRANSITIONS
         // ==========================================
         
-        // Prüft beim allerersten Öffnen der Seite, ob schon ein Login existiert
         db.auth.getSession().then(({ data: { session } }) => {
             toggleLayout(session);
         });
 
-        // Reagiert live auf Login/Logout Aktionen
         db.auth.onAuthStateChange((event, session) => {
             toggleLayout(session);
         });
 
         function toggleLayout(session) {
+            const authLayout = document.getElementById('auth-layout');
+            const appLayout = document.getElementById('app-layout');
+            
             if (session) {
-                document.getElementById('auth-layout').style.display = 'none';
-                document.getElementById('app-layout').style.display = 'block';
-                loadDataFromCloud(); 
+                authLayout.classList.remove('visible');
+                setTimeout(() => { 
+                    appLayout.style.display = 'block'; 
+                    setTimeout(() => appLayout.classList.add('visible'), 50);
+                    loadDataFromCloud(); 
+                }, 400); // Warten bis Fade Out fertig ist
             } else {
-                document.getElementById('auth-layout').style.display = 'flex';
-                document.getElementById('app-layout').style.display = 'none';
+                appLayout.classList.remove('visible');
+                setTimeout(() => { 
+                    appLayout.style.display = 'none'; 
+                    authLayout.classList.add('visible'); 
+                }, 400);
             }
         }
 
+        // Angemeldet bleiben Logik (Session Storage Flag)
+        window.addEventListener('beforeunload', () => {
+            if (sessionStorage.getItem('tempSessionActive') === 'true') {
+                db.auth.signOut();
+            }
+        });
+
         async function handleLogin() {
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const rememberMe = document.getElementById('auth-remember').checked;
             const errorMsg = document.getElementById('auth-error-msg');
+            const btn = document.getElementById('btn-login-submit');
             
             if(!email || !password) return errorMsg.innerText = "Bitte E-Mail und Passwort eingeben.";
             
-            errorMsg.innerText = "Lade...";
+            errorMsg.innerText = "";
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Lade...';
+            
             const { error } = await db.auth.signInWithPassword({ email, password });
             
             if (error) {
                 errorMsg.innerText = "Fehler: " + error.message;
+                btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Einloggen';
             } else {
-                errorMsg.innerText = "";
+                if (!rememberMe) {
+                    sessionStorage.setItem('tempSessionActive', 'true');
+                } else {
+                    sessionStorage.removeItem('tempSessionActive');
+                }
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Eingeloggt!';
             }
         }
 
+        function toggleAuthMode(mode) {
+            if(mode === 'register') {
+                document.getElementById('register-modal').classList.add('active');
+            }
+        }
+        
+        function closeRegisterModal() {
+            document.getElementById('register-modal').classList.remove('active');
+            document.getElementById('reg-error-msg').innerText = '';
+        }
+
         async function handleRegister() {
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
-            const errorMsg = document.getElementById('auth-error-msg');
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            const errorMsg = document.getElementById('reg-error-msg');
+            const btn = document.getElementById('btn-reg-submit');
             
-            if(!email || !password) return errorMsg.innerText = "Bitte E-Mail und Passwort eingeben.";
+            if(!email || !password) return errorMsg.innerText = "Bitte Felder ausfüllen.";
             if(password.length < 6) return errorMsg.innerText = "Passwort muss mind. 6 Zeichen haben.";
             
-            errorMsg.innerText = "Registriere...";
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
             const { error } = await db.auth.signUp({ email, password });
             
             if (error) {
                 errorMsg.innerText = "Fehler: " + error.message;
+                btn.innerHTML = 'Erstellen';
             } else {
-                errorMsg.innerText = "Account erstellt! Du bist jetzt eingeloggt.";
+                closeRegisterModal();
+                showToast("Account erstellt! Willkommen ✨");
             }
         }
 
         async function handleLogout() {
+            sessionStorage.removeItem('tempSessionActive');
             await db.auth.signOut();
             animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
         }
 
+        // ==========================================
+        // ACCOUNT LÖSCHEN LOGIK
+        // ==========================================
+        function openSettingsModal() { document.getElementById('settings-modal').classList.add('active'); }
+        function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
+        
+        function openDeleteConfirmModal() { 
+            closeSettingsModal();
+            document.getElementById('delete-confirm-modal').classList.add('active'); 
+        }
+        function closeDeleteConfirmModal() { document.getElementById('delete-confirm-modal').classList.remove('active'); }
+
+        async function wipeAccountData() {
+            const btn = document.querySelector('.btn-danger-action');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Lösche...';
+            
+            try {
+                // Löscht durch RLS alle eigenen Reihen (neq 0 ist immer true)
+                const { error } = await db.from('animes').delete().neq('id', 0);
+                if (error) throw error;
+                
+                closeDeleteConfirmModal();
+                await handleLogout();
+                showToast("Alle Daten wurden gelöscht.");
+                btn.innerHTML = 'Ja, alles löschen!';
+            } catch (e) {
+                alert("Fehler beim Löschen: " + e.message);
+                btn.innerHTML = 'Ja, alles löschen!';
+            }
+        }
 
         // ==========================================
-        // UI FEEDBACK & NAVIGATION
+        // UI & APP LOGIK
         // ==========================================
         function showToast(message) {
             const toast = document.getElementById('toast-notification');
@@ -534,10 +682,6 @@
             document.getElementById('hp-alerts-grid').innerHTML = loading;
         }
 
-        // ==========================================
-        // DATENBANK LOGIK (SDK V2)
-        // ==========================================
-        
         async function loadDataFromCloud(silent = false) {
             if(!silent) showLoadingStates();
             try {
@@ -611,7 +755,7 @@
                     if(error) throw error;
                 }
                 closeModal(); 
-                await loadDataFromCloud(true);
+                await loadDataFromCloud(true); // Silent Load
                 showToast("Erfolgreich gespeichert! ✨");
             } catch(e) { alert("Fehler: " + e.message); }
         }
@@ -653,9 +797,6 @@
             });
         }
 
-        // ==========================================
-        // RENDER LOGIK
-        // ==========================================
         function createAnimeDOM(anime, context, listName, index = null) {
             const uniqueId = `anime-${context}-${anime.id}-${listName}`;
             let metaHTML = '', actionHTML = '', leadingIconHTML = '';
@@ -695,14 +836,14 @@
                 
                 const releaseBtnClass = anime.isReleased ? 'btn-action release-check active' : 'btn-action release-check';
                 actionHTML = `
-                    <button class="btn-action edit" onclick="editAnime('${anime.id}')" title="Bearbeiten"><i class="fa-solid fa-pen"></i></button>
-                    <button class="${releaseBtnClass}" onclick="toggleRelease('${anime.id}', ${anime.isReleased}, '${uniqueId}')" title="Status umschalten"><i class="fa-solid ${anime.isReleased ? 'fa-circle-check' : 'fa-circle'}"></i></button>`;
+                    <button class="btn-action edit" onclick="editAnime(${anime.id})" title="Bearbeiten"><i class="fa-solid fa-pen"></i></button>
+                    <button class="${releaseBtnClass}" onclick="toggleRelease(${anime.id}, ${anime.isReleased}, '${uniqueId}')" title="Status umschalten"><i class="fa-solid ${anime.isReleased ? 'fa-circle-check' : 'fa-circle'}"></i></button>`;
             } 
             else if(context === 'watchlist') {
-                actionHTML = `<button class="btn-action start-watching" onclick="moveWatchlistToCurrent('${anime.id}', '${uniqueId}')" title="Jetzt schauen"><i class="fa-solid fa-circle-play"></i></button>`;
+                actionHTML = `<button class="btn-action start-watching" onclick="moveWatchlistToCurrent(${anime.id}, '${uniqueId}')" title="Jetzt schauen"><i class="fa-solid fa-circle-play"></i></button>`;
             }
             else if(context === 'current') {
-                actionHTML = `<button class="btn-action check" onclick="finishCurrentAnime('${anime.id}', '${anime.title.replace(/'/g, "\\'")}')" title="Serie abschließen"><i class="fa-solid fa-circle-check"></i></button>`;
+                actionHTML = `<button class="btn-action check" onclick="finishCurrentAnime(${anime.id}, '${anime.title.replace(/'/g, "\\'")}')" title="Serie abschließen"><i class="fa-solid fa-circle-check"></i></button>`;
             }
 
             return `
@@ -716,7 +857,7 @@
                     </div>
                     <div class="action-btns">
                         ${actionHTML}
-                        <button class="btn-action delete" onclick="deleteAnime('${context === 'next-season' ? 'next-season' : context}', '${anime.id}', '${uniqueId}')"><i class="fa-solid fa-trash"></i></button>
+                        <button class="btn-action delete" onclick="deleteAnime('${context === 'next-season' ? 'next-season' : context}', ${anime.id}, '${uniqueId}')"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>`;
         }
