@@ -111,6 +111,7 @@
 
         /* --- PAGES --- */
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: rgba(22, 25, 43, 0.4); padding: 15px 20px; border-radius: 12px; }
+        .page-header h2 { margin: 0; display: flex; align-items: center; gap: 10px; font-size: 1.4rem; }
         .btn-back { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; transition: color 0.3s; }
         .btn-back:hover { color: white; }
         .btn-add { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); transition: all 0.2s ease; }
@@ -183,7 +184,7 @@
         .toast { position: fixed; bottom: -80px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #a04ef6, var(--accent-purple)); color: white; padding: 12px 26px; border-radius: 30px; font-size: 0.95rem; font-weight: 600; box-shadow: 0 10px 25px rgba(138, 43, 226, 0.4); transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; pointer-events: none; display: flex; align-items: center; gap: 10px; }
         .toast.show { bottom: 30px; }
 
-        /* --- MODALS (ALLGEMEIN) --- */
+        /* --- MODALS --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 18, 0.85); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 100; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
         .modal { background: var(--card-bg); border-radius: 20px; padding: 30px; width: 90%; max-width: 450px; border: 1px solid rgba(138, 43, 226, 0.25); transform: scale(0.9) translateY(20px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
@@ -197,7 +198,7 @@
         .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; padding: 10px; }
         .btn-cancel:hover { color: white; }
 
-        /* Danger Modal (Löschen) */
+        /* Danger Modal */
         .modal-danger { border-color: rgba(255, 0, 85, 0.4); }
         .btn-danger-action { background: linear-gradient(45deg, var(--danger), var(--accent-orange)); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 0, 85, 0.3); transition: all 0.2s ease; }
         .btn-danger-action:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 0, 85, 0.5); }
@@ -207,16 +208,25 @@
         .empty-state { text-align: center; color: var(--text-muted); padding: 25px; font-style: italic; font-size: 0.9rem; background: rgba(255,255,255,0.01); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.05); width: 100%; }
         .loading-notice { text-align: center; padding: 40px; color: var(--accent-neon); font-weight: 600; font-size: 1.2rem; }
 
+        /* ================= MOBILE OPTIMIERUNG (GEFIXT) ================= */
         @media (max-width: 600px) {
             header { padding: 15px; }
             .logo img { width: 35px; height: 35px; }
             .logo span { font-size: 1.3rem; }
             .btn-icon-header { width: 35px; height: 35px; font-size: 1rem; }
+            
             .grid-navigation { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .nav-card { padding: 18px 10px; }
             .nav-card i { font-size: 1.8rem; margin-bottom: 8px; }
+            
             .anime-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .anime-grid-item { padding: 12px; border-radius: 10px; }
+            
+            /* NEUES MOBILE LAYOUT FÜR DIE KOPFZEILEN DER UNTERSEITEN */
+            .page-header { flex-direction: column; align-items: center; gap: 15px; padding: 20px 15px; }
+            .page-header h2 { font-size: 1.35rem; text-align: center; width: 100%; justify-content: center; }
+            .btn-back { align-self: flex-start; }
+            .btn-add { width: 100%; text-align: center; padding: 12px; }
         }
     </style>
 </head>
@@ -277,10 +287,10 @@
 
     <div id="app-layout">
         <header>
-            <div class="logo" onclick="showPage('home')">
+            <a class="logo" onclick="showPage('home')">
                 <img src="icon-192.png" alt="YP Logo" onerror="this.style.display='none'">
                 <span>YP AniTracker</span>
-            </div>
+            </a>
             <div class="header-actions">
                 <button class="btn-icon-header" onclick="openSettingsModal()" title="Einstellungen"><i class="fa-solid fa-gear"></i></button>
                 <button class="btn-icon-header" onclick="handleLogout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></button>
@@ -831,14 +841,14 @@
                 
                 const releaseBtnClass = anime.isReleased ? 'btn-action release-check active' : 'btn-action release-check';
                 actionHTML = `
-                    <button class="btn-action edit" onclick="editAnime(${anime.id})" title="Bearbeiten"><i class="fa-solid fa-pen"></i></button>
-                    <button class="${releaseBtnClass}" onclick="toggleRelease(${anime.id}, ${anime.isReleased}, '${uniqueId}')" title="Status umschalten"><i class="fa-solid ${anime.isReleased ? 'fa-circle-check' : 'fa-circle'}"></i></button>`;
+                    <button class="btn-action edit" onclick="editAnime('${anime.id}')" title="Bearbeiten"><i class="fa-solid fa-pen"></i></button>
+                    <button class="${releaseBtnClass}" onclick="toggleRelease('${anime.id}', ${anime.isReleased}, '${uniqueId}')" title="Status umschalten"><i class="fa-solid ${anime.isReleased ? 'fa-circle-check' : 'fa-circle'}"></i></button>`;
             } 
             else if(context === 'watchlist') {
-                actionHTML = `<button class="btn-action start-watching" onclick="moveWatchlistToCurrent(${anime.id}, '${uniqueId}')" title="Jetzt schauen"><i class="fa-solid fa-circle-play"></i></button>`;
+                actionHTML = `<button class="btn-action start-watching" onclick="moveWatchlistToCurrent('${anime.id}', '${uniqueId}')" title="Jetzt schauen"><i class="fa-solid fa-circle-play"></i></button>`;
             }
             else if(context === 'current') {
-                actionHTML = `<button class="btn-action check" onclick="finishCurrentAnime(${anime.id}, '${anime.title.replace(/'/g, "\\'")}')" title="Serie abschließen"><i class="fa-solid fa-circle-check"></i></button>`;
+                actionHTML = `<button class="btn-action check" onclick="finishCurrentAnime('${anime.id}', '${anime.title.replace(/'/g, "\\'")}')" title="Serie abschließen"><i class="fa-solid fa-circle-check"></i></button>`;
             }
 
             return `
@@ -852,7 +862,7 @@
                     </div>
                     <div class="action-btns">
                         ${actionHTML}
-                        <button class="btn-action delete" onclick="deleteAnime('${context === 'next-season' ? 'next-season' : context}', ${anime.id}, '${uniqueId}')"><i class="fa-solid fa-trash"></i></button>
+                        <button class="btn-action delete" onclick="deleteAnime('${context === 'next-season' ? 'next-season' : context}', '${anime.id}', '${uniqueId}')"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>`;
         }
