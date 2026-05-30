@@ -98,7 +98,6 @@
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: rgba(22, 25, 43, 0.4); padding: 15px 20px; border-radius: 12px; }
         .page-header h2 { margin: 0; display: flex; align-items: center; gap: 10px; font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
         
-        /* HINZUFÜGEN BUTTON (NEON STYLE) */
         .btn-add { 
             background: rgba(138, 43, 226, 0.05); color: white; border: 1px solid rgba(138, 43, 226, 0.5); padding: 10px 22px; 
             border-radius: 30px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(5px); display: flex; 
@@ -193,24 +192,24 @@
         .next-card.item-released:hover { border-color: var(--accent-orange); animation: none; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 30px rgba(255, 0, 85, 0.8) !important; }
 
         /* ========================================= */
-        /* DESIGN 3: RAHMENLOSE POSTER (Watchlist & Releases) */
+        /* DESIGN 3: RAHMENLOSE POSTER (Watchlist) */
         /* ========================================= */
         .grid-layout-watchlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 18px; margin-bottom: 20px; }
-        
-        /* FIX: wl-overlay Klasse und h4 für Watchlist und Releases vereint */
-        .watchlist-card, .release-poster-card { position: relative; border-radius: 12px; overflow: hidden; background: transparent; cursor: pointer; display: flex; flex-direction: column; transition: all 0.3s ease; }
-        .watchlist-card { box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 10px rgba(58, 134, 255, 0.2); border: 1px solid rgba(58, 134, 255, 0.2); }
-        .release-poster-card { box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 15px rgba(255, 0, 85, 0.4); border: 1px solid rgba(255, 0, 85, 0.5); }
-        
+        .watchlist-card { position: relative; border-radius: 12px; overflow: hidden; background: transparent; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 10px rgba(58, 134, 255, 0.2); transition: all 0.3s ease; border: 1px solid rgba(58, 134, 255, 0.2); display: flex; flex-direction: column; }
         .watchlist-card:hover { transform: translateY(-6px); box-shadow: 0 8px 25px rgba(0,0,0,0.7), 0 0 20px rgba(58, 134, 255, 0.5); border-color: var(--accent-blue); z-index: 10; }
-        .release-poster-card:hover { transform: translateY(-6px); box-shadow: 0 8px 25px rgba(0,0,0,0.7), 0 0 25px rgba(255, 0, 85, 0.7); border-color: var(--accent-orange); z-index: 10; }
-        
-        .watchlist-card .wl-poster, .release-poster-card .wl-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; border-radius: 12px; }
+        .watchlist-card .wl-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; border-radius: 12px; }
         .nc-placeholder.watchlist { border-radius: 12px; }
-        
-        .watchlist-card .wl-overlay, .release-poster-card .wl-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 10px 10px; background: linear-gradient(to top, rgba(0,0,0,0.95), transparent); pointer-events: none; border-radius: 0 0 12px 12px; text-align: center; box-sizing: border-box; }
-        .watchlist-card .wl-overlay h4, .release-poster-card .wl-overlay h4 { font-size: 0.95rem; font-weight: 600; line-height: 1.3; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.8); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: white; padding: 0 5px; word-break: break-word; }
+        .watchlist-card .wl-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 10px 10px; background: linear-gradient(to top, rgba(0,0,0,0.95), transparent); pointer-events: none; border-radius: 0 0 12px 12px; text-align: center; box-sizing: border-box; }
+        .watchlist-card .wl-overlay h4 { font-size: 0.95rem; font-weight: 600; line-height: 1.3; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.8); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: white; padding: 0 5px; word-break: break-word; }
 
+        /* ========================================= */
+        /* DESIGN 4: FRISCHE RELEASES (Mit Text darunter) */
+        /* ========================================= */
+        .release-poster-card { position: relative; border-radius: 12px; overflow: hidden; background: var(--card-bg); cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 15px rgba(255, 0, 85, 0.4); transition: all 0.3s ease; border: 1px solid rgba(255, 0, 85, 0.5); display: flex; flex-direction: column; }
+        .release-poster-card:hover { transform: translateY(-6px); box-shadow: 0 8px 25px rgba(0,0,0,0.7), 0 0 25px rgba(255, 0, 85, 0.7); border-color: var(--accent-orange); z-index: 10; }
+        .release-poster-card .rp-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .release-poster-card .rp-info { padding: 10px 8px; display: flex; align-items: center; justify-content: center; text-align: center; flex-grow: 1; }
+        .release-poster-card .rp-info h4 { font-size: 0.85rem; font-weight: 600; line-height: 1.3; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--text-color); word-break: break-word; }
         .release-poster-card .rp-badge { position: absolute; top: 6px; right: 6px; background: var(--accent-orange); color: white; font-weight: 700; font-size: 0.6rem; padding: 2px 6px; border-radius: 6px; box-shadow: 0 2px 10px rgba(255,0,85,0.6); z-index: 5; text-transform: uppercase; letter-spacing: 1px; }
 
         /* --- TOAST NOTIFICATION --- */
@@ -310,7 +309,8 @@
             #hp-alerts-grid .grid-layout-watchlist { grid-template-columns: repeat(3, 1fr); gap: 8px; }
             .grid-layout-next { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .grid-layout-watchlist { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-            .watchlist-card .wl-overlay h4, .release-poster-card .wl-overlay h4 { font-size: 0.8rem; padding: 0 4px; }
+            .watchlist-card .wl-overlay h4 { font-size: 0.8rem; padding: 0 4px; }
+            .release-poster-card .rp-info h4 { font-size: 0.75rem; } /* Etwas kleiner für 3er Grid */
 
             /* MOBILE POP-UP (RIESIG, UNBESCHNITTEN, KEIN SCROLLEN) */
             #detail-modal .modal { padding: 25px 15px 20px; width: 92%; max-height: 95vh; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; } 
@@ -999,7 +999,6 @@
             document.getElementById('list-watchlist').innerHTML = animeData.watchlist.length ? animeData.watchlist.map(a => createAnimeDOM(a, 'watchlist', 'p-wl')).join('') : '<div class="empty-state">Deine Watchlist ist im Moment leer.</div>';
             document.getElementById('list-current').innerHTML = animeData.current.length ? animeData.current.map(a => createAnimeDOM(a, 'current', 'p-curr')).join('') : '<div class="empty-state">Du schaust gerade nichts aktiv.</div>';
             
-            // --- NEUES DASHBOARD "NEON TICKET" DESIGN ---
             document.getElementById('hp-current-list').innerHTML = animeData.current.length ? animeData.current.map(a => `
                 <div class="neon-ticket" onclick="openDetailModal('${a.id}')">
                     ${a.coverUrl ? `<img src="${a.coverUrl}" onerror="this.style.display='none'">` : '<div style="width:60px; height:85px; background:#111320; border-radius:10px; display:flex; align-items:center; justify-content:center; color: var(--text-muted);"><i class="fa-solid fa-image"></i></div>'}
@@ -1014,8 +1013,8 @@
                 let listHtml = released.map(a => `
                     <div class="release-poster-card" onclick="openDetailModal('${a.id}')">
                         <div class="rp-badge">NEU</div>
-                        ${a.coverUrl ? `<img src="${a.coverUrl}" class="wl-poster" onerror="this.style.display='none'">` : '<div class="wl-poster" style="background:#111320; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-image"></i></div>'}
-                        <div class="wl-overlay"><h4>${a.title}</h4></div>
+                        ${a.coverUrl ? `<img src="${a.coverUrl}" class="rp-poster" onerror="this.style.display='none'">` : '<div class="rp-poster" style="background:#111320; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-image"></i></div>'}
+                        <div class="rp-info"><h4>${a.title}</h4></div>
                     </div>
                 `).join('');
                 document.getElementById('hp-alerts-grid').innerHTML = `<div class="grid-layout-watchlist">${listHtml}</div>`;
