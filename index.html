@@ -284,11 +284,26 @@
             .nav-card { padding: 18px 10px; }
             .nav-card i { font-size: 1.8rem; margin-bottom: 8px; }
             
-            /* NEU: iOS Large Title Style für den Header (Löst das Platzproblem der Buttons) */
-            .page-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; padding: 15px; gap: 0; }
-            .page-header .btn-back { order: 1; margin: 0; font-size: 1rem; padding: 5px 10px 5px 0; background: transparent; border: none; box-shadow: none; }
-            .page-header .btn-add { order: 2; margin: 0; width: auto; padding: 8px 16px; font-size: 0.85rem; }
-            .page-header h2 { order: 3; width: 100%; justify-content: flex-start; font-size: 1.4rem; margin-top: 15px; margin-bottom: 0; }
+            /* NEU: Variante A - Nativer iOS Header Look */
+            .page-header { 
+                display: flex; flex-direction: row; justify-content: space-between; align-items: center; 
+                padding: 15px; background: transparent; margin-bottom: 15px; 
+            }
+            .page-header .btn-back { 
+                margin: 0; width: 42px; height: 42px; padding: 0; display: flex; align-items: center; justify-content: center; 
+                background: rgba(255,255,255,0.05); border-radius: 12px; font-size: 1.1rem; box-shadow: none;
+            }
+            .page-header .btn-add { 
+                margin: 0; width: 42px; height: 42px; padding: 0; border-radius: 50%; 
+                display: flex; justify-content: center; align-items: center; 
+            }
+            .page-header .btn-add span { display: none; } /* Text verstecken */
+            .page-header .btn-add i { margin: 0; font-size: 1.2rem; }
+            .page-header h2 { 
+                flex: 1; text-align: center; font-size: 1.25rem; margin: 0; padding: 0 10px; 
+                white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+                display: flex; align-items: center; justify-content: center;
+            }
             
             /* Dashboard 3er Grid für Releases Mobile */
             #hp-alerts-grid .grid-layout-watchlist { grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -311,6 +326,10 @@
             .detail-title { font-size: 1.25rem; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
             .btn-pop { padding: 8px 5px; font-size: 0.75rem; gap: 5px; min-width: 45%; }
             .btn-pop i { font-size: 0.85rem; }
+            
+            /* Modals für Hinzufügen: Button muss breit bleiben */
+            .modal-footer .btn-add { width: 100%; height: auto; border-radius: 30px; padding: 12px; }
+            .modal-footer .btn-add span { display: inline; }
         }
     </style>
 </head>
@@ -369,9 +388,9 @@
 
             <div id="page-watched" class="page">
                 <div class="page-header">
-                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
-                    <h2><i class="fa-solid fa-square-check" style="color: var(--accent-green);"></i> Geschaut</h2>
-                    <button class="btn-add" onclick="openModal('watched')"><i class="fa-solid fa-plus"></i> Hinzufügen</button>
+                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2>Geschaut</h2>
+                    <button class="btn-add" onclick="openModal('watched')"><i class="fa-solid fa-plus"></i> <span>Hinzufügen</span></button>
                 </div>
                 
                 <div class="watched-stats">
@@ -395,14 +414,10 @@
 
             <div id="page-next-season" class="page">
                 <div class="page-header">
-                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
-                    <h2>
-                        <i class="fa-solid fa-calendar-plus" style="color: var(--accent-purple);"></i> Folgestaffeln
-                        <span id="total-waiting-count" class="badge-count">0</span>
-                    </h2>
-                    <button class="btn-add" onclick="openModal('next-season')"><i class="fa-solid fa-plus"></i> Hinzufügen</button>
+                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2>Folgestaffeln <span id="total-waiting-count" class="badge-count">0</span></h2>
+                    <button class="btn-add" onclick="openModal('next-season')"><i class="fa-solid fa-plus"></i> <span>Hinzufügen</span></button>
                 </div>
-                
                 <div class="sub-section-title"><i class="fa-solid fa-hourglass"></i> Zukünftige Staffeln</div>
                 <div id="list-next-waiting" class="grid-layout-next"></div> 
                 <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> Neue Releases verfügbar!</div>
@@ -411,18 +426,18 @@
 
             <div id="page-watchlist" class="page">
                 <div class="page-header">
-                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
-                    <h2><i class="fa-solid fa-hourglass-start" style="color: var(--accent-blue);"></i> Watchlist</h2>
-                    <button class="btn-add" onclick="openModal('watchlist')"><i class="fa-solid fa-plus"></i> Hinzufügen</button>
+                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2>Watchlist</h2>
+                    <button class="btn-add" onclick="openModal('watchlist')"><i class="fa-solid fa-plus"></i> <span>Hinzufügen</span></button>
                 </div>
                 <div id="list-watchlist" class="grid-layout-watchlist"></div> 
             </div>
 
             <div id="page-current" class="page">
                 <div class="page-header">
-                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
-                    <h2><i class="fa-solid fa-play" style="color: var(--accent-neon);"></i> Aktuell am Schauen</h2>
-                    <button class="btn-add" onclick="openModal('current')"><i class="fa-solid fa-plus"></i> Hinzufügen</button>
+                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2>Aktuell</h2>
+                    <button class="btn-add" onclick="openModal('current')"><i class="fa-solid fa-plus"></i> <span>Hinzufügen</span></button>
                 </div>
                 <div id="list-current" class="anime-list"></div>
             </div>
@@ -497,10 +512,9 @@
                             <div class="form-group"><input type="text" id="setting-name-val" autocomplete="off" data-lpignore="true"></div>
                             <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsUsernameChange()">Aktualisieren</button>
                         </div><hr class="settings-divider">
-                        <div onkeydown="if(event.key === 'Enter') handleSettingsPasswordChange();">
+                        <div id="dynamic-pw-setting">
                             <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Sicherheit ändern</h4>
-                            <div class="form-group"><input type="text" id="setting-sec-val" class="pw-input" placeholder="Neuer Code (min. 6 Zeichen)" autocomplete="off" data-lpignore="true"></div>
-                            <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()">Aktualisieren</button>
+                            <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="injectPasswordUpdateField()">Sicherheit aktualisieren</button>
                         </div><hr class="settings-divider">
                         <div><h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--danger);">Gefahrenzone</h4><button class="btn-auth" style="background: rgba(255,0,85,0.1); color: var(--danger); border: 1px solid rgba(255,0,85,0.3); padding: 10px;" onclick="openDeleteConfirmModal()"><i class="fa-solid fa-trash-can"></i> Account löschen</button></div>
                         <div class="modal-footer" style="margin-top: 20px;"><button type="button" class="btn-cancel" onclick="closeSettingsModal()">Schließen</button></div>
@@ -517,6 +531,14 @@
         }
         function openDeleteConfirmModal() { document.getElementById('settings-modal').classList.remove('active'); document.getElementById('delete-confirm-modal').classList.add('active'); }
         function closeDeleteConfirmModal() { document.getElementById('delete-confirm-modal').classList.remove('active'); }
+        
+        function injectPasswordUpdateField() {
+            document.getElementById('dynamic-pw-setting').innerHTML = `
+                <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Sicherheit ändern</h4>
+                <div class="form-group"><input type="text" id="setting-sec-val" class="pw-input" placeholder="Neuer Code (min. 6 Zeichen)" autocomplete="off" data-lpignore="true"></div>
+                <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()">Jetzt Speichern</button>
+            `;
+        }
 
         // ==========================================
         // APP INIT
@@ -568,7 +590,7 @@
                             <div id="released-field-group" class="form-group checkbox-group" style="display: none;">
                                 <input type="checkbox" id="anime-is-released"><label for="anime-is-released">Release ist draußen!</label>
                             </div>
-                            <div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeModal()">Abbrechen</button><button type="button" class="btn-add" onclick="saveAnime()"><i class="fa-solid fa-floppy-disk"></i> Speichern</button></div>
+                            <div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeModal()">Abbrechen</button><button type="button" class="btn-add" onclick="saveAnime()"><i class="fa-solid fa-floppy-disk"></i> <span>Speichern</span></button></div>
                         </div>
                     </div>
                 `;
@@ -637,9 +659,6 @@
             try { const { error } = await db.from('animes').delete().neq('id', 0); if (error) throw error; closeDeleteConfirmModal(); await handleLogout(); } catch (e) { alert("Fehler"); }
         }
 
-        // ==========================================
-        // API SUCHE
-        // ==========================================
         let searchTimeout;
         async function searchAnime(query) {
             clearTimeout(searchTimeout); const resultsDiv = document.getElementById('search-results');
@@ -703,7 +722,6 @@
             const formatDot = document.getElementById('detail-format-dot');
             const modalBox = document.querySelector('#detail-modal .modal');
             
-            // 🔥 POP-UP TEXT FIX (Kein Rechteck, keine redundante Staffel/Film Info beim Alarm)
             if (anime.isReleased) { 
                 formatBadge.style.display = 'none';
                 formatDot.style.display = 'none';
@@ -739,7 +757,6 @@
             }
             metaBadge.innerText = metaDisplay;
             
-            // SMARTE DYNAMISCHE BUTTONS IM POP-UP
             let modalActions = '';
             
             if (anime.category === 'watchlist' || (anime.category === 'next-season' && anime.isReleased)) {
@@ -886,14 +903,10 @@
             } catch(e) { alert("Fehler: " + e.message); }
         }
 
-        // ==========================================
-        // RENDER LOGIK FÜR DIE VERSCHIEDENEN DESIGNS
-        // ==========================================
         function createAnimeDOM(anime, context, listName, index = null) {
             const uniqueId = `anime-${context}-${anime.id}-${listName}`;
             let metaHTML = '', leadingIconHTML = '';
             
-            // --- WATCHLIST (RAHMENLOSES POSTER) ---
             if (context === 'watchlist') {
                 return `
                 <div class="watchlist-card" id="${uniqueId}" onclick="openDetailModal('${anime.id}')">
@@ -902,7 +915,6 @@
                 </div>`;
             }
 
-            // --- FOLGESTAFFELN (2-SPALTEN CARD) ---
             if (context === 'next-season') {
                 let borderClass = anime.isReleased ? 'item-released' : 'item-waiting';
                 const badgeLabel = anime.type === 'film' ? 'Film' : 'Staffel';
@@ -926,7 +938,6 @@
                 </div>`;
             }
 
-            // --- GESCHAUT & AKTUELL (EDGE-TO-EDGE) ---
             let borderClass = 'item-' + context;
             
             if (context === 'watched' && anime.category === 'next-season') {
@@ -1011,7 +1022,6 @@
                     </div>
                 </div>`).join('') : '<div class="empty-state" style="border:none;">Nichts aktiv am Schauen.</div>';
             
-            // --- DASHBOARD RELEASES IM WATCHLIST-MAGAZIN-STYLE ---
             if (released.length > 0) {
                 let listHtml = released.map(a => `
                     <div class="release-poster-card" onclick="openDetailModal('${a.id}')">
