@@ -108,8 +108,7 @@
         .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--accent-green); line-height: 1.2; margin-bottom: 2px; text-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
         .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
-        /* --- ALLGEMEINE LISTEN EINSTELLUNGEN --- */
-        .anime-list { display: flex; flex-direction: column; gap: 14px; }
+        /* --- ALLGEMEINE TYPO --- */
         .anime-number { font-weight: 700; font-size: 1.1rem; min-width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .num-watched { color: var(--accent-green); background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); }
         .num-waiting { color: var(--accent-purple); background: rgba(138, 43, 226, 0.08); border: 1px solid rgba(138, 43, 226, 0.2); }
@@ -126,92 +125,69 @@
         .format-badge.film-type { background: rgba(58, 134, 255, 0.15); color: #8ec5ff; border: 1px solid rgba(58, 134, 255, 0.3); }
         .meta-dot { font-size: 0.6rem; opacity: 0.5; margin: 0 2px; }
 
-        .btn-action { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.15rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
-        .btn-action.delete:hover { color: var(--danger); transform: scale(1.1); }
-        .btn-action.check:hover { color: var(--accent-green); transform: scale(1.1); }
-        .btn-action.release-check { transition: color 0.2s, transform 0.2s; }
-        .btn-action.release-check.active { color: var(--accent-orange); }
-        .btn-action.release-check:hover { color: var(--accent-orange); transform: scale(1.1); }
-        .btn-action.edit:hover { color: var(--accent-blue); transform: scale(1.1); }
-        .btn-action.start-watching:hover { color: var(--accent-neon); transform: scale(1.1); }
-
-        @keyframes releasePulse { 0% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 5px rgba(255, 0, 85, 0.15); } 100% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 25px rgba(255, 0, 85, 0.6); } }
         .fade-out { opacity: 0; transform: scale(0.95) translateX(30px); pointer-events: none; }
-        .success-pop { animation: popOut 0.4s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }
-        .highlight-pulse { animation: highlightPulse 0.5s forwards; }
-        @keyframes popOut { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } 100% { transform: scale(0.8); opacity: 0; } }
-        @keyframes highlightPulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0.4); } 100% { box-shadow: 0 0 0 15px rgba(255, 0, 85, 0); } }
-
+        
         /* ========================================= */
-        /* STANDARD LISTEN-ITEMS (Geschaut, Current) */
+        /* NEU 1: EDGE-TO-EDGE LISTEN (Keine Boxen mehr!) */
         /* ========================================= */
+        .anime-list { display: flex; flex-direction: column; }
+        
         .anime-item-list { 
-            background: var(--card-bg); border-radius: 12px; padding: 16px 25px 16px 20px; 
-            display: flex; justify-content: space-between; align-items: center; position: relative; 
-            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer;
+            display: flex; align-items: center; position: relative; 
+            background: transparent; border: none; border-radius: 0;
+            padding: 15px 5px; /* Edge to edge, kein Margin-Bottom mehr */
+            border-bottom: 1px solid rgba(var(--glow-rgb), 0.3); /* Die dezente farbige Trennwand */
+            box-shadow: 0 10px 15px -10px rgba(var(--glow-rgb), 0.15);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer;
         }
-        /* min-width: 0 ist der magische Flexbox Fix, damit Text nicht überläuft */
+        
         .anime-item-list .anime-info-wrapper { display: flex; align-items: center; gap: 15px; flex: 1; min-width: 0; }
         .anime-item-list .anime-cover { width: 45px; height: 65px; object-fit: cover; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); flex-shrink: 0; }
         .anime-item-list .anime-info { display: flex; flex-direction: column; gap: 4px; overflow: hidden; flex: 1; min-width: 0; }
-        .anime-item-list .anime-info h4 { font-size: 1.05rem; font-weight: 600; line-height: 1.3; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .anime-item-list .action-btns { display: flex; gap: 14px; align-items: center; flex-shrink: 0; margin-left: 15px; }
+        .anime-item-list .anime-info h4 { font-size: 1.05rem; font-weight: 600; line-height: 1.3; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.3s; }
+        .anime-item-list .anime-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 
-        .item-watched { border: 1px solid rgba(46, 204, 113, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(46, 204, 113, 0.25); }
-        .item-watched:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(46, 204, 113, 0.45); border-color: var(--accent-green); z-index: 10; }
-        
-        .item-current { border: 1px solid rgba(0, 245, 212, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(0, 245, 212, 0.25); }
-        .item-current:hover { transform: translateY(-3px) scale(1.01); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(0, 245, 212, 0.45); border-color: var(--accent-neon); z-index: 10; }
-
-        /* ========================================= */
-        /* SPLIT-CARD DESIGN FÜR FOLGESTAFFELN */
-        /* ========================================= */
-        .grid-layout-next { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-        .ns-card {
-            background: var(--card-bg); border-radius: 12px; padding: 15px;
-            display: flex; flex-direction: row; justify-content: space-between; align-items: center;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer;
+        /* Hover-Effekte mit sanftem Glow */
+        .anime-item-list:hover { 
+            transform: translateX(4px); 
+            background: rgba(var(--glow-rgb), 0.05); 
+            border-bottom-color: rgba(var(--glow-rgb), 0.8); 
         }
-        .ns-card .ns-left { display: flex; align-items: center; gap: 15px; flex: 1; min-width: 0; overflow: hidden; }
-        .ns-card .ns-cover { width: 55px; height: 75px; border-radius: 8px; object-fit: cover; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .ns-card .ns-info { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; overflow: hidden; }
-        .ns-card .ns-info h4 { font-size: 1rem; font-weight: 600; line-height: 1.3; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .ns-card .anime-meta { font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-        .ns-card .action-btns { display: flex; gap: 12px; margin-left: 10px; flex-shrink: 0; }
 
-        .ns-card.item-waiting { border: 1px solid rgba(138, 43, 226, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(138, 43, 226, 0.25); }
-        .ns-card.item-waiting:hover { transform: translateY(-4px); background: #1d213a; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(138, 43, 226, 0.45); border-color: var(--accent-purple); z-index: 10; }
-        .ns-card.item-released { border: 1px solid rgba(255, 0, 85, 0.5); background: linear-gradient(90deg, rgba(255, 0, 85, 0.05) 0%, var(--card-bg) 100%); animation: releasePulse 1.5s infinite alternate ease-in-out; }
-        .ns-card.item-released:hover { transform: translateY(-4px); background: #1d213a; border-color: var(--accent-orange); box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 30px rgba(255, 0, 85, 0.8) !important; animation: none; z-index: 10; }
+        .item-watched { --glow-rgb: 46, 204, 113; }
+        .item-current { --glow-rgb: 0, 245, 212; }
+        .item-waiting { --glow-rgb: 138, 43, 226; }
+        
+        /* Das Layout für Folgestaffeln ist jetzt genauso edge-to-edge wie alles andere! */
 
         /* ========================================= */
-        /* RAHMENLOSE POSTER FÜR WATCHLIST */
+        /* NEU 2: RAHMENLOSE POSTER (Watchlist) */
         /* ========================================= */
-        .grid-layout-watchlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 18px; }
+        .grid-layout-watchlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 18px; margin-bottom: 20px; }
         .watchlist-card {
             position: relative; border-radius: 12px; overflow: hidden; background: transparent; cursor: pointer;
             box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 10px rgba(58, 134, 255, 0.2); transition: all 0.3s ease; border: 1px solid rgba(58, 134, 255, 0.2);
             display: flex; flex-direction: column;
         }
         .watchlist-card:hover { transform: translateY(-6px); box-shadow: 0 8px 25px rgba(0,0,0,0.7), 0 0 20px rgba(58, 134, 255, 0.5); border-color: var(--accent-blue); z-index: 10; }
-        .watchlist-card .wl-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; border-radius: 12px 12px 0 0; }
-        .watchlist-card .wl-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 12px 12px; background: linear-gradient(to top, rgba(0,0,0,0.95), transparent); pointer-events: none; }
-        .watchlist-card .wl-overlay h4 { font-size: 0.95rem; font-weight: 600; line-height: 1.3; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.8); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .watchlist-card .wl-actions { display: flex; justify-content: center; gap: 20px; padding: 12px; background: var(--card-bg); border-radius: 0 0 12px 12px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .watchlist-card .wl-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; border-radius: 12px; }
+        .watchlist-card .wl-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 12px 12px; background: linear-gradient(to top, rgba(0,0,0,0.95), transparent); pointer-events: none; border-radius: 0 0 12px 12px; }
+        .watchlist-card .wl-overlay h4 { font-size: 0.95rem; font-weight: 600; line-height: 1.3; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.8); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: white; }
 
         /* ========================================= */
-        /* SPLIT-SCREEN DASHBOARD RELEASES */
+        /* NEU 3: FRISCHE RELEASES DASHBOARD (Magazin-Style) */
         /* ========================================= */
-        .split-screen-container { display: flex; gap: 15px; height: 260px; }
-        .split-preview { flex: 0 0 180px; position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--accent-orange); box-shadow: 0 0 15px rgba(255,0,85,0.3); cursor: pointer; transition: transform 0.2s; }
-        .split-preview:hover { transform: scale(1.02); box-shadow: 0 0 25px rgba(255,0,85,0.6); }
-        .split-preview img { width: 100%; height: 100%; object-fit: cover; }
-        .split-preview-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.7); padding: 8px; text-align: center; font-size: 0.75rem; font-weight: 600; color: white; backdrop-filter: blur(5px); }
-        .split-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 5px; }
-        .split-list::-webkit-scrollbar { width: 6px; } .split-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        .release-list-item { padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.2s; border-left: 3px solid transparent; }
-        .release-list-item:hover, .release-list-item.active-preview { background: rgba(255,0,85,0.1); border-left-color: var(--accent-orange); }
-        .release-list-item h4 { font-size: 0.9rem; margin: 0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
+        .release-poster-card {
+            position: relative; border-radius: 12px; overflow: hidden; background: transparent; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 15px rgba(255, 0, 85, 0.4); transition: all 0.3s ease; border: 1px solid rgba(255, 0, 85, 0.5);
+            display: flex; flex-direction: column;
+        }
+        .release-poster-card:hover { transform: translateY(-6px); box-shadow: 0 8px 25px rgba(0,0,0,0.7), 0 0 25px rgba(255, 0, 85, 0.7); border-color: var(--accent-orange); z-index: 10; }
+        .release-poster-card .rp-badge { position: absolute; top: 10px; right: 10px; background: var(--accent-orange); color: white; font-weight: 700; font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; box-shadow: 0 2px 10px rgba(255,0,85,0.6); z-index: 5; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- TOAST NOTIFICATION (CSS FIX) --- */
+        .toast { opacity: 0; visibility: hidden; position: fixed; bottom: -80px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #a04ef6, var(--accent-purple)); color: white; padding: 12px 26px; border-radius: 30px; font-size: 0.95rem; font-weight: 600; box-shadow: 0 10px 25px rgba(138, 43, 226, 0.4); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; pointer-events: none; display: flex; align-items: center; gap: 10px; }
+        .toast.show { bottom: 30px; opacity: 1; visibility: visible; }
 
         /* --- MODALS --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 18, 0.85); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.35s ease; z-index: 1000; }
@@ -254,7 +230,7 @@
         .empty-state { text-align: center; color: var(--text-muted); padding: 25px; font-style: italic; font-size: 0.9rem; background: rgba(255,255,255,0.01); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.05); width: 100%; grid-column: 1 / -1; }
         .loading-notice { text-align: center; padding: 40px; color: var(--accent-neon); font-weight: 600; font-size: 1.2rem; grid-column: 1 / -1; }
 
-        /* ================= MOBILE OPTIMIERUNG (DER FIX) ================= */
+        /* ================= MOBILE OPTIMIERUNG ================= */
         @media (max-width: 600px) {
             header { padding: 15px; }
             .logo img { width: 35px; height: 35px; }
@@ -273,27 +249,10 @@
             .btn-back { align-self: flex-start; }
             .btn-add { width: 100%; text-align: center; padding: 12px; }
             
-            /* NEU: Flexbox Wrap für mobile Listen, damit Text nicht abgeschnitten wird */
-            .anime-item-list, .ns-card { flex-wrap: wrap; padding: 15px; gap: 12px; }
-            .anime-item-list .anime-info-wrapper, .ns-card .ns-left { width: 100%; flex: 1 1 100%; min-width: 0; }
-            
-            /* Buttons rutschen in eine eigene, saubere Zeile darunter */
-            .anime-item-list .action-btns, .ns-card .action-btns { 
-                width: 100%; justify-content: space-around; margin: 0; 
-                padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; 
-            }
-            
-            /* Watchlist auf Mobile anpassen */
+            /* Sauberes 2-Spalten Grid für Watchlist & Releases auf Mobile */
             .grid-layout-watchlist { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .watchlist-card .wl-overlay { padding: 30px 10px 10px; }
             .watchlist-card .wl-overlay h4 { font-size: 0.85rem; }
-            .watchlist-card .wl-actions { gap: 10px; padding: 10px; }
-            .watchlist-card .wl-actions button { font-size: 0.95rem; }
-
-            /* Dashboard Split Screen auf Mobile fixen */
-            .split-screen-container { flex-direction: column; height: auto; gap: 10px; }
-            .split-preview { width: 100%; height: 220px; flex: none; }
-            .split-list { max-height: 250px; overflow-y: auto; }
         }
     </style>
 </head>
@@ -346,7 +305,7 @@
 
                 <div class="homepage-section alert-section">
                     <h2><i class="fa-solid fa-fire" style="color: var(--accent-orange);"></i> Frische Releases!</h2>
-                    <div id="hp-alerts-split"></div>
+                    <div id="hp-alerts-grid"></div>
                 </div>
             </div>
 
@@ -383,9 +342,9 @@
                     <button class="btn-add" onclick="openModal('next-season')">+ Hinzufügen</button>
                 </div>
                 <div class="sub-section-title"><i class="fa-solid fa-hourglass"></i> Zukünftige Staffeln</div>
-                <div id="list-next-waiting" class="grid-layout-next"></div> 
+                <div id="list-next-waiting" class="anime-list"></div> 
                 <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> Neue Releases verfügbar!</div>
-                <div id="list-next-released" class="grid-layout-next"></div> 
+                <div id="list-next-released" class="anime-list"></div> 
             </div>
 
             <div id="page-watchlist" class="page">
@@ -419,7 +378,7 @@
                     <span id="detail-meta" class="status-badge" style="background: rgba(0, 245, 212, 0.15); color: var(--accent-neon);">Meta</span>
                 </div>
                 
-                <div id="detail-action-container" style="display: flex; gap: 10px; margin-bottom: 15px; justify-content: center; width: 100%;"></div>
+                <div id="detail-action-container" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; justify-content: center; width: 100%;"></div>
 
                 <button class="btn-auth" style="background: rgba(255,255,255,0.1); color: white; width: 100%; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600;" onclick="closeDetailModal()">Schließen</button>
             </div>
@@ -440,19 +399,18 @@
         let animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
         let toastTimeout;
         let isInitialLoad = true;
-        window.currentPreviewId = null;
 
         // ==========================================
-        // DYNAMISCHES RENDERN DER MODALS (SAFARI KILLER)
+        // DYNAMISCHES RENDERN (SAFARI KILLER)
         // ==========================================
-        function renderAuthModals() {
+        function injectAuthModals() {
             document.getElementById('auth-container-dynamic').innerHTML = `
                 <div id="auth-layout" class="layout-section active-layout visible">
                     <div class="auth-container" onkeydown="if(event.key === 'Enter') handleLogin();">
                         <div class="auth-logo"><img src="icon-192.png" alt="Logo" onerror="this.style.display='none'"><h1>YP AniTracker</h1></div>
                         <div>
-                            <div class="auth-form-group"><label>E-Mail Adresse</label><input type="text" id="login-email" autocomplete="off" data-lpignore="true"></div>
-                            <div class="auth-form-group"><label>Passwort</label><input type="text" id="login-password" class="pw-input" autocomplete="off" data-lpignore="true"></div>
+                            <div class="auth-form-group"><label>E-Mail Adresse</label><input type="text" id="login-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true"></div>
+                            <div class="auth-form-group"><label>Passwort</label><input type="text" id="login-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true"></div>
                             <label class="auth-options"><div style="display: flex; align-items: center;"><input type="checkbox" id="auth-remember" checked><span>Angemeldet bleiben</span></div></label>
                             <button type="button" class="btn-auth btn-login" onclick="handleLogin()"><i class="fa-solid fa-right-to-bracket"></i> Einloggen</button>
                             <div class="auth-switch"><a onclick="openForgotPasswordModal()">Passwort vergessen?</a><div style="margin-top: 10px;">Neu hier? <a onclick="toggleAuthMode('register')">Account erstellen</a></div></div>
@@ -460,82 +418,47 @@
                     </div>
                 </div>
                 <div id="register-modal" class="modal-overlay"><div class="modal"><h3>Account erstellen</h3><div class="form-group"><label>Benutzername</label><input type="text" id="reg-username" autocomplete="off" data-lpignore="true"></div><div class="form-group"><label>E-Mail</label><input type="text" id="reg-email" autocomplete="off" data-lpignore="true"></div><div class="form-group"><label>Passwort</label><input type="text" id="reg-password" class="pw-input" autocomplete="off" data-lpignore="true"></div><div id="reg-error-msg" class="auth-error"></div><div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeRegisterModal()">Abbrechen</button><button type="button" class="btn-add" onclick="handleRegister()">Erstellen</button></div></div></div>
-                <div id="forgot-password-modal" class="modal-overlay"><div class="modal"><h3>Passwort zurücksetzen</h3><div class="form-group"><label>E-Mail</label><input type="text" id="forgot-email" autocomplete="off" data-lpignore="true"></div><div id="forgot-error-msg" class="auth-error"></div><div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeForgotPasswordModal()">Abbrechen</button><button type="button" class="btn-add" onclick="handlePasswordResetRequest()">Link senden</button></div></div></div>
+                <div id="forgot-password-modal" class="modal-overlay"><div class="modal"><h3>Passwort zurücksetzen</h3><div class="form-group"><label>E-Mail</label><input type="text" id="forgot-email" autocomplete="off" data-lpignore="true"></div><div id="forgot-error-msg" class="auth-error"></div><div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeForgotPasswordModal()">Abbrechen</button><button type="button" class="btn-add" onclick="handlePasswordResetRequest()">Senden</button></div></div></div>
                 <div id="recovery-modal" class="modal-overlay"><div class="modal"><h3>Neues Passwort</h3><div class="form-group"><label>Neues Passwort</label><input type="text" id="recovery-password" class="pw-input" autocomplete="off" data-lpignore="true"></div><div id="recovery-error-msg" class="auth-error"></div><div class="modal-footer"><button type="button" class="btn-add" onclick="handleRecoveryUpdate()">Speichern</button></div></div></div>
             `;
         }
 
-        function renderAppModals() {
-            // Einstellungen Modal
+        function removeAuthModals() { document.getElementById('auth-container-dynamic').innerHTML = ''; }
+
+        function openSettingsModal() { 
             document.getElementById('settings-container-dynamic').innerHTML = `
-                <div id="settings-modal" class="modal-overlay">
+                <div id="settings-modal" class="modal-overlay active">
                     <div class="modal">
                         <h3><i class="fa-solid fa-gear" style="color: var(--text-muted);"></i> Einstellungen</h3>
-                        <div style="margin-top: 20px;" onkeydown="if(event.key === 'Enter') handleSettingsUsernameChange();">
+                        <div style="margin-top: 20px;">
                             <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Name ändern</h4>
                             <div class="form-group"><input type="text" id="setting-name-val" autocomplete="off" data-lpignore="true"></div>
-                            <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsUsernameChange()">Namen aktualisieren</button>
-                        </div>
-                        <hr class="settings-divider">
-                        <div id="dynamic-pw-setting">
-                            <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Passwort ändern</h4>
-                            <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="injectPasswordUpdateField(this)">Passwort aktualisieren</button>
-                        </div>
-                        <hr class="settings-divider">
+                            <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsUsernameChange()">Aktualisieren</button>
+                        </div><hr class="settings-divider">
                         <div>
-                            <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--danger);">Gefahrenzone</h4>
-                            <button class="btn-auth" style="background: rgba(255,0,85,0.1); color: var(--danger); border: 1px solid rgba(255,0,85,0.3); padding: 10px;" onclick="openDeleteConfirmModal()"><i class="fa-solid fa-trash-can"></i> Account & Daten löschen</button>
-                        </div>
+                            <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Sicherheit ändern</h4>
+                            <div class="form-group"><input type="text" id="setting-sec-val" class="pw-input" placeholder="Neuer Code (min. 6 Zeichen)" autocomplete="off" data-lpignore="true"></div>
+                            <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()">Aktualisieren</button>
+                        </div><hr class="settings-divider">
+                        <div><h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--danger);">Gefahrenzone</h4><button class="btn-auth" style="background: rgba(255,0,85,0.1); color: var(--danger); border: 1px solid rgba(255,0,85,0.3); padding: 10px;" onclick="openDeleteConfirmModal()"><i class="fa-solid fa-trash-can"></i> Account löschen</button></div>
                         <div class="modal-footer" style="margin-top: 20px;"><button type="button" class="btn-cancel" onclick="closeSettingsModal()">Schließen</button></div>
                     </div>
                 </div>
-
-                <div id="delete-confirm-modal" class="modal-overlay">
-                    <div class="modal modal-danger">
-                        <h3><i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i> Bist du sicher?</h3>
-                        <p class="danger-text">Wenn du fortfährst, werden <strong>alle deine gespeicherten Animes unwiderruflich aus der Datenbank gelöscht</strong>.</p>
-                        <div class="modal-footer"><button class="btn-cancel" onclick="closeDeleteConfirmModal()">Abbrechen</button><button class="btn-danger-action" onclick="wipeAccountData()">Ja, löschen!</button></div>
-                    </div>
-                </div>
+                <div id="delete-confirm-modal" class="modal-overlay"><div class="modal modal-danger"><h3>Bist du sicher?</h3><p class="danger-text">Dies löscht <strong>alle Daten unwiderruflich</strong>.</p><div class="modal-footer"><button class="btn-cancel" onclick="closeDeleteConfirmModal()">Abbrechen</button><button class="btn-danger-action" onclick="wipeAccountData()">Ja, löschen!</button></div></div></div>
             `;
-
-            // ADD Anime Modal
-            const addDiv = document.createElement('div');
-            addDiv.id = 'dynamic-add-modal-container';
-            addDiv.innerHTML = `
-                <div id="modal" class="modal-overlay">
-                    <div class="modal" onkeydown="if(event.key === 'Enter') saveAnime();">
-                        <h3 id="modal-title">Anime hinzufügen</h3>
-                        <input type="hidden" id="modal-page-context"><input type="hidden" id="anime-edit-id"><input type="hidden" id="anime-cover-url"><input type="hidden" id="anime-mal-id">
-                        <div class="form-group" style="position: relative;">
-                            <label>Anime Name</label>
-                            <input type="text" id="anime-title" placeholder="z.B. Demon Slayer..." oninput="searchAnime(this.value)" autocomplete="off" data-lpignore="true">
-                            <div id="search-results" class="search-res"></div>
-                        </div>
-                        <div id="type-field-group" class="form-group" style="display: none;">
-                            <label>Format / Status</label>
-                            <select id="anime-type" onchange="handleTypeChange()">
-                                <option value="staffel">Neue Staffel folgt</option><option value="film">Film folgt</option><option value="abgeschlossen">Komplett abgeschlossen</option>
-                            </select>
-                        </div>
-                        <div id="meta-field-group" class="form-group" style="display: none;">
-                            <label>Wann kommt das Release?</label>
-                            <input type="text" id="anime-meta-input" placeholder="z.B. Winter 2027" autocomplete="off">
-                        </div>
-                        <div id="released-field-group" class="form-group checkbox-group" style="display: none;">
-                            <input type="checkbox" id="anime-is-released"><label for="anime-is-released">Release ist draußen!</label>
-                        </div>
-                        <div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeModal()">Abbrechen</button><button type="button" class="btn-add" onclick="saveAnime()">Speichern</button></div>
-                    </div>
-                </div>
-            `;
-            if(!document.getElementById('dynamic-add-modal-container')) document.body.appendChild(addDiv);
+            document.getElementById('setting-name-val').value = document.getElementById('header-username-display').innerText;
         }
 
-        // ==========================================
-        // AUTHENTIFIKATION & LOADER
-        // ==========================================
+        function closeSettingsModal() { 
+            const modal = document.getElementById('settings-modal');
+            if(modal) { modal.classList.remove('active'); setTimeout(() => document.getElementById('settings-container-dynamic').innerHTML = '', 400); }
+        }
+        function openDeleteConfirmModal() { document.getElementById('settings-modal').classList.remove('active'); document.getElementById('delete-confirm-modal').classList.add('active'); }
+        function closeDeleteConfirmModal() { document.getElementById('delete-confirm-modal').classList.remove('active'); }
 
+        // ==========================================
+        // APP INIT
+        // ==========================================
         db.auth.getSession().then(({ data: { session } }) => {
             const loader = document.getElementById('global-loader');
             if (loader) { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
@@ -555,24 +478,44 @@
             if (session) {
                 const metadata = session.user.user_metadata || {};
                 document.getElementById('header-username-display').innerText = metadata.username || session.user.email.split('@')[0];
+                removeAuthModals(); // BYE BYE SAFARI
                 
-                // DOM NUKE: Lösche alle Auth Container
-                document.getElementById('auth-container-dynamic').innerHTML = '';
-                // Lade sichere Modals (Settings & Add)
-                renderAppModals();
+                const addDiv = document.createElement('div');
+                addDiv.id = 'dynamic-add-modal-container';
+                addDiv.innerHTML = `
+                    <div id="modal" class="modal-overlay">
+                        <div class="modal" onkeydown="if(event.key === 'Enter') saveAnime();">
+                            <h3 id="modal-title">Anime hinzufügen</h3>
+                            <input type="hidden" id="modal-page-context"><input type="hidden" id="anime-edit-id"><input type="hidden" id="anime-cover-url"><input type="hidden" id="anime-mal-id">
+                            <div class="form-group" style="position: relative;">
+                                <label>Anime Name</label>
+                                <input type="text" id="anime-title" placeholder="z.B. Demon Slayer..." oninput="searchAnime(this.value)" autocomplete="off" data-lpignore="true">
+                                <div id="search-results" class="search-res"></div>
+                            </div>
+                            <div id="type-field-group" class="form-group" style="display: none;">
+                                <label>Format / Status</label>
+                                <select id="anime-type" onchange="handleTypeChange()">
+                                    <option value="staffel">Neue Staffel folgt</option><option value="film">Film folgt</option><option value="abgeschlossen">Komplett abgeschlossen</option>
+                                </select>
+                            </div>
+                            <div id="meta-field-group" class="form-group" style="display: none;">
+                                <label>Wann kommt das Release?</label>
+                                <input type="text" id="anime-meta-input" placeholder="z.B. Winter 2027" autocomplete="off">
+                            </div>
+                            <div id="released-field-group" class="form-group checkbox-group" style="display: none;">
+                                <input type="checkbox" id="anime-is-released"><label for="anime-is-released">Release ist draußen!</label>
+                            </div>
+                            <div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeModal()">Abbrechen</button><button type="button" class="btn-add" onclick="saveAnime()">Speichern</button></div>
+                        </div>
+                    </div>
+                `;
+                if(!document.getElementById('dynamic-add-modal-container')) document.body.appendChild(addDiv);
 
                 appLayout.classList.add('active-layout'); 
                 setTimeout(() => { appLayout.classList.add('visible'); window.scrollTo(0, 0); if(isInitialLoad) loadDataFromCloud(); isInitialLoad = false; }, 50);
             } else {
                 appLayout.style.opacity = '0';
-                setTimeout(() => { 
-                    appLayout.classList.remove('active-layout'); appLayout.style.display = 'none'; 
-                    document.getElementById('settings-container-dynamic').innerHTML = ''; // Settings löschen
-                    const addMod = document.getElementById('dynamic-add-modal-container'); if(addMod) addMod.remove(); // Add Modal löschen
-                    
-                    injectAuthModals(); // Auth Formulare wieder reinladen
-                    isInitialLoad = false; 
-                }, isInitialLoad ? 0 : 400);
+                setTimeout(() => { appLayout.classList.remove('active-layout'); appLayout.style.display = 'none'; const addMod = document.getElementById('dynamic-add-modal-container'); if(addMod) addMod.remove(); injectAuthModals(); isInitialLoad = false; }, isInitialLoad ? 0 : 400);
             }
         }
 
@@ -615,39 +558,18 @@
             if(error) document.getElementById('recovery-error-msg').innerText = error.message; else { document.getElementById('recovery-modal').classList.remove('active'); showToast("Geändert! 🔐"); }
         }
 
-        // ==========================================
-        // EINSTELLUNGEN
-        // ==========================================
-        function openSettingsModal() { 
-            document.getElementById('setting-name-val').value = document.getElementById('header-username-display').innerText;
-            document.getElementById('dynamic-pw-setting').innerHTML = `<h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Passwort ändern</h4><button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="injectPasswordUpdateField()">Passwort aktualisieren</button>`;
-            document.getElementById('settings-modal').classList.add('active'); 
-        }
-        function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
-
         async function handleSettingsUsernameChange() {
             const newUsername = document.getElementById('setting-name-val').value.trim();
             if(!newUsername) return;
             const { error } = await db.auth.updateUser({ data: { username: newUsername } });
             if(error) alert(error.message); else { document.getElementById('header-username-display').innerText = newUsername; closeSettingsModal(); showToast("Geändert!"); }
         }
-
-        function injectPasswordUpdateField() {
-            document.getElementById('dynamic-pw-setting').innerHTML = `
-                <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Passwort ändern</h4>
-                <div class="form-group"><input type="text" id="setting-sec-val" class="pw-input" placeholder="Neuer Code (min. 6 Zeichen)" autocomplete="off" data-lpignore="true"></div>
-                <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()">Jetzt Speichern</button>
-            `;
-        }
-
         async function handleSettingsPasswordChange() {
             const newPassword = document.getElementById('setting-sec-val').value;
             if(newPassword.length < 6) return alert("Min. 6 Zeichen.");
             const { error } = await db.auth.updateUser({ password: newPassword });
             if(error) alert("Fehler"); else { closeSettingsModal(); showToast("Geändert! 🔐"); }
         }
-        function openDeleteConfirmModal() { closeSettingsModal(); document.getElementById('delete-confirm-modal').classList.add('active'); }
-        function closeDeleteConfirmModal() { document.getElementById('delete-confirm-modal').classList.remove('active'); }
         async function wipeAccountData() {
             try { const { error } = await db.from('animes').delete().neq('id', 0); if (error) throw error; closeDeleteConfirmModal(); await handleLogout(); } catch (e) { alert("Fehler"); }
         }
@@ -728,16 +650,25 @@
             }
             metaBadge.innerText = metaDisplay;
             
-            // SMARTE DYNAMISCHE BUTTONS IM POP-UP (LOGIK FIX)
+            // DYNAMISCHE BUTTONS IM POP-UP (ZERO-BUTTON-POLICY IN DEN LISTEN)
             let modalActions = '';
+            
+            // Action Buttons
             if (anime.category === 'watchlist' || (anime.category === 'next-season' && anime.isReleased)) {
-                modalActions = `<button type="button" class="btn-auth" style="background: var(--accent-neon); color: var(--bg-color); margin: 0; flex: 1;" onclick="modalActionMoveToCurrent('${anime.id}')"><i class="fa-solid fa-circle-play"></i> Jetzt schauen</button>`;
-            } else if (anime.category === 'next-season' && !anime.isReleased) {
-                // Wenn noch nicht draußen: Button um Status zu ändern
-                modalActions = `<button type="button" class="btn-auth" style="background: var(--accent-orange); color: white; margin: 0; flex: 1;" onclick="modalActionToggleRelease('${anime.id}', false)"><i class="fa-solid fa-fire"></i> Staffel ist draußen!</button>`;
-            } else if (anime.category === 'current') {
-                modalActions = `<button type="button" class="btn-auth" style="background: var(--accent-green); color: var(--bg-color); margin: 0; flex: 1;" onclick="modalActionFinishCurrent('${anime.id}', '${anime.title.replace(/'/g, "\\'")}')"><i class="fa-solid fa-circle-check"></i> Abschließen</button>`;
+                modalActions += `<button type="button" class="btn-auth" style="background: var(--accent-neon); color: var(--bg-color); flex: 1; min-width: 45%; margin:0;" onclick="modalActionMoveToCurrent('${anime.id}')"><i class="fa-solid fa-circle-play"></i> Schauen</button>`;
+            } 
+            if (anime.category === 'current') {
+                modalActions += `<button type="button" class="btn-auth" style="background: var(--accent-green); color: var(--bg-color); flex: 1; min-width: 45%; margin:0;" onclick="modalActionFinishCurrent('${anime.id}', '${anime.title.replace(/'/g, "\\'")}')"><i class="fa-solid fa-circle-check"></i> Abschließen</button>`;
             }
+            if (anime.category === 'next-season' && !anime.isReleased) {
+                modalActions += `<button type="button" class="btn-auth" style="background: var(--accent-orange); color: white; flex: 1; min-width: 45%; margin:0;" onclick="modalActionToggleRelease('${anime.id}', false)"><i class="fa-solid fa-fire"></i> Ist draußen!</button>`;
+            }
+            if (anime.category === 'next-season') {
+                modalActions += `<button type="button" class="btn-auth" style="background: var(--accent-blue); color: white; flex: 1; min-width: 45%; margin:0;" onclick="editAnime('${anime.id}')"><i class="fa-solid fa-pen"></i> Bearbeiten</button>`;
+            }
+            
+            // Löschen Button IMMER anzeigen
+            modalActions += `<button type="button" class="btn-auth" style="background: rgba(255,0,85,0.1); color: var(--danger); border: 1px solid rgba(255,0,85,0.3); flex: 1; min-width: 45%; margin:0;" onclick="modalActionDelete('${anime.id}')"><i class="fa-solid fa-trash"></i> Löschen</button>`;
             
             const actionContainer = document.getElementById('detail-action-container');
             if(modalActions) { actionContainer.innerHTML = modalActions; actionContainer.style.display = 'flex'; } else { actionContainer.style.display = 'none'; }
@@ -746,9 +677,9 @@
 
         function closeDetailModal(event) { if (event) event.stopPropagation(); document.getElementById('detail-modal').classList.remove('active'); }
 
+        // Modal Button Functions
         function modalActionMoveToCurrent(id) {
             closeDetailModal();
-            document.querySelectorAll(`[id*="-${id}-"]`).forEach(el => el.classList.add('fade-out'));
             setTimeout(async () => {
                 try {
                     await db.from('animes').update({ category: 'current', meta: 'Keine Info' }).eq('id', id);
@@ -768,6 +699,16 @@
         }
 
         function modalActionFinishCurrent(id, title) { closeDetailModal(); setTimeout(() => finishCurrentAnime(id, title), 350); }
+        
+        function modalActionDelete(id) {
+            closeDetailModal();
+            setTimeout(async () => {
+                try {
+                    await db.from('animes').delete().eq('id', id);
+                    await loadDataFromCloud(true); showToast("Anime gelöscht 🗑️");
+                } catch(e) { alert("Fehler beim Löschen."); }
+            }, 350);
+        }
 
         function openModal(pageContext) {
             document.getElementById('modal-page-context').value = pageContext; document.getElementById('anime-edit-id').value = '';
@@ -781,15 +722,18 @@
         }
 
         function editAnime(id) {
-            const anime = animeData.nextSeason.find(a => a.id == id); if (!anime) return;
-            document.getElementById('modal-page-context').value = 'next-season'; document.getElementById('anime-edit-id').value = anime.id;
-            document.getElementById('anime-title').value = anime.title; document.getElementById('anime-cover-url').value = anime.coverUrl || '';
-            document.getElementById('anime-mal-id').value = anime.malId || ''; document.getElementById('anime-type').value = anime.type;
-            document.getElementById('anime-meta-input').value = (anime.meta === 'Fortsetzung angekündigt' || anime.meta === 'Film angekündigt') ? '' : anime.meta;
-            document.getElementById('anime-is-released').checked = anime.isReleased;
-            
-            document.getElementById('modal-title').innerText = 'Info bearbeiten'; document.getElementById('type-field-group').style.display = 'block'; document.getElementById('meta-field-group').style.display = 'block'; document.getElementById('released-field-group').style.display = 'flex';
-            document.getElementById('modal').classList.add('active');
+            closeDetailModal();
+            setTimeout(() => {
+                const anime = animeData.nextSeason.find(a => a.id == id); if (!anime) return;
+                document.getElementById('modal-page-context').value = 'next-season'; document.getElementById('anime-edit-id').value = anime.id;
+                document.getElementById('anime-title').value = anime.title; document.getElementById('anime-cover-url').value = anime.coverUrl || '';
+                document.getElementById('anime-mal-id').value = anime.malId || ''; document.getElementById('anime-type').value = anime.type;
+                document.getElementById('anime-meta-input').value = (anime.meta === 'Fortsetzung angekündigt' || anime.meta === 'Film angekündigt') ? '' : anime.meta;
+                document.getElementById('anime-is-released').checked = anime.isReleased;
+                
+                document.getElementById('modal-title').innerText = 'Info bearbeiten'; document.getElementById('type-field-group').style.display = 'block'; document.getElementById('meta-field-group').style.display = 'block'; document.getElementById('released-field-group').style.display = 'flex';
+                document.getElementById('modal').classList.add('active');
+            }, 350);
         }
 
         function finishCurrentAnime(id, title) {
@@ -807,7 +751,7 @@
         function showLoadingStates() {
             const loading = '<div class="loading-notice"><i class="fa-solid fa-spinner fa-spin"></i> Lade...</div>';
             ['list-watched-completed', 'list-watched-continuing', 'list-watched-released', 'list-next-waiting', 'list-next-released', 'list-watchlist', 'list-current'].forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = loading; });
-            document.getElementById('hp-alerts-split').innerHTML = loading;
+            document.getElementById('hp-alerts-grid').innerHTML = loading;
         }
 
         async function loadDataFromCloud(silent = false) {
@@ -856,58 +800,26 @@
             } catch(e) { alert("Fehler: " + e.message); }
         }
 
-        function animateAndExecute(elementId, animationClass, dbLogic, successMessage) {
-            const element = document.getElementById(elementId);
-            if (element) element.classList.add(animationClass);
-            setTimeout(async () => {
-                try { await dbLogic(); await loadDataFromCloud(true); if (successMessage) showToast(successMessage); } catch(e) { alert("Fehler."); await loadDataFromCloud(true); }
-            }, 350);
-        }
-
-        function deleteAnime(context, id, elementId) { animateAndExecute(elementId, 'fade-out', async () => { await db.from('animes').delete().eq('id', id); }, "Anime gelöscht 🗑️"); }
-        function toggleRelease(id, currentStatus, elementId) {
-            const el = document.getElementById(elementId); if(el) el.classList.add('highlight-pulse');
-            animateAndExecute(elementId, 'success-pop', async () => { await db.from('animes').update({ is_released: !currentStatus }).eq('id', id); });
-        }
-        
-        function moveToCurrent(id, elementId) {
-            animateAndExecute(elementId, 'fade-out', async () => { await db.from('animes').update({ category: 'current', meta: 'Keine Info' }).eq('id', id); }, "Verschoben zu 'Aktuell am Schauen' ⚡");
-        }
-
         // ==========================================
         // RENDER LOGIK FÜR DIE VERSCHIEDENEN DESIGNS
         // ==========================================
-        window.updateDashboardPreview = function(coverUrl, id) {
-            window.currentPreviewId = id;
-            document.getElementById('dashboard-preview-img').src = coverUrl || 'icon-192.png';
-            document.querySelectorAll('.release-list-item').forEach(el => el.classList.remove('active-preview'));
-            const activeEl = document.getElementById('rel-item-' + id);
-            if(activeEl) activeEl.classList.add('active-preview');
-        };
-
         function createAnimeDOM(anime, context, listName, index = null) {
             const uniqueId = `anime-${context}-${anime.id}-${listName}`;
-            let metaHTML = '', actionHTML = '', leadingIconHTML = '';
+            let metaHTML = '', leadingIconHTML = '';
             
-            // DESIGN 2: WATCHLIST
+            // DESIGN 2: WATCHLIST (RAHMENLOSE POSTER)
             if (context === 'watchlist') {
-                actionHTML = `<button type="button" class="btn-action start-watching" onclick="moveToCurrent('${anime.id}', '${uniqueId}')" title="Jetzt schauen" style="color:var(--accent-neon);"><i class="fa-solid fa-circle-play"></i> Jetzt schauen</button>`;
                 return `
-                <div class="watchlist-card" id="${uniqueId}">
-                    <div style="position:relative; width:100%; height:100%; cursor:pointer;" onclick="openDetailModal('${anime.id}')">
-                        ${anime.coverUrl ? `<img src="${anime.coverUrl}" class="wl-poster" onerror="this.style.display='none'">` : '<div class="wl-poster" style="background:#111320; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-image"></i></div>'}
-                        <div class="wl-overlay"><h4>${anime.title}</h4></div>
-                    </div>
-                    <div class="wl-actions" onclick="event.stopPropagation()">
-                        ${actionHTML}
-                        <button type="button" class="btn-action delete" onclick="deleteAnime('${context}', '${anime.id}', '${uniqueId}')" style="margin-left:auto;"><i class="fa-solid fa-trash"></i></button>
-                    </div>
+                <div class="watchlist-card" id="${uniqueId}" onclick="openDetailModal('${anime.id}')">
+                    ${anime.coverUrl ? `<img src="${anime.coverUrl}" class="wl-poster" onerror="this.style.display='none'">` : '<div class="wl-poster" style="background:#111320; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-image"></i></div>'}
+                    <div class="wl-overlay"><h4>${anime.title}</h4></div>
                 </div>`;
             }
 
-            // DESIGN 3: FOLGESTAFFELN (Split Cards)
+            // DESIGN 1 & 3: EDGE-TO-EDGE LISTEN (Geschaut, Current, Folgestaffeln)
+            let borderClass = 'item-' + context;
+            
             if (context === 'next-season') {
-                let borderClass = anime.isReleased ? 'item-released' : 'item-waiting';
                 let iconClass = anime.type === 'film' ? 'fa-solid fa-film' : 'fa-solid fa-tv'; 
                 leadingIconHTML = `<i class="${iconClass} anime-decor-icon color-${anime.isReleased ? 'released' : 'waiting'}"></i>`;
                 
@@ -921,44 +833,13 @@
                 }
 
                 metaHTML = `<div class="anime-meta"><span class="format-badge ${badgeClass}">${badgeLabel}</span>${extraMeta}</div>`;
-                
-                const releaseBtnClass = anime.isReleased ? 'btn-action release-check active' : 'btn-action release-check';
-                // WENN Release draußen: Zeige Play-Button. WENN Warten: Zeige Play-Button NICHT, nur Edit + Toggle.
-                let playBtnHTML = anime.isReleased ? `<button type="button" class="btn-action start-watching" onclick="moveToCurrent('${anime.id}', '${uniqueId}')" title="Jetzt schauen"><i class="fa-solid fa-circle-play"></i></button>` : '';
-
-                actionHTML = `
-                    ${playBtnHTML}
-                    <button type="button" class="btn-action edit" onclick="editAnime('${anime.id}')" title="Bearbeiten"><i class="fa-solid fa-pen"></i></button>
-                    <button type="button" class="${releaseBtnClass}" onclick="toggleRelease('${anime.id}', ${anime.isReleased}, '${uniqueId}')" title="Status umschalten"><i class="fa-solid ${anime.isReleased ? 'fa-circle-check' : 'fa-circle'}"></i></button>`;
-
-                return `
-                <div class="ns-card ${borderClass}" id="${uniqueId}" onclick="openDetailModal('${anime.id}')">
-                    <div class="ns-left">
-                        ${leadingIconHTML}
-                        ${anime.coverUrl ? `<img src="${anime.coverUrl}" class="ns-cover" onerror="this.style.display='none'">` : ''}
-                        <div class="ns-info">
-                            <h4>${anime.title}</h4>
-                            ${metaHTML}
-                        </div>
-                    </div>
-                    <div class="action-btns ns-actions" onclick="event.stopPropagation()">
-                        ${actionHTML}
-                        <button type="button" class="btn-action delete" onclick="deleteAnime('next-season', '${anime.id}', '${uniqueId}')"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                </div>`;
-            }
-
-            // DESIGN 1: STANDARD LISTE (Geschaut, Current)
-            let borderClass = 'item-' + context;
-            let numClass = context === 'watched' ? 'num-watched' : (anime.isReleased ? 'num-released' : 'num-waiting');
-            if (index !== null) leadingIconHTML = `<div class="anime-number ${numClass}">${index}</div>`;
-            else {
-                let iconClass = context === 'current' ? 'fa-solid fa-circle-play' : 'fa-solid fa-bookmark';
-                leadingIconHTML = `<i class="${iconClass} anime-decor-icon color-${context}"></i>`;
-            }
-
-            if(context === 'current') {
-                actionHTML = `<button type="button" class="btn-action check" onclick="finishCurrentAnime('${anime.id}', '${anime.title.replace(/'/g, "\\'")}')" title="Serie abschließen"><i class="fa-solid fa-circle-check"></i></button>`;
+            } else {
+                let numClass = context === 'watched' ? 'num-watched' : (anime.isReleased ? 'num-released' : 'num-waiting');
+                if (index !== null) leadingIconHTML = `<div class="anime-number ${numClass}">${index}</div>`;
+                else {
+                    let iconClass = context === 'current' ? 'fa-solid fa-circle-play' : 'fa-solid fa-bookmark';
+                    leadingIconHTML = `<i class="${iconClass} anime-decor-icon color-${context}"></i>`;
+                }
             }
 
             let coverHTML = anime.coverUrl ? `<img src="${anime.coverUrl}" class="anime-cover" alt="Cover" onerror="this.style.display='none'">` : '';
@@ -973,10 +854,6 @@
                             ${metaHTML}
                         </div>
                     </div>
-                    <div class="action-btns" onclick="event.stopPropagation()">
-                        ${actionHTML}
-                        <button type="button" class="btn-action delete" onclick="deleteAnime('${context}', '${anime.id}', '${uniqueId}')"><i class="fa-solid fa-trash"></i></button>
-                    </div>
                 </div>`;
         }
 
@@ -989,17 +866,16 @@
             for (const base in groups) {
                 if (groups[base].length > 1) {
                     const groupHtml = groups[base].map(a => { 
-                        let currentNum = null;
-                        if (isNumbered) { if (counterObj) { counterObj.val++; currentNum = counterObj.val; } else { localCounter++; currentNum = localCounter; } }
-                        return createAnimeDOM(a, context, prefix, currentNum); 
+                        let num = null;
+                        if (isNumbered) { if (counterObj) { counterObj.val++; num = counterObj.val; } else { localCounter++; num = localCounter; } }
+                        return createAnimeDOM(a, context, prefix, num); 
                     }).join('');
                     
-                    const gridClass = context === 'next-season' ? 'grid-layout-next' : 'anime-list';
-                    html += `<div style="grid-column: 1 / -1; background: rgba(138, 43, 226, 0.05); border-radius: 16px; padding: 18px; border: 1px solid rgba(138, 43, 226, 0.15); margin-bottom: 15px;"><h4 style="margin-bottom: 15px; color: var(--text-color); display: flex; align-items: center; gap: 10px; font-size: 1.05rem;"><i class="fa-solid fa-folder-open" style="color: var(--accent-purple);"></i> ${base} Collection</h4><div class="${gridClass}" style="margin-bottom: 0;">${groupHtml}</div></div>`;
+                    html += `<div style="grid-column: 1 / -1; background: rgba(138, 43, 226, 0.05); border-radius: 16px; padding: 18px 5px; border: 1px solid rgba(138, 43, 226, 0.15); margin-bottom: 15px;"><h4 style="margin-bottom: 15px; color: var(--text-color); display: flex; align-items: center; gap: 10px; font-size: 1.05rem; padding-left: 10px;"><i class="fa-solid fa-folder-open" style="color: var(--accent-purple);"></i> ${base} Collection</h4><div class="anime-list" style="margin-bottom: 0;">${groupHtml}</div></div>`;
                 } else {
-                    let currentNum = null;
-                    if (isNumbered) { if (counterObj) { counterObj.val++; currentNum = counterObj.val; } else { localCounter++; currentNum = localCounter; } }
-                    html += createAnimeDOM(groups[base][0], context, prefix, currentNum);
+                    let num = null;
+                    if (isNumbered) { if (counterObj) { counterObj.val++; num = counterObj.val; } else { localCounter++; num = localCounter; } }
+                    html += createAnimeDOM(groups[base][0], context, prefix, num);
                 }
             }
             return html;
@@ -1025,14 +901,18 @@
             document.getElementById('list-watchlist').innerHTML = animeData.watchlist.length ? animeData.watchlist.map(a => createAnimeDOM(a, 'watchlist', 'p-wl')).join('') : '<div class="empty-state">Deine Watchlist ist im Moment leer.</div>';
             document.getElementById('list-current').innerHTML = animeData.current.length ? animeData.current.map(a => createAnimeDOM(a, 'current', 'p-curr')).join('') : '<div class="empty-state">Du schaust gerade nichts aktiv.</div>';
             
+            // --- DASHBOARD RELEASES IM WATCHLIST-MAGAZIN-STYLE ---
             if (released.length > 0) {
-                let firstAnime = released[0];
-                let defaultCover = firstAnime.coverUrl || 'icon-192.png';
-                let listHtml = released.map((a, i) => `<div class="release-list-item ${i === 0 ? 'active-preview' : ''}" id="rel-item-${a.id}" onclick="updateDashboardPreview('${a.coverUrl || ''}', '${a.id}')" ondblclick="openDetailModal('${a.id}')"><i class="${a.type === 'film' ? 'fa-solid fa-film' : 'fa-solid fa-tv'} color-released"></i><h4>${a.title}</h4></div>`).join('');
-                document.getElementById('hp-alerts-split').innerHTML = `<div class="split-screen-container"><div class="split-preview" onclick="if(window.currentPreviewId) openDetailModal(window.currentPreviewId)"><img id="dashboard-preview-img" src="${defaultCover}" onerror="this.style.display='none'"><div class="split-preview-overlay">Tippe für Details</div></div><div class="split-list">${listHtml}</div></div>`;
-                window.currentPreviewId = firstAnime.id;
+                let listHtml = released.map(a => `
+                    <div class="release-poster-card" onclick="openDetailModal('${a.id}')">
+                        <div class="rp-badge">NEU</div>
+                        ${a.coverUrl ? `<img src="${a.coverUrl}" class="wl-poster" onerror="this.style.display='none'">` : '<div class="wl-poster" style="background:#111320; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-image"></i></div>'}
+                        <div class="wl-overlay"><h4>${a.title}</h4></div>
+                    </div>
+                `).join('');
+                document.getElementById('hp-alerts-grid').innerHTML = `<div class="grid-layout-watchlist">${listHtml}</div>`;
             } else {
-                document.getElementById('hp-alerts-split').innerHTML = '<div class="empty-state" style="border:none;">Keine neuen Releases aktiv.</div>';
+                document.getElementById('hp-alerts-grid').innerHTML = '<div class="empty-state" style="border:none;">Keine neuen Releases aktiv.</div>';
             }
         }
     </script>
