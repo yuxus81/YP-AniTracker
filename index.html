@@ -134,8 +134,30 @@
         .format-badge.film-type { background: rgba(58, 134, 255, 0.15); color: #8ec5ff; border: 1px solid rgba(58, 134, 255, 0.3); }
         .meta-dot { font-size: 0.6rem; opacity: 0.5; margin: 0 2px; }
 
+        .fade-out { opacity: 0; transform: scale(0.95) translateX(30px); pointer-events: none; }
+        
         /* ========================================= */
-        /* DESIGN 1: EDGE-TO-EDGE LISTEN (Geschaut, Aktuell) */
+        /* NEON TICKET (Dashboard Gerade am schauen) */
+        /* ========================================= */
+        .neon-ticket { 
+            display: flex; align-items: center; background: #08090d; border: 1px solid var(--accent-neon); border-radius: 16px; 
+            padding: 12px; margin-bottom: 15px; box-shadow: 0 8px 25px rgba(0, 245, 212, 0.15), inset 0 0 15px rgba(0, 245, 212, 0.05); 
+            cursor: pointer; transition: all 0.3s ease; gap: 15px; 
+        }
+        .neon-ticket:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0, 245, 212, 0.25), inset 0 0 20px rgba(0, 245, 212, 0.1); }
+        .neon-ticket img { width: 60px; height: 85px; object-fit: cover; border-radius: 10px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .neon-ticket .ticket-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; justify-content: center; }
+        .neon-ticket .ticket-info h4 { font-size: 1.1rem; font-weight: 700; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: white; }
+        .neon-ticket .ticket-sub { font-size: 0.75rem; color: var(--accent-neon); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; opacity: 0.9; }
+        .neon-ticket .ticket-btn { 
+            background: rgba(0, 245, 212, 0.15); color: var(--accent-neon); border: 1px solid rgba(0, 245, 212, 0.4); 
+            padding: 10px 18px; border-radius: 30px; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; 
+            flex-shrink: 0; transition: 0.2s; box-shadow: 0 0 10px rgba(0,245,212,0.1); 
+        }
+        .neon-ticket:hover .ticket-btn { background: var(--accent-neon); color: var(--bg-color); box-shadow: 0 0 15px rgba(0,245,212,0.5); }
+
+        /* ========================================= */
+        /* DESIGN 1: EDGE-TO-EDGE LISTEN (Geschaut, Unterseite Aktuell) */
         /* ========================================= */
         .anime-list { display: flex; flex-direction: column; }
         .anime-item-list { 
@@ -147,15 +169,12 @@
         .anime-item-list .anime-cover { width: 55px; height: 80px; object-fit: cover; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); flex-shrink: 0; }
         .anime-item-list .anime-info { display: flex; flex-direction: column; gap: 6px; overflow: hidden; flex: 1; min-width: 0; }
         .anime-item-list .anime-info h4 { font-size: 1.1rem; font-weight: 600; line-height: 1.3; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.3s; }
-        .anime-item-list .anime-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .anime-item-list:hover { transform: translateX(4px); background: rgba(var(--glow-rgb), 0.05); border-bottom-color: rgba(var(--glow-rgb), 0.8); }
 
         .item-watched { --glow-rgb: 46, 204, 113; }
         .item-current { --glow-rgb: 0, 245, 212; }
         .item-waiting { --glow-rgb: 138, 43, 226; }
         .item-released { --glow-rgb: 255, 0, 85; }
-
-        #hp-current-list .anime-item-list { background: rgba(0, 245, 212, 0.05); border-radius: 12px; border: 1px solid rgba(0, 245, 212, 0.2); margin-bottom: 10px; padding: 12px 15px; border-bottom-width: 1px; }
 
         /* ========================================= */
         /* DESIGN 2: FOLGESTAFFELN KARTEN (2er GRID) */
@@ -255,11 +274,11 @@
             .header-greeting { display: block !important; position: static; font-size: 0.75rem; color: var(--text-muted); opacity: 0.8; text-align: center; white-space: nowrap; margin-top: 5px; }
             .btn-icon-header { width: 35px; height: 35px; font-size: 1rem; }
             
-            /* NEU: BENTO GRID FÜR MOBILE */
+            /* BENTO GRID FÜR MOBILE */
             .bento-watched h3 { font-size: 3rem; margin: 5px 0; }
             .bento-card { padding: 15px; }
 
-            /* NEU: MOBILE PAGE HEADER (LARGE TITLE, LINKSBÜNDIG, KEIN ZURÜCK) */
+            /* MOBILE PAGE HEADER (LARGE TITLE, LINKSBÜNDIG, KEIN ZURÜCK) */
             .page-header { 
                 display: flex; flex-direction: row; justify-content: space-between; align-items: center; 
                 padding: 10px 5px 20px; background: transparent; border: none; margin-bottom: 0;
@@ -272,8 +291,15 @@
                 width: 42px; height: 42px; padding: 0; border-radius: 50%; display: flex; 
                 justify-content: center; align-items: center; margin: 0; flex-shrink: 0;
             }
-            .page-header .btn-add span { display: none; } /* Text verstecken */
+            .page-header .btn-add span { display: none; }
             .page-header .btn-add i { font-size: 1.2rem; margin: 0; }
+
+            /* Neon Ticket Mobile Anpassung */
+            .neon-ticket { padding: 10px; gap: 12px; }
+            .neon-ticket img { width: 50px; height: 75px; }
+            .neon-ticket .ticket-info h4 { font-size: 1rem; }
+            .neon-ticket .ticket-btn { padding: 8px 14px; font-size: 0.8rem; }
+            .neon-ticket .ticket-sub { font-size: 0.65rem; }
             
             #hp-alerts-grid .grid-layout-watchlist { grid-template-columns: repeat(3, 1fr); gap: 8px; }
             .grid-layout-next { grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -289,7 +315,6 @@
             .btn-pop { padding: 8px 5px; font-size: 0.75rem; gap: 5px; min-width: 45%; }
             .btn-pop i { font-size: 0.85rem; }
             
-            /* Modals für Hinzufügen: Button muss breit bleiben */
             .modal-footer .btn-add { width: 100%; height: auto; border-radius: 30px; padding: 12px; justify-content: center; }
             .modal-footer .btn-add span { display: inline; }
         }
@@ -339,8 +364,8 @@
                     </div>
                 </div>
 
-                <div class="dash-section-title"><i class="fa-solid fa-bolt" style="color: var(--accent-neon);"></i> Weiter am Schauen</div>
-                <div id="hp-current-list" class="anime-list"></div>
+                <div class="dash-section-title"><i class="fa-solid fa-bolt" style="color: var(--accent-neon);"></i> Gerade am schauen</div>
+                <div id="hp-current-list"></div>
 
                 <div class="dash-section-title" style="margin-top: 25px;"><i class="fa-solid fa-fire" style="color: var(--accent-orange);"></i> Frische Releases!</div>
                 <div id="hp-alerts-grid"></div>
@@ -948,7 +973,6 @@
             let watchCounter = { val: 0 };
             const totalWatched = animeData.watched.length + animeData.nextSeason.length;
             
-            // Bento Dashboard Watch Count
             const bentoWatched = document.getElementById('bento-watched-count');
             if(bentoWatched) bentoWatched.innerText = totalWatched;
 
@@ -972,13 +996,15 @@
             document.getElementById('list-watchlist').innerHTML = animeData.watchlist.length ? animeData.watchlist.map(a => createAnimeDOM(a, 'watchlist', 'p-wl')).join('') : '<div class="empty-state">Deine Watchlist ist im Moment leer.</div>';
             document.getElementById('list-current').innerHTML = animeData.current.length ? animeData.current.map(a => createAnimeDOM(a, 'current', 'p-curr')).join('') : '<div class="empty-state">Du schaust gerade nichts aktiv.</div>';
             
+            // --- NEUES DASHBOARD "NEON TICKET" DESIGN ---
             document.getElementById('hp-current-list').innerHTML = animeData.current.length ? animeData.current.map(a => `
-                <div class="anime-item-list item-current" onclick="openDetailModal('${a.id}')">
-                    <div class="anime-info-wrapper">
-                        <i class="fa-solid fa-circle-play anime-decor-icon color-current"></i>
-                        ${a.coverUrl ? `<img src="${a.coverUrl}" class="anime-cover" onerror="this.style.display='none'">` : ''}
-                        <div class="anime-info"><h4>${a.title}</h4></div>
+                <div class="neon-ticket" onclick="openDetailModal('${a.id}')">
+                    ${a.coverUrl ? `<img src="${a.coverUrl}" onerror="this.style.display='none'">` : '<div style="width:60px; height:85px; background:#111320; border-radius:10px; display:flex; align-items:center; justify-content:center; color: var(--text-muted);"><i class="fa-solid fa-image"></i></div>'}
+                    <div class="ticket-info">
+                        <h4>${a.title}</h4>
+                        <span class="ticket-sub">Folge ansehen</span>
                     </div>
+                    <div class="ticket-btn"><i class="fa-solid fa-play"></i> <span>Fortsetzen</span></div>
                 </div>`).join('') : '<div class="empty-state" style="border:none;">Nichts aktiv am Schauen.</div>';
             
             if (released.length > 0) {
