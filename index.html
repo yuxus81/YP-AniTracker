@@ -98,8 +98,15 @@
         .page-header h2 { margin: 0; display: flex; align-items: center; gap: 10px; font-size: 1.4rem; }
         .btn-back { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; transition: color 0.3s; }
         .btn-back:hover { color: white; }
-        .btn-add { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); transition: all 0.2s ease; }
-        .btn-add:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
+        
+        /* --- HINZUFÜGEN BUTTON REDESIGN (NEON STYLE) --- */
+        .btn-add { 
+            background: rgba(138, 43, 226, 0.05); color: white; border: 1px solid rgba(138, 43, 226, 0.5); padding: 10px 22px; 
+            border-radius: 30px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(5px); display: flex; 
+            align-items: center; gap: 8px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 0 10px rgba(138, 43, 226, 0.2);
+        }
+        .btn-add:hover { background: rgba(138, 43, 226, 0.2); border-color: var(--accent-purple); box-shadow: 0 0 20px rgba(138, 43, 226, 0.6); transform: translateY(-1px); }
+        .btn-add i { font-size: 1rem; color: var(--accent-neon); }
         
         .sub-section-title { margin: 35px 0 15px 0; font-size: 0.95rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
 
@@ -110,9 +117,10 @@
         .stat-box { position: relative; background: #111320; padding: 10px 35px; border-radius: 14px; text-align: center; display: flex; flex-direction: column; align-items: center; z-index: 1; width: 100%; height: 100%; }
         @keyframes borderRotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--accent-green); line-height: 1.2; margin-bottom: 2px; text-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
+        .stat-number.waiting { color: var(--accent-purple); text-shadow: 0 0 10px rgba(138, 43, 226, 0.3); }
         .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
-        /* --- ALLGEMEINE TYPO --- */
+        /* --- ALLGEMEINE TYPO & BADGES --- */
         .anime-number { font-weight: 700; font-size: 1.1rem; min-width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .num-watched { color: var(--accent-green); background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); }
         .num-waiting { color: var(--accent-purple); background: rgba(138, 43, 226, 0.08); border: 1px solid rgba(138, 43, 226, 0.2); }
@@ -127,8 +135,7 @@
         .format-badge { padding: 3px 8px; border-radius: 6px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .format-badge.staffel-type { background: rgba(138, 43, 226, 0.15); color: #c18eff; border: 1px solid rgba(138, 43, 226, 0.3); }
         .format-badge.film-type { background: rgba(58, 134, 255, 0.15); color: #8ec5ff; border: 1px solid rgba(58, 134, 255, 0.3); }
-        .meta-dot { font-size: 0.6rem; opacity: 0.5; margin: 0 2px; }
-
+        
         .fade-out { opacity: 0; transform: scale(0.95) translateX(30px); pointer-events: none; }
         
         /* ========================================= */
@@ -169,6 +176,7 @@
         .next-card { position: relative; border-radius: 12px; overflow: hidden; background: var(--card-bg); cursor: pointer; transition: all 0.3s; border: 1px solid transparent; display: flex; flex-direction: column; }
         .next-card:hover { transform: translateY(-4px); z-index: 10; }
         .next-card .nc-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .nc-placeholder { background:#111320; display:flex; align-items:center; justify-content:center; aspect-ratio: 2/3; color: var(--text-muted); border-radius: 12px 12px 0 0; }
         .next-card .nc-info { padding: 12px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; justify-content: flex-start; }
         .next-card h4 { font-size: 0.95rem; font-weight: 600; line-height: 1.3; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         
@@ -190,6 +198,7 @@
         }
         .watchlist-card:hover { transform: translateY(-6px); box-shadow: 0 8px 25px rgba(0,0,0,0.7), 0 0 20px rgba(58, 134, 255, 0.5); border-color: var(--accent-blue); z-index: 10; }
         .watchlist-card .wl-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; border-radius: 12px; }
+        .nc-placeholder.watchlist { border-radius: 12px; }
         .watchlist-card .wl-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 10px 10px; background: linear-gradient(to top, rgba(0,0,0,0.95), transparent); pointer-events: none; border-radius: 0 0 12px 12px; text-align: center; box-sizing: border-box; }
         .watchlist-card .wl-overlay h4 { font-size: 0.95rem; font-weight: 600; line-height: 1.3; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.8); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: white; padding: 0 5px; word-break: break-word; }
 
@@ -237,13 +246,12 @@
         .btn-pop-danger { background: rgba(255, 71, 87, 0.1); color: var(--danger); border-color: rgba(255, 71, 87, 0.3); }
         .btn-pop-danger:hover { background: rgba(255, 71, 87, 0.2); transform: scale(1.02); }
 
-        /* --- DETAILS POPUP MODAL (FIX FÜR KEIN SCROLLEN) --- */
-        #detail-modal .modal { padding: 25px; text-align: center; display: flex; flex-direction: column; max-height: 85vh; overflow: hidden; }
-        .detail-cover-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 15px; flex: 1 1 auto; min-height: 0; }
-        .detail-cover-wrapper img { width: auto; max-width: 100%; height: 100%; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
-        .detail-content { flex: 0 0 auto; margin-top: 10px; }
-        .detail-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
-        .detail-badges { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        /* --- DETAILS POPUP MODAL (DESKTOP) --- */
+        #detail-modal .modal { padding: 30px; text-align: center; }
+        .detail-cover-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 20px; }
+        .detail-cover-wrapper img { width: auto; max-width: 100%; max-height: 350px; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        .detail-content { position: relative; z-index: 10; }
+        .detail-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 15px; line-height: 1.3; }
         
         .modal-danger { border-color: rgba(255, 0, 85, 0.4); }
         .btn-danger-action { background: linear-gradient(45deg, var(--danger), var(--accent-orange)); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 0, 85, 0.3); transition: all 0.2s ease; }
@@ -269,10 +277,10 @@
             .nav-card { padding: 18px 10px; }
             .nav-card i { font-size: 1.8rem; margin-bottom: 8px; }
             
-            .page-header { flex-direction: column; align-items: center; gap: 15px; padding: 20px 15px; }
-            .page-header h2 { font-size: 1.35rem; text-align: center; width: 100%; justify-content: center; }
-            .btn-back { align-self: flex-start; }
-            .btn-add { width: 100%; text-align: center; padding: 12px; }
+            .page-header { flex-direction: column; align-items: center; gap: 10px; padding: 15px 15px; } 
+            .page-header h2 { font-size: 1.3rem; text-align: center; width: 100%; justify-content: center; margin-bottom: 5px; }
+            .btn-back { align-self: flex-start; margin-bottom: 5px; }
+            .btn-add { width: 100%; text-align: center; padding: 10px; font-size: 0.85rem; justify-content: center; }
             
             /* Dashboard 3er Grid für Releases Mobile */
             #hp-alerts-grid .grid-layout-watchlist { grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -284,11 +292,16 @@
             .grid-layout-watchlist { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .watchlist-card .wl-overlay h4, .release-poster-card .wl-overlay h4 { font-size: 0.8rem; padding: 0 4px; }
 
-            /* Modal Mobile Fix (Kein Scrollen!) */
-            #detail-modal .modal { padding: 20px 15px; max-height: 90vh; width: 92%; }
-            .detail-cover-wrapper img { max-height: 220px; }
-            .detail-title { font-size: 1.1rem; }
-            .btn-pop { padding: 8px; font-size: 0.8rem; }
+            /* ========================================= */
+            /* NEU: MOBILE POP-UP (RIESIGES BILD OHNE SCROLLEN) */
+            /* ========================================= */
+            #detail-modal .modal { padding: 0; width: 90%; overflow: hidden; border-radius: 20px; } 
+            .detail-cover-wrapper { margin-bottom: 15px; width: 100%; display: block; border-radius: 20px 20px 0 0; }
+            .detail-cover-wrapper img { width: 100%; max-height: 48vh; object-fit: cover; border-radius: 0; box-shadow: none; display: block; } 
+            .detail-content { padding: 0 20px 20px; }
+            .detail-title { font-size: 1.25rem; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+            .btn-pop { padding: 8px 5px; font-size: 0.75rem; gap: 5px; min-width: 45%; }
+            .btn-pop i { font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -349,7 +362,7 @@
                 <div class="page-header">
                     <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
                     <h2><i class="fa-solid fa-square-check" style="color: var(--accent-green);"></i> Geschaut</h2>
-                    <button class="btn-add" onclick="openModal('watched')">+ Hinzufügen</button>
+                    <button class="btn-add" onclick="openModal('watched')"><i class="fa-solid fa-plus"></i> Hinzufügen</button>
                 </div>
                 
                 <div class="watched-stats">
@@ -375,7 +388,15 @@
                 <div class="page-header">
                     <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
                     <h2><i class="fa-solid fa-calendar-plus" style="color: var(--accent-purple);"></i> Folgestaffeln</h2>
-                    <button class="btn-add" onclick="openModal('next-season')">+ Hinzufügen</button>
+                    <button class="btn-add" onclick="openModal('next-season')"><i class="fa-solid fa-plus"></i> Hinzufügen</button>
+                </div>
+                <div class="watched-stats">
+                    <div class="stat-wrapper">
+                        <div class="stat-box">
+                            <span class="stat-number waiting" id="total-waiting-count">0</span>
+                            <span class="stat-label">Offene Staffeln</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="sub-section-title"><i class="fa-solid fa-hourglass"></i> Zukünftige Staffeln</div>
                 <div id="list-next-waiting" class="grid-layout-next"></div> 
@@ -387,7 +408,7 @@
                 <div class="page-header">
                     <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
                     <h2><i class="fa-solid fa-hourglass-start" style="color: var(--accent-blue);"></i> Watchlist</h2>
-                    <button class="btn-add" onclick="openModal('watchlist')">+ Hinzufügen</button>
+                    <button class="btn-add" onclick="openModal('watchlist')"><i class="fa-solid fa-plus"></i> Hinzufügen</button>
                 </div>
                 <div id="list-watchlist" class="grid-layout-watchlist"></div> 
             </div>
@@ -395,7 +416,7 @@
             <div id="page-current" class="page">
                 <div class="page-header">
                     <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-play" style="color: var(--accent-neon);"></i> Aktuell am Schauen</h2>
-                    <button class="btn-add" onclick="openModal('current')">+ Hinzufügen</button>
+                    <button class="btn-add" onclick="openModal('current')"><i class="fa-solid fa-plus"></i> Hinzufügen</button>
                 </div>
                 <div id="list-current" class="anime-list"></div>
             </div>
@@ -409,12 +430,15 @@
             </div>
             <div class="detail-content">
                 <h3 id="detail-title" class="detail-title">Title</h3>
-                <div class="detail-badges">
-                    <span id="detail-format" class="format-badge" style="background: rgba(138, 43, 226, 0.2); color: #c18eff;">Format</span>
-                    <span id="detail-meta" class="status-badge" style="background: rgba(0, 245, 212, 0.15); color: var(--accent-neon);">Meta</span>
+                <div class="detail-badges" style="display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 15px;">
+                    <span id="detail-format" class="format-badge">Format</span>
+                    <span id="detail-format-dot" class="meta-dot" style="font-size: 1rem; color: var(--text-muted);">•</span>
+                    <span id="detail-meta" style="font-size: 0.85rem;">Meta</span>
                 </div>
                 
-                <div id="detail-action-container" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 100%;"></div>
+                <div id="detail-action-container" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 100%; margin-bottom: 15px;"></div>
+                
+                <button type="button" style="background: rgba(255,255,255,0.05); color: var(--text-muted); width: 100%; padding: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.2s;" onclick="closeDetailModal()" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Schließen</button>
             </div>
         </div>
     </div>
@@ -451,9 +475,9 @@
                         </div><div id="auth-error-msg" class="auth-error"></div>
                     </div>
                 </div>
-                <div id="register-modal" class="modal-overlay"><div class="modal" onkeydown="if(event.key === 'Enter') handleRegister();"><h3><i class="fa-solid fa-user-plus" style="color: var(--accent-neon);"></i> Account erstellen</h3><div class="form-group"><label>Benutzername</label><input type="text" id="reg-username" placeholder="Wie sollen wir dich nennen?" autocomplete="off" data-lpignore="true"></div><div class="form-group"><label>E-Mail Adresse</label><input type="text" id="reg-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true"></div><div class="form-group"><label>Passwort (Min. 6 Zeichen)</label><input type="text" id="reg-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true"></div><div id="reg-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div><div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeRegisterModal()">Abbrechen</button><button type="button" class="btn-add" onclick="handleRegister()">Erstellen</button></div></div></div>
-                <div id="forgot-password-modal" class="modal-overlay"><div class="modal" onkeydown="if(event.key === 'Enter') handlePasswordResetRequest();"><h3><i class="fa-solid fa-key" style="color: var(--accent-blue);"></i> Passwort zurücksetzen</h3><p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Gib deine E-Mail ein. Wir senden dir einen Link, um ein neues Passwort festzulegen.</p><div class="form-group"><label>E-Mail Adresse</label><input type="text" id="forgot-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true"></div><div id="forgot-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div><div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeForgotPasswordModal()">Abbrechen</button><button type="button" class="btn-add" onclick="handlePasswordResetRequest()">Link senden</button></div></div></div>
-                <div id="recovery-modal" class="modal-overlay"><div class="modal" onkeydown="if(event.key === 'Enter') handleRecoveryUpdate();"><h3><i class="fa-solid fa-unlock-keyhole" style="color: var(--accent-green);"></i> Neues Passwort</h3><p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Bitte vergib jetzt dein neues Passwort.</p><div class="form-group"><label>Neues Passwort</label><input type="text" id="recovery-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true"></div><div id="recovery-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div><div class="modal-footer"><button type="button" class="btn-add" onclick="handleRecoveryUpdate()">Speichern & Einloggen</button></div></div></div>
+                <div id="register-modal" class="modal-overlay"><div class="modal" onkeydown="if(event.key === 'Enter') handleRegister();"><h3><i class="fa-solid fa-user-plus" style="color: var(--accent-neon);"></i> Account erstellen</h3><div class="form-group"><label>Benutzername</label><input type="text" id="reg-username" placeholder="Wie sollen wir dich nennen?" autocomplete="off" data-lpignore="true"></div><div class="form-group"><label>E-Mail Adresse</label><input type="text" id="reg-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true"></div><div class="form-group"><label>Passwort (Min. 6 Zeichen)</label><input type="text" id="reg-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true"></div><div id="reg-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div><div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeRegisterModal()">Abbrechen</button><button type="button" class="btn-add" onclick="handleRegister()"><i class="fa-solid fa-check"></i> Erstellen</button></div></div></div>
+                <div id="forgot-password-modal" class="modal-overlay"><div class="modal" onkeydown="if(event.key === 'Enter') handlePasswordResetRequest();"><h3><i class="fa-solid fa-key" style="color: var(--accent-blue);"></i> Passwort zurücksetzen</h3><p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Gib deine E-Mail ein. Wir senden dir einen Link, um ein neues Passwort festzulegen.</p><div class="form-group"><label>E-Mail Adresse</label><input type="text" id="forgot-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true"></div><div id="forgot-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div><div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeForgotPasswordModal()">Abbrechen</button><button type="button" class="btn-add" onclick="handlePasswordResetRequest()"><i class="fa-solid fa-paper-plane"></i> Senden</button></div></div></div>
+                <div id="recovery-modal" class="modal-overlay"><div class="modal" onkeydown="if(event.key === 'Enter') handleRecoveryUpdate();"><h3><i class="fa-solid fa-unlock-keyhole" style="color: var(--accent-green);"></i> Neues Passwort</h3><p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Bitte vergib jetzt dein neues Passwort.</p><div class="form-group"><label>Neues Passwort</label><input type="text" id="recovery-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true"></div><div id="recovery-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div><div class="modal-footer"><button type="button" class="btn-add" onclick="handleRecoveryUpdate()"><i class="fa-solid fa-floppy-disk"></i> Speichern</button></div></div></div>
             `;
         }
 
@@ -467,12 +491,12 @@
                         <div style="margin-top: 20px;" onkeydown="if(event.key === 'Enter') handleSettingsUsernameChange();">
                             <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Name ändern</h4>
                             <div class="form-group"><input type="text" id="setting-name-val" autocomplete="off" data-lpignore="true"></div>
-                            <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsUsernameChange()">Namen aktualisieren</button>
+                            <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsUsernameChange()">Aktualisieren</button>
                         </div><hr class="settings-divider">
                         <div onkeydown="if(event.key === 'Enter') handleSettingsPasswordChange();">
                             <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Sicherheit ändern</h4>
                             <div class="form-group"><input type="text" id="setting-sec-val" class="pw-input" placeholder="Neuer Code (min. 6 Zeichen)" autocomplete="off" data-lpignore="true"></div>
-                            <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()">Sicherheit aktualisieren</button>
+                            <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()">Aktualisieren</button>
                         </div><hr class="settings-divider">
                         <div><h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--danger);">Gefahrenzone</h4><button class="btn-auth" style="background: rgba(255,0,85,0.1); color: var(--danger); border: 1px solid rgba(255,0,85,0.3); padding: 10px;" onclick="openDeleteConfirmModal()"><i class="fa-solid fa-trash-can"></i> Account löschen</button></div>
                         <div class="modal-footer" style="margin-top: 20px;"><button type="button" class="btn-cancel" onclick="closeSettingsModal()">Schließen</button></div>
@@ -541,7 +565,7 @@
                             <div id="released-field-group" class="form-group checkbox-group" style="display: none;">
                                 <input type="checkbox" id="anime-is-released"><label for="anime-is-released">Release ist draußen!</label>
                             </div>
-                            <div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeModal()">Abbrechen</button><button type="button" class="btn-add" onclick="saveAnime()">Speichern</button></div>
+                            <div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeModal()">Abbrechen</button><button type="button" class="btn-add" onclick="saveAnime()"><i class="fa-solid fa-floppy-disk"></i> Speichern</button></div>
                         </div>
                     </div>
                 `;
@@ -671,25 +695,30 @@
             }
             
             const metaBadge = document.getElementById('detail-meta');
+            const formatBadge = document.getElementById('detail-format');
+            const formatDot = document.getElementById('detail-format-dot');
             const modalBox = document.querySelector('#detail-modal .modal');
             
+            // 🔥 KLARES TEXT-DESIGN FÜR DEN STATUS (Keine klobigen Kästchen mehr!)
             if (anime.isReleased) { 
+                // Wenn Release: Blende "Staffel/Film" Badge aus, zeige nur den dicken orangen Text!
+                formatBadge.style.display = 'none';
+                formatDot.style.display = 'none';
                 metaDisplay = anime.type === 'film' ? '🔥 NEUER FILM IST DRAUßEN!' : '🔥 NEUE STAFFEL IST DRAUßEN!';
-                metaBadge.style.background = 'transparent'; 
                 metaBadge.style.color = 'var(--accent-orange)'; 
-                metaBadge.style.border = 'none';
                 metaBadge.style.fontWeight = '800';
                 metaBadge.style.fontSize = '1.05rem';
                 modalBox.style.borderColor = 'rgba(255, 0, 85, 0.4)';
             } else {
-                metaBadge.style.fontWeight = '600';
-                metaBadge.style.fontSize = '0.75rem';
-                metaBadge.style.border = 'none';
+                formatBadge.style.display = 'inline-block';
+                formatDot.style.display = 'inline-block';
+                metaBadge.style.fontWeight = '700';
+                metaBadge.style.fontSize = '0.85rem';
                 
-                if (anime.category === 'watched') { modalBox.style.borderColor = 'rgba(46, 204, 113, 0.4)'; metaBadge.style.color = 'var(--accent-green)'; metaBadge.style.background = 'rgba(46, 204, 113, 0.15)'; } 
-                else if (anime.category === 'current') { modalBox.style.borderColor = 'rgba(0, 245, 212, 0.4)'; metaBadge.style.color = 'var(--accent-neon)'; metaBadge.style.background = 'rgba(0, 245, 212, 0.15)'; } 
-                else if (anime.category === 'watchlist') { modalBox.style.borderColor = 'rgba(58, 134, 255, 0.4)'; metaBadge.style.color = 'var(--accent-blue)'; metaBadge.style.background = 'rgba(58, 134, 255, 0.15)'; } 
-                else { modalBox.style.borderColor = 'rgba(138, 43, 226, 0.4)'; metaBadge.style.color = 'var(--accent-purple)'; metaBadge.style.background = 'rgba(138, 43, 226, 0.15)'; }
+                if (anime.category === 'watched') { modalBox.style.borderColor = 'rgba(46, 204, 113, 0.4)'; metaBadge.style.color = 'var(--accent-green)'; } 
+                else if (anime.category === 'current') { modalBox.style.borderColor = 'rgba(0, 245, 212, 0.4)'; metaBadge.style.color = 'var(--accent-neon)'; } 
+                else if (anime.category === 'watchlist') { modalBox.style.borderColor = 'rgba(58, 134, 255, 0.4)'; metaBadge.style.color = 'var(--accent-blue)'; } 
+                else { modalBox.style.borderColor = 'rgba(138, 43, 226, 0.4)'; metaBadge.style.color = 'var(--accent-purple)'; }
             }
             metaBadge.innerText = metaDisplay;
             
@@ -944,6 +973,9 @@
             
             const waiting = animeData.nextSeason.filter(a => !a.isReleased);
             const released = animeData.nextSeason.filter(a => a.isReleased);
+            
+            const totalWaitingDisplay = document.getElementById('total-waiting-count');
+            if(totalWaitingDisplay) totalWaitingDisplay.innerText = waiting.length;
 
             document.getElementById('list-watched-continuing').innerHTML = renderGrouped(waiting, 'watched', 'p-w-cont', true, watchCounter);
             document.getElementById('list-watched-released').innerHTML = renderGrouped(released, 'watched', 'p-w-rel', true, watchCounter);
