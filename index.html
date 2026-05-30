@@ -22,7 +22,9 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; overflow-x: hidden; margin: 0; }
+        
+        /* OVERSCROLL FIX: Verhindert links/rechts swipen und bouncing! */
+        html, body { max-width: 100vw; overflow-x: hidden; overscroll-behavior-x: none; background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; margin: 0; }
         
         /* APPLE AUTOCORRECT / PASSWORD HACK */
         .pw-input { -webkit-text-security: disc; text-security: disc; }
@@ -110,7 +112,7 @@
         .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--accent-green); line-height: 1.2; margin-bottom: 2px; text-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
         .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
-        /* --- ALLGEMEINE TYPO & BADGES --- */
+        /* --- ALLGEMEINE TYPO --- */
         .anime-number { font-weight: 700; font-size: 1.1rem; min-width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .num-watched { color: var(--accent-green); background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); }
         .num-waiting { color: var(--accent-purple); background: rgba(138, 43, 226, 0.08); border: 1px solid rgba(138, 43, 226, 0.2); }
@@ -126,8 +128,6 @@
         .format-badge.staffel-type { background: rgba(138, 43, 226, 0.15); color: #c18eff; border: 1px solid rgba(138, 43, 226, 0.3); }
         .format-badge.film-type { background: rgba(58, 134, 255, 0.15); color: #8ec5ff; border: 1px solid rgba(58, 134, 255, 0.3); }
         .meta-dot { font-size: 0.6rem; opacity: 0.5; margin: 0 2px; }
-        .status-badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5px; text-align: center; }
-        .status-badge.current-badge { background: rgba(0, 245, 212, 0.1); color: var(--accent-neon); }
 
         .fade-out { opacity: 0; transform: scale(0.95) translateX(30px); pointer-events: none; }
         
@@ -135,15 +135,17 @@
         /* DESIGN 1: EDGE-TO-EDGE LISTEN (Geschaut, Aktuell) */
         /* ========================================= */
         .anime-list { display: flex; flex-direction: column; }
+        
         .anime-item-list { 
             display: flex; align-items: center; position: relative; 
             background: transparent; border: none; border-radius: 0;
-            padding: 18px 10px; /* Größer und entspannter */
+            padding: 18px 10px; 
             border-bottom: 1px solid rgba(var(--glow-rgb), 0.3); 
             box-shadow: 0 10px 15px -10px rgba(var(--glow-rgb), 0.15);
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer;
             min-height: 85px;
         }
+        
         .anime-item-list .anime-info-wrapper { display: flex; align-items: center; gap: 15px; flex: 1; min-width: 0; }
         .anime-item-list .anime-cover { width: 55px; height: 80px; object-fit: cover; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); flex-shrink: 0; }
         .anime-item-list .anime-info { display: flex; flex-direction: column; gap: 6px; overflow: hidden; flex: 1; min-width: 0; }
@@ -152,21 +154,19 @@
 
         .anime-item-list:hover { transform: translateX(4px); background: rgba(var(--glow-rgb), 0.05); border-bottom-color: rgba(var(--glow-rgb), 0.8); }
 
-        /* Farb-Zuweisungen (Überschreiben die Variablen dynamisch) */
         .item-watched { --glow-rgb: 46, 204, 113; }
         .item-current { --glow-rgb: 0, 245, 212; }
         .item-waiting { --glow-rgb: 138, 43, 226; }
         .item-released { --glow-rgb: 255, 0, 85; }
 
+        /* DASHBOARD AKTUELL FIX */
+        #hp-current-list .anime-item-list { background: rgba(0, 245, 212, 0.05); border-radius: 12px; border: 1px solid rgba(0, 245, 212, 0.2); margin-bottom: 10px; padding: 12px 15px; border-bottom-width: 1px; }
+
         /* ========================================= */
         /* DESIGN 2: FOLGESTAFFELN KARTEN (2er GRID) */
         /* ========================================= */
         .grid-layout-next { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .next-card { 
-            position: relative; border-radius: 12px; overflow: hidden; background: var(--card-bg); 
-            cursor: pointer; transition: all 0.3s; border: 1px solid transparent; 
-            display: flex; flex-direction: column; 
-        }
+        .next-card { position: relative; border-radius: 12px; overflow: hidden; background: var(--card-bg); cursor: pointer; transition: all 0.3s; border: 1px solid transparent; display: flex; flex-direction: column; }
         .next-card:hover { transform: translateY(-4px); z-index: 10; }
         .next-card .nc-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .next-card .nc-info { padding: 12px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; justify-content: flex-start; }
@@ -193,11 +193,7 @@
         .watchlist-card .wl-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 10px 10px; background: linear-gradient(to top, rgba(0,0,0,0.95), transparent); pointer-events: none; border-radius: 0 0 12px 12px; text-align: center; box-sizing: border-box; }
         .watchlist-card .wl-overlay h4 { font-size: 0.95rem; font-weight: 600; line-height: 1.3; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.8); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: white; padding: 0 5px; word-break: break-word; }
 
-        .release-poster-card {
-            position: relative; border-radius: 12px; overflow: hidden; background: transparent; cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 15px rgba(255, 0, 85, 0.4); transition: all 0.3s ease; border: 1px solid rgba(255, 0, 85, 0.5);
-            display: flex; flex-direction: column;
-        }
+        .release-poster-card { position: relative; border-radius: 12px; overflow: hidden; background: transparent; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 15px rgba(255, 0, 85, 0.4); transition: all 0.3s ease; border: 1px solid rgba(255, 0, 85, 0.5); display: flex; flex-direction: column; }
         .release-poster-card:hover { transform: translateY(-6px); box-shadow: 0 8px 25px rgba(0,0,0,0.7), 0 0 25px rgba(255, 0, 85, 0.7); border-color: var(--accent-orange); z-index: 10; }
         .release-poster-card .rp-badge { position: absolute; top: 6px; right: 6px; background: var(--accent-orange); color: white; font-weight: 700; font-size: 0.6rem; padding: 2px 6px; border-radius: 6px; box-shadow: 0 2px 10px rgba(255,0,85,0.6); z-index: 5; text-transform: uppercase; letter-spacing: 1px; }
 
@@ -241,13 +237,13 @@
         .btn-pop-danger { background: rgba(255, 71, 87, 0.1); color: var(--danger); border-color: rgba(255, 71, 87, 0.3); }
         .btn-pop-danger:hover { background: rgba(255, 71, 87, 0.2); transform: scale(1.02); }
 
-        /* --- DETAILS POPUP MODAL --- */
-        #detail-modal .modal { padding: 30px; text-align: center; }
-        .detail-cover-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 25px; }
-        .detail-cover-wrapper img { width: auto; max-width: 100%; height: auto; max-height: 400px; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
-        .detail-content { position: relative; z-index: 10; }
-        .detail-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 15px; line-height: 1.3; }
-        .detail-badges { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        /* --- DETAILS POPUP MODAL (FIX FÜR KEIN SCROLLEN) --- */
+        #detail-modal .modal { padding: 25px; text-align: center; display: flex; flex-direction: column; max-height: 85vh; overflow: hidden; }
+        .detail-cover-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 15px; flex: 1 1 auto; min-height: 0; }
+        .detail-cover-wrapper img { width: auto; max-width: 100%; height: 100%; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        .detail-content { flex: 0 0 auto; margin-top: 10px; }
+        .detail-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+        .detail-badges { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         
         .modal-danger { border-color: rgba(255, 0, 85, 0.4); }
         .btn-danger-action { background: linear-gradient(45deg, var(--danger), var(--accent-orange)); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 0, 85, 0.3); transition: all 0.2s ease; }
@@ -278,15 +274,21 @@
             .btn-back { align-self: flex-start; }
             .btn-add { width: 100%; text-align: center; padding: 12px; }
             
-            /* NEU: Dashboard 3er Grid für Releases Mobile */
+            /* Dashboard 3er Grid für Releases Mobile */
             #hp-alerts-grid .grid-layout-watchlist { grid-template-columns: repeat(3, 1fr); gap: 8px; }
             
-            /* NEU: Folgestaffeln 2er Grid auf Mobile */
+            /* Folgestaffeln 2er Grid auf Mobile */
             .grid-layout-next { grid-template-columns: repeat(2, 1fr); gap: 12px; }
 
             /* Watchlist auf Mobile */
             .grid-layout-watchlist { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .watchlist-card .wl-overlay h4, .release-poster-card .wl-overlay h4 { font-size: 0.8rem; padding: 0 4px; }
+
+            /* Modal Mobile Fix (Kein Scrollen!) */
+            #detail-modal .modal { padding: 20px 15px; max-height: 90vh; width: 92%; }
+            .detail-cover-wrapper img { max-height: 220px; }
+            .detail-title { font-size: 1.1rem; }
+            .btn-pop { padding: 8px; font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -412,9 +414,7 @@
                     <span id="detail-meta" class="status-badge" style="background: rgba(0, 245, 212, 0.15); color: var(--accent-neon);">Meta</span>
                 </div>
                 
-                <div id="detail-action-container" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 25px; justify-content: center; width: 100%;"></div>
-
-                <button class="btn-auth" style="background: rgba(255,255,255,0.1); color: white; width: 100%; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600;" onclick="closeDetailModal()">Schließen</button>
+                <div id="detail-action-container" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 100%;"></div>
             </div>
         </div>
     </div>
@@ -435,7 +435,7 @@
         let isInitialLoad = true;
 
         // ==========================================
-        // DYNAMISCHES RENDERN (SAFARI KILLER)
+        // DYNAMISCHES RENDERN DER AUTH-MODALS (DER ULTIMATIVE SAFARI-KILLER)
         // ==========================================
         function injectAuthModals() {
             document.getElementById('auth-container-dynamic').innerHTML = `
@@ -443,17 +443,17 @@
                     <div class="auth-container" onkeydown="if(event.key === 'Enter') handleLogin();">
                         <div class="auth-logo"><img src="icon-192.png" alt="Logo" onerror="this.style.display='none'"><h1>YP AniTracker</h1></div>
                         <div>
-                            <div class="auth-form-group"><label>E-Mail Adresse</label><input type="text" id="login-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true"></div>
-                            <div class="auth-form-group"><label>Passwort</label><input type="text" id="login-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true"></div>
+                            <div class="auth-form-group"><label>E-Mail Adresse</label><input type="text" id="login-email" placeholder="deine@email.de" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true"></div>
+                            <div class="auth-form-group"><label>Passwort</label><input type="text" id="login-password" class="pw-input" placeholder="••••••••" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true"></div>
                             <label class="auth-options"><div style="display: flex; align-items: center;"><input type="checkbox" id="auth-remember" checked><span>Angemeldet bleiben</span></div></label>
                             <button type="button" class="btn-auth btn-login" onclick="handleLogin()"><i class="fa-solid fa-right-to-bracket"></i> Einloggen</button>
                             <div class="auth-switch"><a onclick="openForgotPasswordModal()">Passwort vergessen?</a><div style="margin-top: 10px;">Neu hier? <a onclick="toggleAuthMode('register')">Account erstellen</a></div></div>
                         </div><div id="auth-error-msg" class="auth-error"></div>
                     </div>
                 </div>
-                <div id="register-modal" class="modal-overlay"><div class="modal"><h3>Account erstellen</h3><div class="form-group"><label>Benutzername</label><input type="text" id="reg-username" placeholder="Wie sollen wir dich nennen?" autocomplete="off" data-lpignore="true"></div><div class="form-group"><label>E-Mail</label><input type="text" id="reg-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true"></div><div class="form-group"><label>Passwort</label><input type="text" id="reg-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true"></div><div id="reg-error-msg" class="auth-error"></div><div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeRegisterModal()">Abbrechen</button><button type="button" class="btn-add" onclick="handleRegister()">Erstellen</button></div></div></div>
-                <div id="forgot-password-modal" class="modal-overlay"><div class="modal"><h3>Passwort zurücksetzen</h3><p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Gib deine E-Mail ein. Wir senden dir einen Link, um ein neues Passwort festzulegen.</p><div class="form-group"><label>E-Mail Adresse</label><input type="text" id="forgot-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true"></div><div id="forgot-error-msg" class="auth-error"></div><div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeForgotPasswordModal()">Abbrechen</button><button type="button" class="btn-add" onclick="handlePasswordResetRequest()">Link senden</button></div></div></div>
-                <div id="recovery-modal" class="modal-overlay"><div class="modal"><h3>Neues Passwort</h3><p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Bitte vergib jetzt dein neues Passwort.</p><div class="form-group"><label>Neues Passwort</label><input type="text" id="recovery-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true"></div><div id="recovery-error-msg" class="auth-error"></div><div class="modal-footer"><button type="button" class="btn-add" onclick="handleRecoveryUpdate()">Speichern & Einloggen</button></div></div></div>
+                <div id="register-modal" class="modal-overlay"><div class="modal" onkeydown="if(event.key === 'Enter') handleRegister();"><h3><i class="fa-solid fa-user-plus" style="color: var(--accent-neon);"></i> Account erstellen</h3><div class="form-group"><label>Benutzername</label><input type="text" id="reg-username" placeholder="Wie sollen wir dich nennen?" autocomplete="off" data-lpignore="true"></div><div class="form-group"><label>E-Mail Adresse</label><input type="text" id="reg-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true"></div><div class="form-group"><label>Passwort (Min. 6 Zeichen)</label><input type="text" id="reg-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true"></div><div id="reg-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div><div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeRegisterModal()">Abbrechen</button><button type="button" class="btn-add" onclick="handleRegister()">Erstellen</button></div></div></div>
+                <div id="forgot-password-modal" class="modal-overlay"><div class="modal" onkeydown="if(event.key === 'Enter') handlePasswordResetRequest();"><h3><i class="fa-solid fa-key" style="color: var(--accent-blue);"></i> Passwort zurücksetzen</h3><p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Gib deine E-Mail ein. Wir senden dir einen Link, um ein neues Passwort festzulegen.</p><div class="form-group"><label>E-Mail Adresse</label><input type="text" id="forgot-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true"></div><div id="forgot-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div><div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeForgotPasswordModal()">Abbrechen</button><button type="button" class="btn-add" onclick="handlePasswordResetRequest()">Link senden</button></div></div></div>
+                <div id="recovery-modal" class="modal-overlay"><div class="modal" onkeydown="if(event.key === 'Enter') handleRecoveryUpdate();"><h3><i class="fa-solid fa-unlock-keyhole" style="color: var(--accent-green);"></i> Neues Passwort</h3><p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Bitte vergib jetzt dein neues Passwort.</p><div class="form-group"><label>Neues Passwort</label><input type="text" id="recovery-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true"></div><div id="recovery-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div><div class="modal-footer"><button type="button" class="btn-add" onclick="handleRecoveryUpdate()">Speichern & Einloggen</button></div></div></div>
             `;
         }
 
@@ -469,7 +469,7 @@
                             <div class="form-group"><input type="text" id="setting-name-val" autocomplete="off" data-lpignore="true"></div>
                             <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsUsernameChange()">Namen aktualisieren</button>
                         </div><hr class="settings-divider">
-                        <div>
+                        <div onkeydown="if(event.key === 'Enter') handleSettingsPasswordChange();">
                             <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Sicherheit ändern</h4>
                             <div class="form-group"><input type="text" id="setting-sec-val" class="pw-input" placeholder="Neuer Code (min. 6 Zeichen)" autocomplete="off" data-lpignore="true"></div>
                             <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()">Sicherheit aktualisieren</button>
@@ -512,9 +512,10 @@
             if (session) {
                 const metadata = session.user.user_metadata || {};
                 document.getElementById('header-username-display').innerText = metadata.username || session.user.email.split('@')[0];
+                
                 removeAuthModals(); // BYE BYE SAFARI
                 
-                // Add Modal Injection
+                // Add Modal Injection (Sicher, keine Passwort-Felder)
                 const addDiv = document.createElement('div');
                 addDiv.id = 'dynamic-add-modal-container';
                 addDiv.innerHTML = `
@@ -672,7 +673,6 @@
             const metaBadge = document.getElementById('detail-meta');
             const modalBox = document.querySelector('#detail-modal .modal');
             
-            // 🔥 KLARES TEXT-DESIGN FÜR "NEUE STAFFEL DRAUßEN" (OHNE KASTEN)
             if (anime.isReleased) { 
                 metaDisplay = anime.type === 'film' ? '🔥 NEUER FILM IST DRAUßEN!' : '🔥 NEUE STAFFEL IST DRAUßEN!';
                 metaBadge.style.background = 'transparent'; 
@@ -703,7 +703,7 @@
                 modalActions += `<button type="button" class="btn-pop btn-pop-green" onclick="modalActionFinishCurrent('${anime.id}', '${anime.title.replace(/'/g, "\\'")}')"><i class="fa-solid fa-circle-check"></i> Abschließen</button>`;
             }
             if (anime.category === 'next-season' && !anime.isReleased) {
-                modalActions += `<button type="button" class="btn-pop btn-pop-orange" onclick="modalActionToggleRelease('${anime.id}', false)"><i class="fa-solid fa-fire"></i> Ist draußen!</button>`;
+                modalActions += `<button type="button" class="btn-pop btn-pop-orange" onclick="modalActionToggleRelease('${anime.id}', true)"><i class="fa-solid fa-fire"></i> Ist draußen!</button>`;
             }
             if (anime.category === 'next-season') {
                 modalActions += `<button type="button" class="btn-pop btn-pop-blue" onclick="editAnime('${anime.id}')"><i class="fa-solid fa-pen"></i> Bearbeiten</button>`;
@@ -718,6 +718,7 @@
 
         function closeDetailModal(event) { if (event) event.stopPropagation(); document.getElementById('detail-modal').classList.remove('active'); }
 
+        // Modal Button Functions
         function modalActionMoveToCurrent(id) {
             closeDetailModal();
             setTimeout(async () => {
@@ -728,11 +729,11 @@
             }, 350);
         }
 
-        function modalActionToggleRelease(id, currentStatus) {
+        function modalActionToggleRelease(id, newStatus) {
             closeDetailModal();
             setTimeout(async () => {
                 try {
-                    await db.from('animes').update({ is_released: !currentStatus }).eq('id', id);
+                    await db.from('animes').update({ is_released: newStatus }).eq('id', id);
                     await loadDataFromCloud(true); showToast("Status aktualisiert! 🔥");
                 } catch(e) { alert("Fehler"); }
             }, 350);
@@ -790,7 +791,7 @@
 
         function showLoadingStates() {
             const loading = '<div class="loading-notice"><i class="fa-solid fa-spinner fa-spin"></i> Lade...</div>';
-            ['list-watched-completed', 'list-watched-continuing', 'list-watched-released', 'list-next-waiting', 'list-next-released', 'list-watchlist', 'list-current'].forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = loading; });
+            ['list-watched-completed', 'list-watched-continuing', 'list-watched-released', 'list-next-waiting', 'list-next-released', 'list-watchlist', 'list-current', 'hp-current-list'].forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = loading; });
             document.getElementById('hp-alerts-grid').innerHTML = loading;
         }
 
@@ -869,10 +870,10 @@
 
                 return `
                 <div class="next-card ${borderClass}" id="${uniqueId}" onclick="openDetailModal('${anime.id}')">
-                    ${anime.coverUrl ? `<img src="${anime.coverUrl}" class="nc-poster" onerror="this.style.display='none'">` : '<div class="nc-poster" style="background:#111320; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-image"></i></div>'}
+                    ${anime.coverUrl ? `<img src="${anime.coverUrl}" class="nc-poster" onerror="this.style.display='none'">` : '<div class="nc-poster" style="background:#111320; display:flex; align-items:center; justify-content:center; aspect-ratio: 2/3;"><i class="fa-solid fa-image"></i></div>'}
                     <div class="nc-info">
                         <h4>${anime.title}</h4>
-                        <div class="anime-meta" style="margin-top:5px;">
+                        <div class="anime-meta" style="margin-top:2px;">
                             <span class="format-badge ${badgeClass}">${badgeLabel}</span>
                             ${extraMeta}
                         </div>
@@ -883,7 +884,6 @@
             // --- GESCHAUT & AKTUELL (EDGE-TO-EDGE) ---
             let borderClass = 'item-' + context;
             
-            // FARB-FIX FÜR GESCHAUT: Wenn in Geschaut, aber die Kategorie ist next-season, übernimm das Design
             if (context === 'watched' && anime.category === 'next-season') {
                 borderClass = anime.isReleased ? 'item-released' : 'item-waiting';
             }
@@ -953,6 +953,15 @@
             
             document.getElementById('list-watchlist').innerHTML = animeData.watchlist.length ? animeData.watchlist.map(a => createAnimeDOM(a, 'watchlist', 'p-wl')).join('') : '<div class="empty-state">Deine Watchlist ist im Moment leer.</div>';
             document.getElementById('list-current').innerHTML = animeData.current.length ? animeData.current.map(a => createAnimeDOM(a, 'current', 'p-curr')).join('') : '<div class="empty-state">Du schaust gerade nichts aktiv.</div>';
+            
+            document.getElementById('hp-current-list').innerHTML = animeData.current.length ? animeData.current.map(a => `
+                <div class="anime-item-list item-current" onclick="openDetailModal('${a.id}')">
+                    <div class="anime-info-wrapper">
+                        <i class="fa-solid fa-circle-play anime-decor-icon color-current"></i>
+                        ${a.coverUrl ? `<img src="${a.coverUrl}" class="anime-cover" onerror="this.style.display='none'">` : ''}
+                        <div class="anime-info"><h4>${a.title}</h4></div>
+                    </div>
+                </div>`).join('') : '<div class="empty-state" style="border:none;">Nichts aktiv am Schauen.</div>';
             
             // --- DASHBOARD RELEASES IM WATCHLIST-MAGAZIN-STYLE ---
             if (released.length > 0) {
