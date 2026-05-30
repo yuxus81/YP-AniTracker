@@ -35,6 +35,8 @@
 
         .layout-section { display: none; opacity: 0; transition: opacity 0.4s ease; }
         .active-layout { display: block !important; opacity: 1 !important; }
+        #auth-layout { min-height: 100vh; align-items: center; justify-content: center; padding: 20px; }
+        #auth-layout.active-layout { display: flex !important; } 
         #app-layout { padding-bottom: 60px; }
 
         /* --- AUTH SCREEN --- */
@@ -98,6 +100,7 @@
         .btn-back { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; transition: color 0.3s; }
         .btn-back:hover { color: white; }
         
+        /* --- HINZUFÜGEN BUTTON REDESIGN (NEON STYLE) --- */
         .btn-add { 
             background: rgba(138, 43, 226, 0.05); color: white; border: 1px solid rgba(138, 43, 226, 0.5); padding: 10px 22px; 
             border-radius: 30px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(5px); display: flex; 
@@ -108,17 +111,20 @@
         
         .sub-section-title { margin: 35px 0 15px 0; font-size: 0.95rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
 
-        /* --- GESAMT-ZÄHLER BADGE --- */
+        /* --- GESAMT-ZÄHLER BADGE (Geschaut) --- */
         .watched-stats { display: flex; justify-content: center; margin-bottom: 20px; }
         .stat-wrapper { position: relative; border-radius: 16px; padding: 2px; overflow: hidden; display: inline-flex; background: var(--card-bg); box-shadow: 0 0 15px rgba(46, 204, 113, 0.15); }
         .stat-wrapper::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(from 0deg, transparent 75%, var(--accent-green) 100%); animation: borderRotate 2.5s linear infinite; z-index: 0; }
         .stat-box { position: relative; background: #111320; padding: 10px 35px; border-radius: 14px; text-align: center; display: flex; flex-direction: column; align-items: center; z-index: 1; width: 100%; height: 100%; }
         @keyframes borderRotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--accent-green); line-height: 1.2; margin-bottom: 2px; text-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
+        .stat-number.waiting { color: var(--accent-purple); text-shadow: 0 0 10px rgba(138, 43, 226, 0.3); }
         .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+
+        /* KLEINER DEZENTER ZÄHLER FÜR FOLGESTAFFELN */
         .badge-count { font-size: 0.85rem; font-weight: 700; background: rgba(138,43,226,0.15); color: var(--accent-purple); padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(138,43,226,0.3); vertical-align: middle; margin-left: 8px; }
 
-        /* --- ALLGEMEINE TYPO --- */
+        /* --- ALLGEMEINE TYPO & BADGES --- */
         .anime-number { font-weight: 700; font-size: 1.1rem; min-width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .num-watched { color: var(--accent-green); background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); }
         .num-waiting { color: var(--accent-purple); background: rgba(138, 43, 226, 0.08); border: 1px solid rgba(138, 43, 226, 0.2); }
@@ -134,6 +140,8 @@
         .format-badge.staffel-type { background: rgba(138, 43, 226, 0.15); color: #c18eff; border: 1px solid rgba(138, 43, 226, 0.3); }
         .format-badge.film-type { background: rgba(58, 134, 255, 0.15); color: #8ec5ff; border: 1px solid rgba(58, 134, 255, 0.3); }
         .meta-dot { font-size: 0.6rem; opacity: 0.5; margin: 0 2px; }
+        .status-badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5px; text-align: center; }
+        .status-badge.current-badge { background: rgba(0, 245, 212, 0.1); color: var(--accent-neon); }
 
         .fade-out { opacity: 0; transform: scale(0.95) translateX(30px); pointer-events: none; }
         
@@ -141,16 +149,23 @@
         /* DESIGN 1: EDGE-TO-EDGE LISTEN (Geschaut, Aktuell) */
         /* ========================================= */
         .anime-list { display: flex; flex-direction: column; }
+        
         .anime-item-list { 
-            display: flex; align-items: center; position: relative; background: transparent; border: none; border-radius: 0;
-            padding: 18px 10px; border-bottom: 1px solid rgba(var(--glow-rgb), 0.3); box-shadow: 0 10px 15px -10px rgba(var(--glow-rgb), 0.15);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer; min-height: 85px;
+            display: flex; align-items: center; position: relative; 
+            background: transparent; border: none; border-radius: 0;
+            padding: 18px 10px; 
+            border-bottom: 1px solid rgba(var(--glow-rgb), 0.3); 
+            box-shadow: 0 10px 15px -10px rgba(var(--glow-rgb), 0.15);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer;
+            min-height: 85px;
         }
+        
         .anime-item-list .anime-info-wrapper { display: flex; align-items: center; gap: 15px; flex: 1; min-width: 0; }
         .anime-item-list .anime-cover { width: 55px; height: 80px; object-fit: cover; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); flex-shrink: 0; }
         .anime-item-list .anime-info { display: flex; flex-direction: column; gap: 6px; overflow: hidden; flex: 1; min-width: 0; }
         .anime-item-list .anime-info h4 { font-size: 1.1rem; font-weight: 600; line-height: 1.3; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.3s; }
         .anime-item-list .anime-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
         .anime-item-list:hover { transform: translateX(4px); background: rgba(var(--glow-rgb), 0.05); border-bottom-color: rgba(var(--glow-rgb), 0.8); }
 
         .item-watched { --glow-rgb: 46, 204, 113; }
@@ -158,6 +173,7 @@
         .item-waiting { --glow-rgb: 138, 43, 226; }
         .item-released { --glow-rgb: 255, 0, 85; }
 
+        /* DASHBOARD AKTUELL FIX */
         #hp-current-list .anime-item-list { background: rgba(0, 245, 212, 0.05); border-radius: 12px; border: 1px solid rgba(0, 245, 212, 0.2); margin-bottom: 10px; padding: 12px 15px; border-bottom-width: 1px; }
 
         /* ========================================= */
@@ -170,8 +186,10 @@
         .nc-placeholder { background:#111320; display:flex; align-items:center; justify-content:center; aspect-ratio: 2/3; color: var(--text-muted); border-radius: 12px 12px 0 0; }
         .next-card .nc-info { padding: 12px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; justify-content: flex-start; }
         .next-card h4 { font-size: 0.95rem; font-weight: 600; line-height: 1.3; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
         .next-card.item-waiting { border-color: rgba(138, 43, 226, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(138, 43, 226, 0.25); }
         .next-card.item-waiting:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(138, 43, 226, 0.45); border-color: var(--accent-purple); }
+        
         @keyframes releasePulse { 0% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 5px rgba(255, 0, 85, 0.15); } 100% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 25px rgba(255, 0, 85, 0.6); } }
         .next-card.item-released { border-color: rgba(255, 0, 85, 0.5); animation: releasePulse 1.5s infinite alternate ease-in-out; }
         .next-card.item-released:hover { border-color: var(--accent-orange); animation: none; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 30px rgba(255, 0, 85, 0.8) !important; }
@@ -180,7 +198,11 @@
         /* DESIGN 3: RAHMENLOSE POSTER (Watchlist & Releases) */
         /* ========================================= */
         .grid-layout-watchlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 18px; margin-bottom: 20px; }
-        .watchlist-card { position: relative; border-radius: 12px; overflow: hidden; background: transparent; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 10px rgba(58, 134, 255, 0.2); transition: all 0.3s ease; border: 1px solid rgba(58, 134, 255, 0.2); display: flex; flex-direction: column; }
+        .watchlist-card {
+            position: relative; border-radius: 12px; overflow: hidden; background: transparent; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 10px rgba(58, 134, 255, 0.2); transition: all 0.3s ease; border: 1px solid rgba(58, 134, 255, 0.2);
+            display: flex; flex-direction: column;
+        }
         .watchlist-card:hover { transform: translateY(-6px); box-shadow: 0 8px 25px rgba(0,0,0,0.7), 0 0 20px rgba(58, 134, 255, 0.5); border-color: var(--accent-blue); z-index: 10; }
         .watchlist-card .wl-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; border-radius: 12px; }
         .nc-placeholder.watchlist { border-radius: 12px; }
@@ -218,7 +240,7 @@
         .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; padding: 10px; }
         .btn-cancel:hover { color: white; }
 
-        /* --- POP-UP BUTTONS (TRANSPARENT) --- */
+        /* --- NEUE POP-UP BUTTONS (TRANSPARENT & STYLISCH) --- */
         .btn-pop { flex: 1; min-width: 40%; margin: 4px; padding: 10px; font-size: 0.85rem; border-radius: 10px; background: transparent; border: 1px solid transparent; cursor: pointer; font-weight: 600; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; backdrop-filter: blur(4px); }
         .btn-pop-neon { background: rgba(0, 245, 212, 0.1); color: var(--accent-neon); border-color: rgba(0, 245, 212, 0.3); }
         .btn-pop-neon:hover { background: rgba(0, 245, 212, 0.2); transform: scale(1.02); }
@@ -262,33 +284,28 @@
             .nav-card { padding: 18px 10px; }
             .nav-card i { font-size: 1.8rem; margin-bottom: 8px; }
             
-            /* NEU: SYMMETRISCHER PAGE HEADER (Zentrierter Titel oben, Buttons in Reihe darunter) */
-            .page-header { 
-                display: flex; flex-direction: column; align-items: center; 
-                padding: 20px 15px 15px; background: transparent; gap: 18px; position: relative; padding-bottom: 50px;
-            }
-            .page-header h2 { 
-                order: 1; width: 100%; text-align: center; font-size: 1.6rem; 
-                justify-content: center; font-weight: 700; margin: 0; letter-spacing: -0.5px;
-            }
-            .page-header .btn-back { 
-                position: absolute; left: 15px; top: 65px; 
-                background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 12px; margin: 0; font-size: 1rem; border: none; box-shadow: none;
-            }
-            .page-header .btn-add { 
-                position: absolute; right: 15px; top: 60px;
-                padding: 8px 16px; font-size: 0.8rem; margin: 0; width: auto;
-            }
-
+            /* NEU: iOS Large Title Style für den Header (Löst das Platzproblem der Buttons) */
+            .page-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; padding: 15px; gap: 0; }
+            .page-header .btn-back { order: 1; margin: 0; font-size: 1rem; padding: 5px 10px 5px 0; background: transparent; border: none; box-shadow: none; }
+            .page-header .btn-add { order: 2; margin: 0; width: auto; padding: 8px 16px; font-size: 0.85rem; }
+            .page-header h2 { order: 3; width: 100%; justify-content: flex-start; font-size: 1.4rem; margin-top: 15px; margin-bottom: 0; }
+            
+            /* Dashboard 3er Grid für Releases Mobile */
             #hp-alerts-grid .grid-layout-watchlist { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            
+            /* Folgestaffeln 2er Grid auf Mobile */
             .grid-layout-next { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+            /* Watchlist auf Mobile */
             .grid-layout-watchlist { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .watchlist-card .wl-overlay h4, .release-poster-card .wl-overlay h4 { font-size: 0.8rem; padding: 0 4px; }
 
             /* ========================================= */
             /* NEU: MOBILE POP-UP (RIESIG, UNBESCHNITTEN, KEIN SCROLLEN) */
             /* ========================================= */
             #detail-modal .modal { padding: 25px 15px 20px; width: 92%; max-height: 95vh; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; } 
             .detail-cover-wrapper { margin-bottom: 10px; width: 100%; display: flex; justify-content: center; }
+            /* object-fit: contain lässt das Bild im Originalformat! max-height auf fette 45vh hochgeschraubt */
             .detail-cover-wrapper img { width: auto; max-width: 100%; max-height: 45vh; object-fit: contain; border-radius: 10px; display: block; box-shadow: 0 8px 25px rgba(0,0,0,0.5); } 
             .detail-content { padding: 0 5px; display: flex; flex-direction: column; align-items: center; }
             .detail-title { font-size: 1.25rem; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
@@ -352,8 +369,8 @@
 
             <div id="page-watched" class="page">
                 <div class="page-header">
-                    <h2>Geschaut</h2>
-                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
+                    <h2><i class="fa-solid fa-square-check" style="color: var(--accent-green);"></i> Geschaut</h2>
                     <button class="btn-add" onclick="openModal('watched')"><i class="fa-solid fa-plus"></i> Hinzufügen</button>
                 </div>
                 
@@ -378,10 +395,14 @@
 
             <div id="page-next-season" class="page">
                 <div class="page-header">
-                    <h2>Folgestaffeln <span id="total-waiting-count" class="badge-count">0</span></h2>
-                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
+                    <h2>
+                        <i class="fa-solid fa-calendar-plus" style="color: var(--accent-purple);"></i> Folgestaffeln
+                        <span id="total-waiting-count" class="badge-count">0</span>
+                    </h2>
                     <button class="btn-add" onclick="openModal('next-season')"><i class="fa-solid fa-plus"></i> Hinzufügen</button>
                 </div>
+                
                 <div class="sub-section-title"><i class="fa-solid fa-hourglass"></i> Zukünftige Staffeln</div>
                 <div id="list-next-waiting" class="grid-layout-next"></div> 
                 <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> Neue Releases verfügbar!</div>
@@ -390,8 +411,8 @@
 
             <div id="page-watchlist" class="page">
                 <div class="page-header">
-                    <h2>Watchlist</h2>
-                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
+                    <h2><i class="fa-solid fa-hourglass-start" style="color: var(--accent-blue);"></i> Watchlist</h2>
                     <button class="btn-add" onclick="openModal('watchlist')"><i class="fa-solid fa-plus"></i> Hinzufügen</button>
                 </div>
                 <div id="list-watchlist" class="grid-layout-watchlist"></div> 
@@ -399,8 +420,8 @@
 
             <div id="page-current" class="page">
                 <div class="page-header">
-                    <h2>Aktuell</h2>
-                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                    <button class="btn-back" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
+                    <h2><i class="fa-solid fa-play" style="color: var(--accent-neon);"></i> Aktuell am Schauen</h2>
                     <button class="btn-add" onclick="openModal('current')"><i class="fa-solid fa-plus"></i> Hinzufügen</button>
                 </div>
                 <div id="list-current" class="anime-list"></div>
@@ -415,7 +436,7 @@
             </div>
             <div class="detail-content">
                 <h3 id="detail-title" class="detail-title">Title</h3>
-                <div class="detail-badges" id="detail-badges-container" style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                <div class="detail-badges" style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
                     <span id="detail-format" style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Format</span>
                     <span id="detail-format-dot" class="meta-dot" style="font-size: 1.2rem; color: var(--text-muted); margin: 0 8px;">•</span>
                     <span id="detail-meta">Meta</span>
@@ -441,6 +462,9 @@
         let toastTimeout;
         let isInitialLoad = true;
 
+        // ==========================================
+        // DYNAMISCHES RENDERN DER AUTH-MODALS (DER ULTIMATIVE SAFARI-KILLER)
+        // ==========================================
         function injectAuthModals() {
             document.getElementById('auth-container-dynamic').innerHTML = `
                 <div id="auth-layout" class="layout-section active-layout visible">
@@ -473,9 +497,10 @@
                             <div class="form-group"><input type="text" id="setting-name-val" autocomplete="off" data-lpignore="true"></div>
                             <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsUsernameChange()">Aktualisieren</button>
                         </div><hr class="settings-divider">
-                        <div id="dynamic-pw-setting">
+                        <div onkeydown="if(event.key === 'Enter') handleSettingsPasswordChange();">
                             <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Sicherheit ändern</h4>
-                            <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="injectPasswordUpdateField()">Sicherheit aktualisieren</button>
+                            <div class="form-group"><input type="text" id="setting-sec-val" class="pw-input" placeholder="Neuer Code (min. 6 Zeichen)" autocomplete="off" data-lpignore="true"></div>
+                            <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()">Aktualisieren</button>
                         </div><hr class="settings-divider">
                         <div><h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--danger);">Gefahrenzone</h4><button class="btn-auth" style="background: rgba(255,0,85,0.1); color: var(--danger); border: 1px solid rgba(255,0,85,0.3); padding: 10px;" onclick="openDeleteConfirmModal()"><i class="fa-solid fa-trash-can"></i> Account löschen</button></div>
                         <div class="modal-footer" style="margin-top: 20px;"><button type="button" class="btn-cancel" onclick="closeSettingsModal()">Schließen</button></div>
@@ -492,15 +517,10 @@
         }
         function openDeleteConfirmModal() { document.getElementById('settings-modal').classList.remove('active'); document.getElementById('delete-confirm-modal').classList.add('active'); }
         function closeDeleteConfirmModal() { document.getElementById('delete-confirm-modal').classList.remove('active'); }
-        
-        function injectPasswordUpdateField() {
-            document.getElementById('dynamic-pw-setting').innerHTML = `
-                <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Sicherheit ändern</h4>
-                <div class="form-group"><input type="text" id="setting-sec-val" class="pw-input" placeholder="Neuer Code (min. 6 Zeichen)" autocomplete="off" data-lpignore="true"></div>
-                <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()">Jetzt Speichern</button>
-            `;
-        }
 
+        // ==========================================
+        // APP INIT
+        // ==========================================
         db.auth.getSession().then(({ data: { session } }) => {
             const loader = document.getElementById('global-loader');
             if (loader) { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
@@ -521,7 +541,7 @@
                 const metadata = session.user.user_metadata || {};
                 document.getElementById('header-username-display').innerText = metadata.username || session.user.email.split('@')[0];
                 
-                removeAuthModals(); 
+                removeAuthModals(); // BYE BYE SAFARI
                 
                 const addDiv = document.createElement('div');
                 addDiv.id = 'dynamic-add-modal-container';
@@ -617,6 +637,9 @@
             try { const { error } = await db.from('animes').delete().neq('id', 0); if (error) throw error; closeDeleteConfirmModal(); await handleLogout(); } catch (e) { alert("Fehler"); }
         }
 
+        // ==========================================
+        // API SUCHE
+        // ==========================================
         let searchTimeout;
         async function searchAnime(query) {
             clearTimeout(searchTimeout); const resultsDiv = document.getElementById('search-results');
@@ -648,6 +671,9 @@
             handleTypeChange(); document.getElementById('search-results').style.display = 'none';
         }
 
+        // ==========================================
+        // APP LOGIK & UI INTERAKTIONEN
+        // ==========================================
         function showToast(message) { const toast = document.getElementById('toast-notification'); document.getElementById('toast-message').innerText = message; toast.classList.add('show'); clearTimeout(toastTimeout); toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000); }
         function showPage(pageId) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('page-' + pageId).classList.add('active'); window.scrollTo(0,0); }
         function handleTypeChange() {
@@ -676,7 +702,6 @@
             const formatBadge = document.getElementById('detail-format');
             const formatDot = document.getElementById('detail-format-dot');
             const modalBox = document.querySelector('#detail-modal .modal');
-            const badgeContainer = document.getElementById('detail-badges-container');
             
             // 🔥 POP-UP TEXT FIX (Kein Rechteck, keine redundante Staffel/Film Info beim Alarm)
             if (anime.isReleased) { 
@@ -885,7 +910,7 @@
                 
                 let extraMeta = '';
                 if (!anime.isReleased) {
-                    extraMeta = `<span>${anime.meta}</span>`;
+                    extraMeta = `<span class="meta-dot">•</span> <span>${anime.meta}</span>`;
                 }
 
                 return `
