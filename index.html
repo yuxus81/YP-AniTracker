@@ -3,399 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YP AniTracker (Cloud Pro)</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0d0f18">
-    <link rel="apple-touch-icon" href="icon-192.png">
-
+    <title>YP AniTracker (Cloud Pro) - Bento</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <style>
-        :root {
-            --bg-color: #0d0f18; --card-bg: #16192b; --accent-purple: #8a2be2; --accent-neon: #00f5d4;
-            --accent-green: #2ecc71; --accent-blue: #3a86ff; --accent-orange: #ff0055;
-            --text-color: #f1f3f9; --text-muted: #7e8da6; --danger: #ff4757;
-        }
-
+        :root { --bg-color: #0d0f18; --card-bg: #16192b; --accent-purple: #8a2be2; --accent-neon: #00f5d4; --accent-green: #2ecc71; --accent-blue: #3a86ff; --accent-orange: #ff0055; --text-color: #f1f3f9; --text-muted: #7e8da6; --danger: #ff4757; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-        
-        /* OVERSCROLL FIX: Verhindert links/rechts swipen und bouncing! */
         html, body { max-width: 100vw; overflow-x: hidden; overscroll-behavior-x: none; background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; margin: 0; }
-        
-        /* APPLE AUTOCORRECT / PASSWORD HACK */
         .pw-input { -webkit-text-security: disc; text-security: disc; }
-
-        /* --- LOADER & LAYOUTS --- */
-        #global-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease; }
+        #global-loader { position: fixed; inset: 0; background: var(--bg-color); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s; }
         #global-loader h1 { margin-top: 15px; font-size: 1.8rem; background: linear-gradient(45deg, var(--accent-neon), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        .layout-section { display: none; opacity: 0; transition: opacity 0.4s ease; }
+        .layout-section { display: none; opacity: 0; transition: opacity 0.4s; }
         .active-layout { display: block !important; opacity: 1 !important; }
+        #auth-layout { min-height: 100vh; align-items: center; justify-content: center; padding: 20px; } #auth-layout.active-layout { display: flex !important; } 
         #app-layout { padding-bottom: 80px; }
-
-        /* --- AUTH SCREEN --- */
-        .auth-container { background: var(--card-bg); border-radius: 20px; padding: 40px 30px; width: 100%; max-width: 400px; border: 1px solid rgba(138, 43, 226, 0.25); box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center; margin: auto; }
-        .auth-logo { margin-bottom: 30px; }
-        .auth-logo img { width: 80px; border-radius: 20px; box-shadow: 0 0 20px rgba(138, 43, 226, 0.5); }
-        .auth-logo h1 { font-size: 1.8rem; margin-top: 15px; background: linear-gradient(45deg, var(--accent-neon), #b55fe6, var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .auth-form-group { margin-bottom: 20px; text-align: left; }
-        .auth-form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
+        .auth-container { background: var(--card-bg); border-radius: 20px; padding: 40px 30px; width: 100%; max-width: 400px; border: 1px solid rgba(138,43,226,0.25); box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center; margin: auto; }
+        .auth-logo img { width: 80px; border-radius: 20px; box-shadow: 0 0 20px rgba(138,43,226,0.5); } .auth-logo h1 { font-size: 1.8rem; margin: 15px 0 30px; background: linear-gradient(45deg, var(--accent-neon), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .auth-form-group { margin-bottom: 20px; text-align: left; } .auth-form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
         .auth-form-group input { width: 100%; padding: 14px; background: var(--bg-color); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: white; font-size: 1rem; outline: none; transition: 0.3s; }
-        .auth-form-group input:focus { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(138, 43, 226, 0.2); }
-        .auth-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; }
-        .auth-options input { accent-color: var(--accent-purple); transform: scale(1.2); margin-right: 8px; cursor: pointer; width: auto; }
-        .btn-auth { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .btn-login { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); }
-        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5); }
-        .auth-switch { color: var(--text-muted); font-size: 0.9rem; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
-        .auth-switch a { color: var(--accent-neon); text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .auth-switch a:hover { color: white; }
+        .auth-form-group input:focus { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(138,43,226,0.2); }
+        .auth-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; } .auth-options input { transform: scale(1.2); margin-right: 8px; accent-color: var(--accent-purple); }
+        .btn-auth { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.3s; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-login { background: linear-gradient(45deg, var(--accent-purple), #a04ef6); color: white; box-shadow: 0 4px 15px rgba(138,43,226,0.3); } .btn-login:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(138,43,226,0.5); }
+        .auth-switch { color: var(--text-muted); font-size: 0.9rem; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; } .auth-switch a { color: var(--accent-neon); font-weight: 600; cursor: pointer; }
         .auth-error { color: var(--accent-orange); font-size: 0.85rem; margin-top: 15px; min-height: 20px; font-weight: 600; }
-
-        /* --- HEADER & NAVIGATION --- */
-        header { background: linear-gradient(135deg, #180f2b 0%, #0d0f18 100%); padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--accent-purple); position: relative; }
-        .logo { cursor: pointer; display: flex; align-items: center; gap: 12px; transition: transform 0.3s; text-decoration: none; }
-        .logo:hover { transform: scale(1.05) rotate(-1deg); }
-        .logo img { width: 45px; height: 45px; border-radius: 12px; box-shadow: 0 0 10px rgba(138, 43, 226, 0.5); object-fit: cover; flex-shrink: 0; display: block; }
-        .logo span { font-size: 1.8rem; font-weight: 700; background: linear-gradient(45deg, var(--accent-neon), #b55fe6, var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; }
-        .header-actions { display: flex; gap: 15px; align-items: center; flex-shrink: 0; }
-        .header-buttons { display: flex; gap: 12px; }
-        .header-greeting { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 5px; }
-        .header-greeting b { color: var(--text-color); }
-        .btn-icon-header { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); width: 40px; height: 40px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-        .btn-icon-header:hover { color: white; background: rgba(255,255,255,0.1); transform: scale(1.05); }
-
-        .container { max-width: 950px; margin: 25px auto; padding: 0 20px; }
-        .page { display: none; animation: fadeInPage 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .page.active { display: block; }
-        @keyframes fadeInPage { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- DASHBOARD HERO BANNER (Idee A) --- */
-        #hero-banner-container { margin-bottom: 15px; }
-        .hero-banner { position: relative; width: 100%; height: 350px; border-radius: 20px; background-size: cover; background-position: center; overflow: hidden; box-shadow: 0 15px 30px rgba(0,0,0,0.5); cursor: pointer; }
-        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, #0d0f18 10%, rgba(13,15,24,0.7) 50%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 25px; }
-        .hero-badge { align-self: flex-start; background: var(--accent-neon); color: #000; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 8px; margin-bottom: 10px; }
-        .hero-overlay h2 { font-size: 1.8rem; font-weight: 800; margin: 0 0 15px 0; line-height: 1.2; text-shadow: 0 2px 10px rgba(0,0,0,0.8); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .btn-hero-play { background: white; color: black; border: none; padding: 12px 24px; border-radius: 30px; font-weight: 700; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s; width: 100%; max-width: 250px; }
-        .btn-hero-play:hover { transform: scale(1.05); }
-
-        /* --- QUICK ACCESS PILLS (Idee A) --- */
-        .quick-access-nav { display: flex; gap: 12px; overflow-x: auto; padding: 5px 0 20px; scroll-snap-type: x mandatory; margin-bottom: 10px; }
-        .quick-access-nav::-webkit-scrollbar { display: none; }
-        .qa-pill { flex: 0 0 auto; background: rgba(255,255,255,0.05); padding: 12px 24px; border-radius: 30px; font-weight: 600; font-size: 0.95rem; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 8px; scroll-snap-align: start; cursor: pointer; transition: 0.2s; }
-        .qa-pill:hover { transform: translateY(-2px); }
-        .qa-pill.watched { color: var(--accent-green); border-color: rgba(46,204,113,0.3); }
-        .qa-pill.current { color: var(--accent-neon); border-color: rgba(0,245,212,0.3); }
-        .qa-pill.next { color: var(--accent-purple); border-color: rgba(138,43,226,0.3); }
-        .qa-pill.watchlist { color: var(--accent-blue); border-color: rgba(58,134,255,0.3); }
+        header { background: linear-gradient(135deg, #180f2b 0%, #0d0f18 100%); padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--accent-purple); }
+        .logo { cursor: pointer; display: flex; align-items: center; gap: 12px; } .logo img { width: 45px; height: 45px; border-radius: 12px; } .logo span { font-size: 1.8rem; font-weight: 700; background: linear-gradient(45deg, var(--accent-neon), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header-actions { display: flex; gap: 15px; align-items: center; } .header-buttons { display: flex; gap: 12px; } .header-greeting { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; } .header-greeting b { color: white; }
+        .btn-icon-header { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); width: 40px; height: 40px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; }
+        .container { max-width: 950px; margin: 20px auto; padding: 0 20px; } .page { display: none; animation: fadeIn 0.3s forwards; } .page.active { display: block; } @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .dash-section-title { font-size: 1.15rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-weight: 700; }
-
-        /* --- LARGE TITLE PAGE HEADER (Kein Zurück-Button) --- */
-        .page-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .page-header h2 { margin: 0; font-size: 2.2rem; font-weight: 800; letter-spacing: -1px; display: flex; align-items: center; gap: 12px; }
+        /* --- BENTO BOX DASHBOARD --- */
+        .bento-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: minmax(110px, auto); gap: 15px; margin-bottom: 30px; }
+        .bento-card { background: var(--card-bg); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; }
+        .bento-card:hover { transform: translateY(-4px); }
+        .bento-watched { grid-column: span 1; grid-row: span 2; background: linear-gradient(135deg, rgba(46,204,113,0.1), transparent); border-color: rgba(46,204,113,0.3); }
+        .bento-watched h3 { font-size: 2.5rem; color: var(--accent-green); line-height: 1; margin: 10px 0 5px; }
+        .bento-watched i { color: var(--accent-green); font-size: 2rem; opacity: 0.8; }
+        .bento-current { grid-column: span 1; grid-row: span 1; border-color: rgba(0,245,212,0.3); flex-direction: row; gap: 12px; justify-content: flex-start; }
+        .bento-current i { color: var(--accent-neon); font-size: 1.5rem; }
+        .bento-next { grid-column: span 1; grid-row: span 1; border-color: rgba(138,43,226,0.3); flex-direction: row; gap: 12px; justify-content: flex-start; }
+        .bento-next i { color: var(--accent-purple); font-size: 1.5rem; }
+        .bento-watchlist { grid-column: span 2; grid-row: span 1; border-color: rgba(58,134,255,0.3); flex-direction: row; gap: 12px; justify-content: center; background: linear-gradient(90deg, rgba(58,134,255,0.05), transparent); }
+        .bento-watchlist i { color: var(--accent-blue); font-size: 1.5rem; }
+        .bento-card span { font-weight: 600; font-size: 0.95rem; }
         
-        /* HINZUFÜGEN BUTTON (NEON STYLE) */
-        .btn-add { 
-            background: rgba(138, 43, 226, 0.05); color: white; border: 1px solid rgba(138, 43, 226, 0.5); padding: 10px 22px; 
-            border-radius: 30px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(5px); display: flex; 
-            align-items: center; gap: 8px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 0 10px rgba(138, 43, 226, 0.2);
-            margin-bottom: 5px; /* Alignment with large title */
-        }
-        .btn-add:hover { background: rgba(138, 43, 226, 0.2); border-color: var(--accent-purple); box-shadow: 0 0 20px rgba(138, 43, 226, 0.6); transform: translateY(-1px); }
-        .btn-add i { font-size: 1rem; color: var(--accent-neon); }
+        /* --- LARGE TITLE PAGE HEADER OHNE ZURÜCK BUTTON --- */
+        .page-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; padding: 10px 0 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .page-header h2 { margin: 0; font-size: 2.2rem; font-weight: 800; letter-spacing: -1px; text-align: left; }
+        .btn-add { background: rgba(138,43,226,0.05); color: white; border: 1px solid rgba(138,43,226,0.5); padding: 10px 22px; border-radius: 30px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; box-shadow: 0 0 10px rgba(138,43,226,0.2); transition: 0.3s; }
+        .btn-add:hover { background: rgba(138,43,226,0.2); box-shadow: 0 0 20px rgba(138,43,226,0.6); } .btn-add i { color: var(--accent-neon); }
         
-        .sub-section-title { margin: 35px 0 15px 0; font-size: 0.95rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .dash-section-title, .sub-section-title { font-size: 1.15rem; margin: 25px 0 15px; display: flex; align-items: center; gap: 10px; font-weight: 700; }
+        .sub-section-title { font-size: 0.95rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* --- GESAMT-ZÄHLER BADGE --- */
-        .watched-stats { display: flex; justify-content: center; margin-bottom: 20px; }
-        .stat-wrapper { position: relative; border-radius: 16px; padding: 2px; overflow: hidden; display: inline-flex; background: var(--card-bg); box-shadow: 0 0 15px rgba(46, 204, 113, 0.15); }
-        .stat-wrapper::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(from 0deg, transparent 75%, var(--accent-green) 100%); animation: borderRotate 2.5s linear infinite; z-index: 0; }
-        .stat-box { position: relative; background: #111320; padding: 10px 35px; border-radius: 14px; text-align: center; display: flex; flex-direction: column; align-items: center; z-index: 1; width: 100%; height: 100%; }
-        @keyframes borderRotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--accent-green); line-height: 1.2; margin-bottom: 2px; text-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
-        .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
-        .badge-count { font-size: 1.2rem; font-weight: 800; background: rgba(138,43,226,0.15); color: var(--accent-purple); padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(138,43,226,0.3); vertical-align: middle; margin-left: 10px; }
-
-        /* --- ALLGEMEINE TYPO & BADGES --- */
+        /* ALLGEMEINE LISTEN (EDGE TO EDGE) */
+        .anime-item-list { display: flex; align-items: center; background: transparent; padding: 18px 10px; border-bottom: 1px solid rgba(var(--glow-rgb), 0.3); cursor: pointer; min-height: 85px; transition: 0.3s; }
+        .anime-item-list:hover { transform: translateX(4px); background: rgba(var(--glow-rgb), 0.05); }
+        .anime-info-wrapper { display: flex; align-items: center; gap: 15px; flex: 1; min-width: 0; }
+        .anime-cover { width: 55px; height: 80px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
+        .anime-info { display: flex; flex-direction: column; gap: 6px; overflow: hidden; flex: 1; } .anime-info h4 { font-size: 1.1rem; font-weight: 600; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-watched { --glow-rgb: 46,204,113; } .item-current { --glow-rgb: 0,245,212; } .item-waiting { --glow-rgb: 138,43,226; } .item-released { --glow-rgb: 255,0,85; }
+        #hp-current-list .anime-item-list { background: rgba(0,245,212,0.05); border-radius: 12px; border: 1px solid rgba(0,245,212,0.2); margin-bottom: 10px; padding: 12px 15px; border-bottom-width: 1px; }
+        
+        /* NUMBER & ICONS */
         .anime-number { font-weight: 700; font-size: 1.1rem; min-width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .num-watched { color: var(--accent-green); background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.2); }
-        .num-waiting { color: var(--accent-purple); background: rgba(138, 43, 226, 0.08); border: 1px solid rgba(138, 43, 226, 0.2); }
-        .num-released { color: #ff3377; background: rgba(255, 0, 85, 0.1); border: 1px solid rgba(255, 0, 85, 0.3); font-weight: 800; }
-        .anime-decor-icon { font-size: 1.1rem; opacity: 0.8; flex-shrink: 0; }
-        .color-watched { color: var(--accent-green); }
-        .color-waiting { color: var(--accent-purple); }
-        .color-released { color: var(--accent-orange); }
-        .color-watchlist { color: var(--accent-blue); } 
-        .color-current { color: var(--accent-neon); }
+        .num-watched { color: var(--accent-green); background: rgba(46,204,113,0.1); } .num-waiting { color: var(--accent-purple); background: rgba(138,43,226,0.1); } .num-released { color: var(--accent-orange); background: rgba(255,0,85,0.1); }
+        .anime-decor-icon { font-size: 1.1rem; flex-shrink: 0; } .color-current { color: var(--accent-neon); }
 
-        .format-badge { padding: 3px 8px; border-radius: 6px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .format-badge.staffel-type { background: rgba(138, 43, 226, 0.15); color: #c18eff; border: 1px solid rgba(138, 43, 226, 0.3); }
-        .format-badge.film-type { background: rgba(58, 134, 255, 0.15); color: #8ec5ff; border: 1px solid rgba(58, 134, 255, 0.3); }
-        .meta-dot { font-size: 0.6rem; opacity: 0.5; margin: 0 2px; }
+        /* GRID NEXT SEASON & WATCHLIST */
+        .grid-layout-next, .grid-layout-watchlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .next-card, .watchlist-card { position: relative; border-radius: 12px; overflow: hidden; background: transparent; cursor: pointer; border: 1px solid rgba(58,134,255,0.2); display: flex; flex-direction: column; transition: 0.3s; }
+        .next-card { background: var(--card-bg); border-color: transparent; }
+        .next-card:hover, .watchlist-card:hover { transform: translateY(-4px); z-index: 10; }
+        .nc-poster, .wl-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 12px; } .next-card .nc-poster { border-radius: 12px 12px 0 0; }
+        .nc-info { padding: 12px; } .nc-info h4 { font-size: 0.95rem; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .next-card.item-waiting { border-color: rgba(138,43,226,0.3); } .next-card.item-released { border-color: rgba(255,0,85,0.5); box-shadow: 0 0 15px rgba(255,0,85,0.3); }
+        .wl-overlay { position: absolute; bottom: 0; width: 100%; padding: 40px 10px 10px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white; text-align: center; }
+        .wl-overlay h4 { font-size: 0.95rem; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .release-poster-card { border-color: rgba(255,0,85,0.5); } .rp-badge { position: absolute; top: 6px; right: 6px; background: var(--accent-orange); color: white; font-size: 0.6rem; font-weight: 700; padding: 2px 6px; border-radius: 6px; z-index: 5; }
+
+        /* MODALS & POPUPS */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(10,11,18,0.85); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 1000; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal { background: var(--card-bg); border-radius: 20px; padding: 25px; width: 92%; max-width: 450px; border: 1px solid rgba(138,43,226,0.25); transform: scale(0.9); transition: 0.3s; max-height: 95vh; display: flex; flex-direction: column; }
+        .modal-overlay.active .modal { transform: scale(1); }
+        .form-group { margin-bottom: 20px; text-align: left; } .form-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-muted); }
+        .form-group input, .form-group select { width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; }
+        .search-res { position: absolute; top: 100%; width: 100%; background: #0d0f18; border: 1px solid var(--accent-purple); z-index: 2000; max-height: 200px; overflow-y: auto; display: none; }
+        .search-item { padding: 10px; display: flex; gap: 10px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); } .search-cover { width: 35px; height: 50px; object-fit: cover; }
         
-        .fade-out { opacity: 0; transform: scale(0.95) translateX(30px); pointer-events: none; }
-        
-        /* ========================================= */
-        /* DESIGN 1: EDGE-TO-EDGE LISTEN (Geschaut, Aktuell) */
-        /* ========================================= */
-        .anime-list { display: flex; flex-direction: column; }
-        .anime-item-list { 
-            display: flex; align-items: center; position: relative; background: transparent; border: none; border-radius: 0;
-            padding: 18px 5px; border-bottom: 1px solid rgba(var(--glow-rgb), 0.3); box-shadow: 0 10px 15px -10px rgba(var(--glow-rgb), 0.15);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer; min-height: 85px;
-        }
-        .anime-item-list .anime-info-wrapper { display: flex; align-items: center; gap: 15px; flex: 1; min-width: 0; }
-        .anime-item-list .anime-cover { width: 55px; height: 80px; object-fit: cover; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); flex-shrink: 0; }
-        .anime-item-list .anime-info { display: flex; flex-direction: column; gap: 6px; overflow: hidden; flex: 1; min-width: 0; }
-        .anime-item-list .anime-info h4 { font-size: 1.1rem; font-weight: 600; line-height: 1.3; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.3s; }
-        .anime-item-list .anime-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-        .anime-item-list:hover { transform: translateX(4px); background: rgba(var(--glow-rgb), 0.05); border-bottom-color: rgba(var(--glow-rgb), 0.8); }
+        #detail-modal .modal { padding: 25px 15px 20px; }
+        .detail-cover-wrapper { margin-bottom: 10px; display: flex; justify-content: center; }
+        .detail-cover-wrapper img { max-height: 45vh; max-width: 100%; object-fit: contain; border-radius: 10px; }
+        .detail-title { font-size: 1.3rem; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-align: center; }
+        .btn-pop { flex: 1; min-width: 45%; padding: 10px; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; gap: 5px; border: 1px solid transparent; background: transparent; }
+        .btn-pop-neon { background: rgba(0,245,212,0.1); color: var(--accent-neon); border-color: rgba(0,245,212,0.3); } .btn-pop-green { background: rgba(46,204,113,0.1); color: var(--accent-green); border-color: rgba(46,204,113,0.3); } .btn-pop-orange { background: rgba(255,0,85,0.1); color: var(--accent-orange); border-color: rgba(255,0,85,0.3); } .btn-pop-danger { background: rgba(255,71,87,0.1); color: var(--danger); border-color: rgba(255,71,87,0.3); }
 
-        .item-watched { --glow-rgb: 46, 204, 113; }
-        .item-current { --glow-rgb: 0, 245, 212; }
-        .item-waiting { --glow-rgb: 138, 43, 226; }
-        .item-released { --glow-rgb: 255, 0, 85; }
+        .toast { opacity: 0; position: fixed; bottom: -80px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #a04ef6, var(--accent-purple)); color: white; padding: 12px 26px; border-radius: 30px; transition: 0.4s; z-index: 1000; }
+        .toast.show { bottom: 30px; opacity: 1; }
 
-        /* ========================================= */
-        /* DESIGN 2: FOLGESTAFFELN KARTEN (2er GRID) */
-        /* ========================================= */
-        .grid-layout-next { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .next-card { position: relative; border-radius: 12px; overflow: hidden; background: var(--card-bg); cursor: pointer; transition: all 0.3s; border: 1px solid transparent; display: flex; flex-direction: column; }
-        .next-card:hover { transform: translateY(-4px); z-index: 10; }
-        .next-card .nc-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .nc-placeholder { background:#111320; display:flex; align-items:center; justify-content:center; aspect-ratio: 2/3; color: var(--text-muted); border-radius: 12px 12px 0 0; }
-        .next-card .nc-info { padding: 12px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; justify-content: flex-start; }
-        .next-card h4 { font-size: 0.95rem; font-weight: 600; line-height: 1.3; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .next-card.item-waiting { border-color: rgba(138, 43, 226, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 10px rgba(138, 43, 226, 0.25); }
-        .next-card.item-waiting:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(138, 43, 226, 0.45); border-color: var(--accent-purple); }
-        @keyframes releasePulse { 0% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 5px rgba(255, 0, 85, 0.15); } 100% { box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 25px rgba(255, 0, 85, 0.6); } }
-        .next-card.item-released { border-color: rgba(255, 0, 85, 0.5); animation: releasePulse 1.5s infinite alternate ease-in-out; }
-        .next-card.item-released:hover { border-color: var(--accent-orange); animation: none; box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 30px rgba(255, 0, 85, 0.8) !important; }
-
-        /* ========================================= */
-        /* DESIGN 3: RAHMENLOSE POSTER (Watchlist & Releases) */
-        /* ========================================= */
-        .grid-layout-watchlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 18px; margin-bottom: 20px; }
-        .watchlist-card { position: relative; border-radius: 12px; overflow: hidden; background: transparent; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 10px rgba(58, 134, 255, 0.2); transition: all 0.3s ease; border: 1px solid rgba(58, 134, 255, 0.2); display: flex; flex-direction: column; }
-        .watchlist-card:hover { transform: translateY(-6px); box-shadow: 0 8px 25px rgba(0,0,0,0.7), 0 0 20px rgba(58, 134, 255, 0.5); border-color: var(--accent-blue); z-index: 10; }
-        .watchlist-card .wl-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; border-radius: 12px; }
-        .nc-placeholder.watchlist { border-radius: 12px; }
-        .watchlist-card .wl-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 10px 10px; background: linear-gradient(to top, rgba(0,0,0,0.95), transparent); pointer-events: none; border-radius: 0 0 12px 12px; text-align: center; box-sizing: border-box; }
-        .watchlist-card .wl-overlay h4 { font-size: 0.95rem; font-weight: 600; line-height: 1.3; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.8); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: white; padding: 0 5px; word-break: break-word; }
-
-        .release-poster-card { position: relative; border-radius: 12px; overflow: hidden; background: transparent; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 15px rgba(255, 0, 85, 0.4); transition: all 0.3s ease; border: 1px solid rgba(255, 0, 85, 0.5); display: flex; flex-direction: column; }
-        .release-poster-card:hover { transform: translateY(-6px); box-shadow: 0 8px 25px rgba(0,0,0,0.7), 0 0 25px rgba(255, 0, 85, 0.7); border-color: var(--accent-orange); z-index: 10; }
-        .release-poster-card .rp-badge { position: absolute; top: 6px; right: 6px; background: var(--accent-orange); color: white; font-weight: 700; font-size: 0.6rem; padding: 2px 6px; border-radius: 6px; box-shadow: 0 2px 10px rgba(255,0,85,0.6); z-index: 5; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* --- TOAST NOTIFICATION --- */
-        .toast { opacity: 0; visibility: hidden; position: fixed; bottom: -80px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #a04ef6, var(--accent-purple)); color: white; padding: 12px 26px; border-radius: 30px; font-size: 0.95rem; font-weight: 600; box-shadow: 0 10px 25px rgba(138, 43, 226, 0.4); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; pointer-events: none; display: flex; align-items: center; gap: 10px; }
-        .toast.show { bottom: 30px; opacity: 1; visibility: visible; }
-
-        /* --- MODALS --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 18, 0.85); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.35s ease; z-index: 1000; }
-        .modal-overlay.active { opacity: 1; pointer-events: auto; display: flex; }
-        .modal { background: var(--card-bg); border-radius: 20px; padding: 30px; width: 90%; max-width: 450px; border: 1px solid rgba(138, 43, 226, 0.25); transform: scale(0.85) translateY(20px); opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 15px 35px rgba(0,0,0,0.4); max-height: 90vh; overflow-y: auto; }
-        .modal-overlay.active .modal { transform: scale(1) translateY(0); opacity: 1; }
-
-        .modal h3 { margin-bottom: 20px; font-size: 1.35rem; font-weight: 700; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
-        .form-group input[type="text"], .form-group input[type="email"], .form-group select { width: 100%; padding: 12px 15px; background: var(--bg-color); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: white; font-size: 1rem; outline: none; transition: all 0.3s; }
-        .form-group input:focus, .form-group select:focus { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(138, 43, 226, 0.2); }
-        .checkbox-group { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; flex-direction: row; }
-        .checkbox-group input[type="checkbox"] { width: auto; accent-color: var(--accent-purple); transform: scale(1.2); flex-shrink: 0; margin: 0; cursor: pointer; }
-        .checkbox-group label { margin-bottom: 0; display: inline-block; width: auto; flex: 1; line-height: 1.4; }
-        
-        .search-res { position: absolute; top: 100%; left: 0; width: 100%; background: #0d0f18; border: 1px solid var(--accent-purple); border-radius: 0 0 10px 10px; z-index: 2000; max-height: 250px; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: none; }
-        .search-item { padding: 10px 15px; display: flex; align-items: center; gap: 12px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s; }
-        .search-item:hover { background: rgba(138, 43, 226, 0.2); }
-        .search-cover { width: 35px; height: 50px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
-        .modal-footer { display: flex; justify-content: flex-end; gap: 15px; margin-top: 25px; }
-        .btn-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: color 0.2s; padding: 10px; }
-        .btn-cancel:hover { color: white; }
-
-        /* --- POP-UP BUTTONS (TRANSPARENT) --- */
-        .btn-pop { flex: 1; min-width: 40%; margin: 4px; padding: 10px; font-size: 0.85rem; border-radius: 10px; background: transparent; border: 1px solid transparent; cursor: pointer; font-weight: 600; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; backdrop-filter: blur(4px); }
-        .btn-pop-neon { background: rgba(0, 245, 212, 0.1); color: var(--accent-neon); border-color: rgba(0, 245, 212, 0.3); }
-        .btn-pop-neon:hover { background: rgba(0, 245, 212, 0.2); transform: scale(1.02); }
-        .btn-pop-green { background: rgba(46, 204, 113, 0.1); color: var(--accent-green); border-color: rgba(46, 204, 113, 0.3); }
-        .btn-pop-green:hover { background: rgba(46, 204, 113, 0.2); transform: scale(1.02); }
-        .btn-pop-orange { background: rgba(255, 0, 85, 0.1); color: var(--accent-orange); border-color: rgba(255, 0, 85, 0.3); }
-        .btn-pop-orange:hover { background: rgba(255, 0, 85, 0.2); transform: scale(1.02); }
-        .btn-pop-blue { background: rgba(58, 134, 255, 0.1); color: var(--accent-blue); border-color: rgba(58, 134, 255, 0.3); }
-        .btn-pop-blue:hover { background: rgba(58, 134, 255, 0.2); transform: scale(1.02); }
-        .btn-pop-danger { background: rgba(255, 71, 87, 0.1); color: var(--danger); border-color: rgba(255, 71, 87, 0.3); }
-        .btn-pop-danger:hover { background: rgba(255, 71, 87, 0.2); transform: scale(1.02); }
-
-        /* --- DETAILS POPUP MODAL (DESKTOP) --- */
-        #detail-modal .modal { padding: 30px; text-align: center; }
-        .detail-cover-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 20px; }
-        .detail-cover-wrapper img { width: auto; max-width: 100%; max-height: 350px; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
-        .detail-content { position: relative; z-index: 10; }
-        .detail-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 15px; line-height: 1.3; }
-        
-        .modal-danger { border-color: rgba(255, 0, 85, 0.4); }
-        .btn-danger-action { background: linear-gradient(45deg, var(--danger), var(--accent-orange)); color: white; border: none; padding: 10px 22px; border-radius: 30px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 0, 85, 0.3); transition: all 0.2s ease; }
-        .btn-danger-action:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 0, 85, 0.5); }
-        .danger-text { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 25px; }
-        .danger-text strong { color: var(--danger); }
-        
-        .settings-divider { border: 0; height: 1px; background: rgba(255,255,255,0.1); margin: 25px 0; }
-        .empty-state { text-align: center; color: var(--text-muted); padding: 25px; font-style: italic; font-size: 0.9rem; background: rgba(255,255,255,0.01); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.05); width: 100%; grid-column: 1 / -1; }
-        .loading-notice { text-align: center; padding: 40px; color: var(--accent-neon); font-weight: 600; font-size: 1.2rem; grid-column: 1 / -1; }
-
-        /* ================= MOBILE OPTIMIERUNG ================= */
         @media (max-width: 600px) {
-            header { padding: 15px; }
-            .logo img { width: 35px; height: 35px; }
-            .logo span { font-size: 1.3rem; }
-            .header-actions { flex-direction: column; align-items: center; gap: 4px; }
-            .header-buttons { gap: 10px; }
-            .header-greeting { display: block !important; position: static; font-size: 0.75rem; color: var(--text-muted); opacity: 0.8; text-align: center; white-space: nowrap; margin-top: 5px; }
-            .btn-icon-header { width: 35px; height: 35px; font-size: 1rem; }
-            
-            /* NEU: Nativer iOS Large Title Header OHNE Zurück-Button */
-            .page-header { 
-                display: flex; flex-direction: row; justify-content: space-between; align-items: center; 
-                padding: 10px 5px 20px; background: transparent; border: none; margin-bottom: 0;
-            }
-            .page-header h2 { 
-                font-size: 2.1rem; font-weight: 800; text-align: left; margin: 0; letter-spacing: -1px;
-                display: flex; align-items: center; gap: 10px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-            }
-            .page-header .btn-add { 
-                width: 42px; height: 42px; padding: 0; border-radius: 50%; display: flex; 
-                justify-content: center; align-items: center; margin: 0; flex-shrink: 0;
-            }
-            .page-header .btn-add span { display: none; } /* Text verstecken */
-            .page-header .btn-add i { font-size: 1.2rem; margin: 0; }
-            
-            /* Dashboard 3er Grid für Releases Mobile */
+            header { padding: 15px; } .logo span { font-size: 1.3rem; } .header-actions { flex-direction: column; gap: 4px; } .header-greeting { font-size: 0.75rem; }
+            .page-header { flex-direction: row; align-items: center; border: none; padding: 10px 5px; }
+            .page-header h2 { font-size: 2.1rem; }
+            .page-header .btn-add { padding: 10px; border-radius: 50%; width: 45px; height: 45px; justify-content: center; } .page-header .btn-add span { display: none; }
+            .grid-layout-next, .grid-layout-watchlist { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             #hp-alerts-grid .grid-layout-watchlist { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-            
-            /* Folgestaffeln 2er Grid auf Mobile */
-            .grid-layout-next { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-
-            /* Watchlist auf Mobile */
-            .grid-layout-watchlist { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-            .watchlist-card .wl-overlay h4, .release-poster-card .wl-overlay h4 { font-size: 0.8rem; padding: 0 4px; }
-
-            /* ========================================= */
-            /* MOBILE POP-UP (RIESIG, UNBESCHNITTEN, KEIN SCROLLEN) */
-            /* ========================================= */
-            #detail-modal .modal { padding: 25px 15px 20px; width: 92%; max-height: 95vh; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; } 
-            .detail-cover-wrapper { margin-bottom: 10px; width: 100%; display: flex; justify-content: center; }
-            .detail-cover-wrapper img { width: auto; max-width: 100%; max-height: 45vh; object-fit: contain; border-radius: 10px; display: block; box-shadow: 0 8px 25px rgba(0,0,0,0.5); } 
-            .detail-content { padding: 0 5px; display: flex; flex-direction: column; align-items: center; }
-            .detail-title { font-size: 1.25rem; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
-            .btn-pop { padding: 8px 5px; font-size: 0.75rem; gap: 5px; min-width: 45%; }
-            .btn-pop i { font-size: 0.85rem; }
-            
-            /* Modals für Hinzufügen: Button muss breit bleiben */
-            .modal-footer .btn-add { width: 100%; height: auto; border-radius: 30px; padding: 12px; justify-content: center; }
-            .modal-footer .btn-add span { display: inline; }
+            .bento-watched h3 { font-size: 3rem; }
         }
     </style>
 </head>
 <body>
 
-    <div id="global-loader">
-        <i class="fa-solid fa-circle-notch fa-spin" style="color: var(--accent-neon); font-size: 3.5rem; margin-bottom: 20px;"></i>
-        <h1 style="margin:0;">YP AniTracker</h1>
-    </div>
-
-    <div id="auth-container-dynamic"></div>
-    <div id="settings-container-dynamic"></div>
+    <div id="global-loader"><i class="fa-solid fa-circle-notch fa-spin" style="color: var(--accent-neon); font-size: 3.5rem;"></i><h1>YP AniTracker</h1></div>
+    <div id="auth-container-dynamic"></div><div id="settings-container-dynamic"></div>
 
     <div id="app-layout" class="layout-section">
         <header>
-            <a class="logo" onclick="showPage('home')">
-                <img src="icon-192.png" alt="YP Logo" onerror="this.style.display='none'">
-                <span>YP AniTracker</span>
-            </a>
+            <a class="logo" onclick="showPage('home')"><img src="icon-192.png" onerror="this.style.display='none'"><span>YP AniTracker</span></a>
             <div class="header-actions">
-                <div class="header-buttons">
-                    <button class="btn-icon-header" onclick="openSettingsModal()" title="Einstellungen"><i class="fa-solid fa-gear"></i></button>
-                    <button class="btn-icon-header" onclick="handleLogout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></button>
-                </div>
+                <div class="header-buttons"><button class="btn-icon-header" onclick="openSettingsModal()"><i class="fa-solid fa-gear"></i></button><button class="btn-icon-header" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i></button></div>
                 <div class="header-greeting">Hey, <b id="header-username-display">User</b></div>
             </div>
         </header>
 
         <div class="container">
             <div id="page-home" class="page active">
-                
-                <div id="hero-banner-container"></div>
-
-                <div class="quick-access-nav">
-                    <div class="qa-pill watched" onclick="showPage('watched')"><i class="fa-solid fa-square-check"></i> Geschaut</div>
-                    <div class="qa-pill current" onclick="showPage('current')"><i class="fa-solid fa-play"></i> Aktuell</div>
-                    <div class="qa-pill next" onclick="showPage('next-season')"><i class="fa-solid fa-calendar-plus"></i> Staffeln</div>
-                    <div class="qa-pill watchlist" onclick="showPage('watchlist')"><i class="fa-solid fa-hourglass-start"></i> Watchlist</div>
+                <div class="bento-grid">
+                    <div class="bento-card bento-watched" onclick="showPage('watched')">
+                        <span>Geschaut</span>
+                        <h3 id="bento-watched-count">0</h3>
+                        <i class="fa-solid fa-square-check"></i>
+                    </div>
+                    <div class="bento-card bento-current" onclick="showPage('current')">
+                        <i class="fa-solid fa-play"></i><span>Aktuell</span>
+                    </div>
+                    <div class="bento-card bento-next" onclick="showPage('next-season')">
+                        <i class="fa-solid fa-calendar-plus"></i><span>Staffeln</span>
+                    </div>
+                    <div class="bento-card bento-watchlist" onclick="showPage('watchlist')">
+                        <i class="fa-solid fa-hourglass-start"></i><span>Deine Watchlist öffnen</span>
+                    </div>
                 </div>
 
-                <div class="dash-section-title" style="margin-top: 20px;"><i class="fa-solid fa-bolt" style="color: var(--accent-neon);"></i> Weiter am Schauen</div>
+                <div class="dash-section-title"><i class="fa-solid fa-bolt" style="color: var(--accent-neon);"></i> Weiter am Schauen</div>
                 <div id="hp-current-list" class="anime-list"></div>
 
-                <div class="dash-section-title" style="margin-top: 30px;"><i class="fa-solid fa-fire" style="color: var(--accent-orange);"></i> Frische Releases!</div>
+                <div class="dash-section-title"><i class="fa-solid fa-fire" style="color: var(--accent-orange);"></i> Frische Releases!</div>
                 <div id="hp-alerts-grid"></div>
             </div>
 
             <div id="page-watched" class="page">
-                <div class="page-header">
-                    <h2>Geschaut</h2>
-                    <button class="btn-add" onclick="openModal('watched')"><i class="fa-solid fa-plus"></i> <span>Hinzufügen</span></button>
-                </div>
-                
-                <div class="watched-stats">
-                    <div class="stat-wrapper">
-                        <div class="stat-box">
-                            <span class="stat-number" id="total-watched-count">0</span>
-                            <span class="stat-label">Gesamt geschaut</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="sub-section-title"><i class="fa-solid fa-check-double" style="color: var(--accent-green);"></i> Komplett Abgeschlossen</div>
-                <div id="list-watched-completed" class="anime-list"></div>
-                
-                <div class="sub-section-title"><i class="fa-solid fa-tv" style="color: var(--accent-purple);"></i> Fortsetzung folgt</div>
-                <div id="list-watched-continuing" class="anime-list"></div>
-                
-                <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> Neue Staffel verfügbar!</div>
-                <div id="list-watched-released" class="anime-list"></div>
+                <div class="page-header"><h2>Geschaut</h2><button class="btn-add" onclick="openModal('watched')"><i class="fa-solid fa-plus"></i> <span>Hinzufügen</span></button></div>
+                <div class="sub-section-title"><i class="fa-solid fa-check-double" style="color: var(--accent-green);"></i> Abgeschlossen</div><div id="list-watched-completed" class="anime-list"></div>
+                <div class="sub-section-title"><i class="fa-solid fa-tv" style="color: var(--accent-purple);"></i> Fortsetzung folgt</div><div id="list-watched-continuing" class="anime-list"></div>
+                <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> Neue Staffel da!</div><div id="list-watched-released" class="anime-list"></div>
             </div>
 
             <div id="page-next-season" class="page">
-                <div class="page-header">
-                    <h2>Staffeln <span id="total-waiting-count" class="badge-count">0</span></h2>
-                    <button class="btn-add" onclick="openModal('next-season')"><i class="fa-solid fa-plus"></i> <span>Hinzufügen</span></button>
-                </div>
-                
-                <div class="sub-section-title"><i class="fa-solid fa-hourglass"></i> Zukünftige Staffeln</div>
-                <div id="list-next-waiting" class="grid-layout-next"></div> 
-                <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> Neue Releases verfügbar!</div>
-                <div id="list-next-released" class="grid-layout-next"></div> 
+                <div class="page-header"><h2>Staffeln</h2><button class="btn-add" onclick="openModal('next-season')"><i class="fa-solid fa-plus"></i> <span>Hinzufügen</span></button></div>
+                <div class="sub-section-title"><i class="fa-solid fa-hourglass"></i> Zukünftige Staffeln</div><div id="list-next-waiting" class="grid-layout-next"></div> 
+                <div class="sub-section-title"><i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> Neue Releases!</div><div id="list-next-released" class="grid-layout-next"></div> 
             </div>
 
             <div id="page-watchlist" class="page">
-                <div class="page-header">
-                    <h2>Watchlist</h2>
-                    <button class="btn-add" onclick="openModal('watchlist')"><i class="fa-solid fa-plus"></i> <span>Hinzufügen</span></button>
-                </div>
+                <div class="page-header"><h2>Watchlist</h2><button class="btn-add" onclick="openModal('watchlist')"><i class="fa-solid fa-plus"></i> <span>Hinzufügen</span></button></div>
                 <div id="list-watchlist" class="grid-layout-watchlist"></div> 
             </div>
 
             <div id="page-current" class="page">
-                <div class="page-header">
-                    <h2>Aktuell</h2>
-                    <button class="btn-add" onclick="openModal('current')"><i class="fa-solid fa-plus"></i> <span>Hinzufügen</span></button>
-                </div>
+                <div class="page-header"><h2>Aktuell</h2><button class="btn-add" onclick="openModal('current')"><i class="fa-solid fa-plus"></i> <span>Hinzufügen</span></button></div>
                 <div id="list-current" class="anime-list"></div>
             </div>
         </div>
@@ -403,619 +182,146 @@
 
     <div id="detail-modal" class="modal-overlay" onclick="closeDetailModal(event)">
         <div class="modal" onclick="event.stopPropagation()">
-            <div class="detail-cover-wrapper">
-                <img id="detail-cover" src="" alt="Cover">
-            </div>
+            <div class="detail-cover-wrapper"><img id="detail-cover" src="" alt="Cover"></div>
             <div class="detail-content">
                 <h3 id="detail-title" class="detail-title">Title</h3>
-                <div class="detail-badges" style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                    <span id="detail-format" style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Format</span>
-                    <span id="detail-format-dot" class="meta-dot" style="font-size: 1.2rem; color: var(--text-muted); margin: 0 8px;">•</span>
-                    <span id="detail-meta">Meta</span>
+                <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px; gap: 8px;">
+                    <span id="detail-format" style="font-weight: 700; text-transform: uppercase;"></span><span id="detail-format-dot" class="meta-dot" style="font-size: 1.2rem;">•</span><span id="detail-meta"></span>
                 </div>
-                
                 <div id="detail-action-container" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 100%;"></div>
             </div>
         </div>
     </div>
-
-    <div id="toast-notification" class="toast">
-        <i class="fa-solid fa-circle-check"></i> <span id="toast-message">Erfolgreich!</span>
-    </div>
+    <div id="toast-notification" class="toast"><i class="fa-solid fa-circle-check"></i> <span id="toast-message">Erfolgreich!</span></div>
 
     <script>
-        if (typeof window.supabase === 'undefined') alert("Ladefehler: Datenbank-Schnittstelle blockiert.");
+        if (typeof window.supabase === 'undefined') alert("Ladefehler: Supabase blockiert.");
+        const db = window.supabase.createClient("https://anyvdbweojvaztyiacwb.supabase.co", "sb_publishable_6A73CDl65UrCWWVbTz9z7A_nu3cIWME");
+        let animeData = { watched: [], nextSeason: [], watchlist: [], current: [] }; let toastTimeout; let isInitialLoad = true;
 
-        const SUPABASE_URL = "https://anyvdbweojvaztyiacwb.supabase.co";
-        const API_KEY = "sb_publishable_6A73CDl65UrCWWVbTz9z7A_nu3cIWME";
-        const db = window.supabase.createClient(SUPABASE_URL, API_KEY);
-
-        let animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
-        let toastTimeout;
-        let isInitialLoad = true;
-
-        // ==========================================
-        // DYNAMISCHES RENDERN DER AUTH-MODALS 
-        // ==========================================
+        /* SAFARI INJECTION */
         function injectAuthModals() {
             document.getElementById('auth-container-dynamic').innerHTML = `
-                <div id="auth-layout" class="layout-section active-layout visible">
-                    <div class="auth-container" onkeydown="if(event.key === 'Enter') handleLogin();">
-                        <div class="auth-logo"><img src="icon-192.png" alt="Logo" onerror="this.style.display='none'"><h1>YP AniTracker</h1></div>
-                        <div>
-                            <div class="auth-form-group"><label>E-Mail Adresse</label><input type="text" id="login-email" placeholder="deine@email.de" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true"></div>
-                            <div class="auth-form-group"><label>Passwort</label><input type="text" id="login-password" class="pw-input" placeholder="••••••••" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true"></div>
-                            <label class="auth-options"><div style="display: flex; align-items: center;"><input type="checkbox" id="auth-remember" checked><span>Angemeldet bleiben</span></div></label>
-                            <button type="button" class="btn-auth btn-login" onclick="handleLogin()"><i class="fa-solid fa-right-to-bracket"></i> Einloggen</button>
-                            <div class="auth-switch"><a onclick="openForgotPasswordModal()">Passwort vergessen?</a><div style="margin-top: 10px;">Neu hier? <a onclick="toggleAuthMode('register')">Account erstellen</a></div></div>
-                        </div><div id="auth-error-msg" class="auth-error"></div>
-                    </div>
-                </div>
-                <div id="register-modal" class="modal-overlay"><div class="modal" onkeydown="if(event.key === 'Enter') handleRegister();"><h3><i class="fa-solid fa-user-plus" style="color: var(--accent-neon);"></i> Account erstellen</h3><div class="form-group"><label>Benutzername</label><input type="text" id="reg-username" placeholder="Wie sollen wir dich nennen?" autocomplete="off" data-lpignore="true"></div><div class="form-group"><label>E-Mail Adresse</label><input type="text" id="reg-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true"></div><div class="form-group"><label>Passwort (Min. 6 Zeichen)</label><input type="text" id="reg-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true"></div><div id="reg-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div><div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeRegisterModal()">Abbrechen</button><button type="button" class="btn-add" onclick="handleRegister()"><i class="fa-solid fa-check"></i> Erstellen</button></div></div></div>
-                <div id="forgot-password-modal" class="modal-overlay"><div class="modal" onkeydown="if(event.key === 'Enter') handlePasswordResetRequest();"><h3><i class="fa-solid fa-key" style="color: var(--accent-blue);"></i> Passwort zurücksetzen</h3><p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Gib deine E-Mail ein. Wir senden dir einen Link, um ein neues Passwort festzulegen.</p><div class="form-group"><label>E-Mail Adresse</label><input type="text" id="forgot-email" placeholder="deine@email.de" autocomplete="off" data-lpignore="true"></div><div id="forgot-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div><div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeForgotPasswordModal()">Abbrechen</button><button type="button" class="btn-add" onclick="handlePasswordResetRequest()"><i class="fa-solid fa-paper-plane"></i> Senden</button></div></div></div>
-                <div id="recovery-modal" class="modal-overlay"><div class="modal" onkeydown="if(event.key === 'Enter') handleRecoveryUpdate();"><h3><i class="fa-solid fa-unlock-keyhole" style="color: var(--accent-green);"></i> Neues Passwort</h3><p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Bitte vergib jetzt dein neues Passwort.</p><div class="form-group"><label>Neues Passwort</label><input type="text" id="recovery-password" class="pw-input" placeholder="••••••••" autocomplete="off" data-lpignore="true"></div><div id="recovery-error-msg" class="auth-error" style="margin-top:0; margin-bottom: 15px;"></div><div class="modal-footer"><button type="button" class="btn-add" onclick="handleRecoveryUpdate()"><i class="fa-solid fa-floppy-disk"></i> Speichern</button></div></div></div>
+                <div id="auth-layout" class="layout-section active-layout visible"><div class="auth-container" onkeydown="if(event.key === 'Enter') handleLogin();"><div class="auth-logo"><img src="icon-192.png"><h1>YP AniTracker</h1></div><div><div class="auth-form-group"><label>E-Mail</label><input type="text" id="login-email" autocomplete="off" data-lpignore="true"></div><div class="auth-form-group"><label>Passwort</label><input type="text" id="login-password" class="pw-input" autocomplete="off" data-lpignore="true"></div><button type="button" class="btn-auth btn-login" onclick="handleLogin()">Einloggen</button><div class="auth-switch"><a onclick="openForgotPasswordModal()">Passwort vergessen?</a><div>Neu hier? <a onclick="toggleAuthMode('register')">Account erstellen</a></div></div></div><div id="auth-error-msg" class="auth-error"></div></div></div>
+                <div id="register-modal" class="modal-overlay"><div class="modal"><h3>Account erstellen</h3><div class="form-group"><label>Name</label><input type="text" id="reg-username"></div><div class="form-group"><label>E-Mail</label><input type="text" id="reg-email"></div><div class="form-group"><label>Passwort</label><input type="text" id="reg-password" class="pw-input"></div><button type="button" class="btn-auth btn-login" onclick="handleRegister()">Erstellen</button></div></div>
             `;
         }
+        function openSettingsModal() { document.getElementById('settings-container-dynamic').innerHTML = `<div id="settings-modal" class="modal-overlay active"><div class="modal"><h3>Einstellungen</h3><button class="btn-auth" style="background:rgba(255,0,85,0.1); color:var(--danger);" onclick="wipeAccountData()">Account löschen</button><button type="button" class="btn-auth" onclick="closeSettingsModal()">Schließen</button></div></div>`; }
+        function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); setTimeout(() => document.getElementById('settings-container-dynamic').innerHTML='', 300); }
 
-        function removeAuthModals() { document.getElementById('auth-container-dynamic').innerHTML = ''; }
-
-        function openSettingsModal() { 
-            document.getElementById('settings-container-dynamic').innerHTML = `
-                <div id="settings-modal" class="modal-overlay active">
-                    <div class="modal">
-                        <h3><i class="fa-solid fa-gear" style="color: var(--text-muted);"></i> Einstellungen</h3>
-                        <div style="margin-top: 20px;" onkeydown="if(event.key === 'Enter') handleSettingsUsernameChange();">
-                            <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Name ändern</h4>
-                            <div class="form-group"><input type="text" id="setting-name-val" autocomplete="off" data-lpignore="true"></div>
-                            <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsUsernameChange()">Aktualisieren</button>
-                        </div><hr class="settings-divider">
-                        <div id="dynamic-pw-setting">
-                            <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Sicherheit ändern</h4>
-                            <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="injectPasswordUpdateField()">Sicherheit aktualisieren</button>
-                        </div><hr class="settings-divider">
-                        <div><h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--danger);">Gefahrenzone</h4><button class="btn-auth" style="background: rgba(255,0,85,0.1); color: var(--danger); border: 1px solid rgba(255,0,85,0.3); padding: 10px;" onclick="openDeleteConfirmModal()"><i class="fa-solid fa-trash-can"></i> Account löschen</button></div>
-                        <div class="modal-footer" style="margin-top: 20px;"><button type="button" class="btn-cancel" onclick="closeSettingsModal()">Schließen</button></div>
-                    </div>
-                </div>
-                <div id="delete-confirm-modal" class="modal-overlay"><div class="modal modal-danger"><h3>Bist du sicher?</h3><p class="danger-text">Dies löscht <strong>alle Daten unwiderruflich</strong>.</p><div class="modal-footer"><button class="btn-cancel" onclick="closeDeleteConfirmModal()">Abbrechen</button><button class="btn-danger-action" onclick="wipeAccountData()">Ja, löschen!</button></div></div></div>
-            `;
-            document.getElementById('setting-name-val').value = document.getElementById('header-username-display').innerText;
-        }
-
-        function closeSettingsModal() { 
-            const modal = document.getElementById('settings-modal');
-            if(modal) { modal.classList.remove('active'); setTimeout(() => document.getElementById('settings-container-dynamic').innerHTML = '', 400); }
-        }
-        function openDeleteConfirmModal() { document.getElementById('settings-modal').classList.remove('active'); document.getElementById('delete-confirm-modal').classList.add('active'); }
-        function closeDeleteConfirmModal() { document.getElementById('delete-confirm-modal').classList.remove('active'); }
-        
-        function injectPasswordUpdateField() {
-            document.getElementById('dynamic-pw-setting').innerHTML = `
-                <h4 style="font-size: 0.95rem; margin-bottom: 15px; color: var(--accent-neon);">Sicherheit ändern</h4>
-                <div class="form-group"><input type="text" id="setting-sec-val" class="pw-input" placeholder="Neuer Code (min. 6 Zeichen)" autocomplete="off" data-lpignore="true"></div>
-                <button type="button" class="btn-auth" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px;" onclick="handleSettingsPasswordChange()">Jetzt Speichern</button>
-            `;
-        }
-
-        // ==========================================
-        // APP INIT
-        // ==========================================
-        db.auth.getSession().then(({ data: { session } }) => {
-            const loader = document.getElementById('global-loader');
-            if (loader) { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
-            toggleLayout(session);
-        }).catch(err => {
-            const loader = document.getElementById('global-loader');
-            if (loader) loader.style.display = 'none'; alert("Netzwerkfehler"); toggleLayout(null);
-        });
-
-        db.auth.onAuthStateChange((event, session) => {
-            if (event === 'PASSWORD_RECOVERY') { injectAuthModals(); document.getElementById('recovery-modal').classList.add('active'); }
-            if(!isInitialLoad) toggleLayout(session);
-        });
+        db.auth.getSession().then(({ data: { session } }) => { document.getElementById('global-loader').style.display='none'; toggleLayout(session); });
+        db.auth.onAuthStateChange((e, session) => { if(!isInitialLoad) toggleLayout(session); });
 
         function toggleLayout(session) {
             const appLayout = document.getElementById('app-layout');
             if (session) {
-                const metadata = session.user.user_metadata || {};
-                document.getElementById('header-username-display').innerText = metadata.username || session.user.email.split('@')[0];
-                
-                removeAuthModals(); 
-                
-                const addDiv = document.createElement('div');
-                addDiv.id = 'dynamic-add-modal-container';
-                addDiv.innerHTML = `
-                    <div id="modal" class="modal-overlay">
-                        <div class="modal" onkeydown="if(event.key === 'Enter') saveAnime();">
-                            <h3 id="modal-title">Anime hinzufügen</h3>
-                            <input type="hidden" id="modal-page-context"><input type="hidden" id="anime-edit-id"><input type="hidden" id="anime-cover-url"><input type="hidden" id="anime-mal-id">
-                            <div class="form-group" style="position: relative;">
-                                <label>Anime Name</label>
-                                <input type="text" id="anime-title" placeholder="z.B. Demon Slayer..." oninput="searchAnime(this.value)" autocomplete="off" data-lpignore="true">
-                                <div id="search-results" class="search-res"></div>
-                            </div>
-                            <div id="type-field-group" class="form-group" style="display: none;">
-                                <label>Format / Status</label>
-                                <select id="anime-type" onchange="handleTypeChange()">
-                                    <option value="staffel">Neue Staffel folgt</option><option value="film">Film folgt</option><option value="abgeschlossen">Komplett abgeschlossen</option>
-                                </select>
-                            </div>
-                            <div id="meta-field-group" class="form-group" style="display: none;">
-                                <label>Wann kommt das Release?</label>
-                                <input type="text" id="anime-meta-input" placeholder="z.B. Winter 2027" autocomplete="off">
-                            </div>
-                            <div id="released-field-group" class="form-group checkbox-group" style="display: none;">
-                                <input type="checkbox" id="anime-is-released"><label for="anime-is-released">Release ist draußen!</label>
-                            </div>
-                            <div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeModal()">Abbrechen</button><button type="button" class="btn-add" onclick="saveAnime()"><i class="fa-solid fa-floppy-disk"></i> <span>Speichern</span></button></div>
-                        </div>
-                    </div>
-                `;
+                document.getElementById('header-username-display').innerText = session.user.user_metadata.username || session.user.email.split('@')[0];
+                document.getElementById('auth-container-dynamic').innerHTML = '';
+                const addDiv = document.createElement('div'); addDiv.id = 'dynamic-add-modal-container';
+                addDiv.innerHTML = `<div id="modal" class="modal-overlay"><div class="modal"><h3 id="modal-title">Anime hinzufügen</h3><input type="hidden" id="modal-page-context"><input type="hidden" id="anime-edit-id"><input type="hidden" id="anime-cover-url"><div class="form-group"><input type="text" id="anime-title" oninput="searchAnime(this.value)" placeholder="Suche..."><div id="search-results" class="search-res"></div></div><div id="type-field-group" class="form-group" style="display:none"><select id="anime-type" onchange="handleTypeChange()"><option value="staffel">Staffel</option><option value="film">Film</option></select></div><div id="meta-field-group" class="form-group" style="display:none"><input type="text" id="anime-meta-input"></div><div id="released-field-group" class="form-group checkbox-group" style="display:none"><input type="checkbox" id="anime-is-released"><label>Draußen!</label></div><div style="display:flex; gap:10px;"><button class="btn-pop" onclick="closeModal()">Abbruch</button><button class="btn-pop btn-pop-neon" onclick="saveAnime()">Speichern</button></div></div></div>`;
                 if(!document.getElementById('dynamic-add-modal-container')) document.body.appendChild(addDiv);
-
-                appLayout.classList.add('active-layout'); 
-                setTimeout(() => { appLayout.classList.add('visible'); window.scrollTo(0, 0); if(isInitialLoad) loadDataFromCloud(); isInitialLoad = false; }, 50);
-            } else {
-                appLayout.style.opacity = '0';
-                setTimeout(() => { appLayout.classList.remove('active-layout'); appLayout.style.display = 'none'; const addMod = document.getElementById('dynamic-add-modal-container'); if(addMod) addMod.remove(); injectAuthModals(); isInitialLoad = false; }, isInitialLoad ? 0 : 400);
-            }
+                appLayout.classList.add('active-layout'); setTimeout(() => { appLayout.style.opacity='1'; loadDataFromCloud(); isInitialLoad=false; }, 50);
+            } else { appLayout.style.opacity='0'; setTimeout(() => { appLayout.classList.remove('active-layout'); injectAuthModals(); isInitialLoad=false; }, 400); }
         }
 
-        window.addEventListener('beforeunload', () => { if (sessionStorage.getItem('tempSessionActive') === 'true') db.auth.signOut(); });
-
-        async function handleLogin() {
-            const email = document.getElementById('login-email').value; const password = document.getElementById('login-password').value;
-            const rememberMe = document.getElementById('auth-remember').checked; const errorMsg = document.getElementById('auth-error-msg');
-            const btn = document.querySelector('.btn-login');
-            if(!email || !password) return errorMsg.innerText = "E-Mail und Passwort eingeben.";
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Lade...';
-            const { error } = await db.auth.signInWithPassword({ email, password });
-            if (error) { errorMsg.innerText = error.message; btn.innerHTML = 'Einloggen'; } 
-            else { if (!rememberMe) sessionStorage.setItem('tempSessionActive', 'true'); else sessionStorage.removeItem('tempSessionActive'); location.reload(); }
-        }
-
-        function toggleAuthMode(mode) { if(mode === 'register') document.getElementById('register-modal').classList.add('active'); }
-        function closeRegisterModal() { document.getElementById('register-modal').classList.remove('active'); document.getElementById('reg-error-msg').innerText = ''; }
-        async function handleRegister() {
-            const username = document.getElementById('reg-username').value.trim(); const email = document.getElementById('reg-email').value.trim(); const password = document.getElementById('reg-password').value;
-            if(!email || !password || !username) return; if(password.length < 6) return;
-            const { error } = await db.auth.signUp({ email, password, options: { data: { username: username } } });
-            if (error) document.getElementById('reg-error-msg').innerText = error.message; else { closeRegisterModal(); showToast("Account erstellt! ✨"); }
-        }
-
-        async function handleLogout() { sessionStorage.removeItem('tempSessionActive'); await db.auth.signOut(); location.reload(); }
-
-        function openForgotPasswordModal() { document.getElementById('forgot-password-modal').classList.add('active'); }
-        function closeForgotPasswordModal() { document.getElementById('forgot-password-modal').classList.remove('active'); }
-        async function handlePasswordResetRequest() {
-            const email = document.getElementById('forgot-email').value;
-            if(!email) return;
-            const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
-            if(error) document.getElementById('forgot-error-msg').innerText = error.message; else { closeForgotPasswordModal(); alert("E-Mail gesendet!"); }
-        }
-        async function handleRecoveryUpdate() {
-            const newPassword = document.getElementById('recovery-password').value;
-            if(newPassword.length < 6) return;
-            const { error } = await db.auth.updateUser({ password: newPassword });
-            if(error) document.getElementById('recovery-error-msg').innerText = error.message; else { document.getElementById('recovery-modal').classList.remove('active'); showToast("Geändert! 🔐"); }
-        }
-
-        async function handleSettingsUsernameChange() {
-            const newUsername = document.getElementById('setting-name-val').value.trim();
-            if(!newUsername) return;
-            const { error } = await db.auth.updateUser({ data: { username: newUsername } });
-            if(error) alert(error.message); else { document.getElementById('header-username-display').innerText = newUsername; closeSettingsModal(); showToast("Geändert!"); }
-        }
-        async function handleSettingsPasswordChange() {
-            const newPassword = document.getElementById('setting-sec-val').value;
-            if(newPassword.length < 6) return alert("Min. 6 Zeichen.");
-            const { error } = await db.auth.updateUser({ password: newPassword });
-            if(error) alert("Fehler"); else { closeSettingsModal(); showToast("Geändert! 🔐"); }
-        }
-        async function wipeAccountData() {
-            try { const { error } = await db.from('animes').delete().neq('id', 0); if (error) throw error; closeDeleteConfirmModal(); await handleLogout(); } catch (e) { alert("Fehler"); }
-        }
+        async function handleLogin() { const { error } = await db.auth.signInWithPassword({ email: login-email.value, password: login-password.value }); if(error) alert(error.message); else location.reload(); }
+        async function handleLogout() { await db.auth.signOut(); location.reload(); }
+        function showToast(msg) { const t = document.getElementById('toast-notification'); document.getElementById('toast-message').innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+        function showPage(pageId) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('page-' + pageId).classList.add('active'); window.scrollTo(0,0); }
 
         let searchTimeout;
         async function searchAnime(query) {
-            clearTimeout(searchTimeout); const resultsDiv = document.getElementById('search-results');
-            if(!query || query.trim().length < 3) { resultsDiv.style.display = 'none'; return; }
+            clearTimeout(searchTimeout); const resDiv = document.getElementById('search-results');
+            if(query.length < 3) return resDiv.style.display='none';
             searchTimeout = setTimeout(async () => {
-                resultsDiv.style.display = 'block'; resultsDiv.innerHTML = '<div style="padding:15px; text-align:center;"><i class="fa-solid fa-spinner fa-spin"></i></div>';
+                resDiv.style.display='block'; resDiv.innerHTML='Lade...';
                 try {
                     const res = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=5`); const { data } = await res.json();
-                    if(!data || data.length === 0) { resultsDiv.innerHTML = '<div style="padding:15px; text-align:center;">Nichts gefunden.</div>'; return; }
-                    resultsDiv.innerHTML = data.map(anime => {
-                        let bestTitle = anime.title;
-                        if (anime.titles && anime.titles.length > 0) {
-                            const ger = anime.titles.find(t => t.type === 'German'); const eng = anime.titles.find(t => t.type === 'English');
-                            if (ger) bestTitle = ger.title; else if (eng) bestTitle = eng.title;
-                        }
-                        const highResCover = anime.images?.webp?.large_image_url || ''; const titleEscaped = bestTitle.replace(/'/g, "\\'").replace(/"/g, "&quot;");
-                        let seasonText = (anime.season && anime.year) ? `${anime.season} ${anime.year}` : '';
-                        return `<div class="search-item" onclick="selectAnime('${titleEscaped}', '${highResCover}', ${anime.mal_id}, '${anime.status}', '${anime.type}', '${seasonText}')"><img src="${highResCover}" class="search-cover"><span style="font-weight: 600; font-size: 0.9rem;">${bestTitle}</span></div>`;
-                    }).join('');
-                } catch(e) { resultsDiv.innerHTML = '<div style="padding:15px; text-align:center;">Fehler.</div>'; }
+                    resDiv.innerHTML = data.map(a => `<div class="search-item" onclick="selectAnime('${a.title.replace(/'/g, "\\'")}', '${a.images.webp.large_image_url}', '${a.status}', '${a.type}', '${a.season||''}')"><img src="${a.images.webp.large_image_url}" class="search-cover"><span>${a.title}</span></div>`).join('');
+                } catch(e) { resDiv.innerHTML='Fehler'; }
             }, 600);
         }
-
-        function selectAnime(title, coverUrl, malId, apiStatus, apiType, apiDate) {
-            document.getElementById('anime-title').value = title; document.getElementById('anime-cover-url').value = coverUrl; document.getElementById('anime-mal-id').value = malId;
+        function selectAnime(title, coverUrl, apiStatus, apiType, apiDate) {
+            document.getElementById('anime-title').value = title; document.getElementById('anime-cover-url').value = coverUrl;
             document.getElementById('anime-type').value = apiType === 'Movie' ? 'film' : 'staffel';
-            document.getElementById('anime-meta-input').value = apiStatus === 'Not yet aired' ? (apiDate || 'Unbekannt') : '';
+            document.getElementById('anime-meta-input').value = apiStatus === 'Not yet aired' ? apiDate : '';
             document.getElementById('anime-is-released').checked = apiStatus === 'Currently Airing' || apiStatus === 'Finished Airing';
-            handleTypeChange(); document.getElementById('search-results').style.display = 'none';
+            handleTypeChange(); document.getElementById('search-results').style.display='none';
         }
 
-        // ==========================================
-        // APP LOGIK & UI INTERAKTIONEN
-        // ==========================================
-        function showToast(message) { const toast = document.getElementById('toast-notification'); document.getElementById('toast-message').innerText = message; toast.classList.add('show'); clearTimeout(toastTimeout); toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000); }
-        function showPage(pageId) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('page-' + pageId).classList.add('active'); window.scrollTo(0,0); }
         function handleTypeChange() {
-            const type = document.getElementById('anime-type').value;
-            if (type === 'abgeschlossen') { document.getElementById('meta-field-group').style.display = 'none'; document.getElementById('released-field-group').style.display = 'none'; } 
-            else { document.getElementById('meta-field-group').style.display = 'block'; document.getElementById('released-field-group').style.display = 'flex'; }
+            const ctx = document.getElementById('modal-page-context').value;
+            if(ctx==='next-season' || ctx==='archive-pipeline') { document.getElementById('meta-field-group').style.display='block'; document.getElementById('released-field-group').style.display='flex'; }
         }
 
-        function openDetailModal(id) {
-            const anime = [...animeData.watched, ...animeData.nextSeason, ...animeData.watchlist, ...animeData.current].find(a => a.id === Number(id));
-            if(!anime) return;
-
-            document.getElementById('detail-cover').src = anime.coverUrl || 'icon-192.png';
-            document.getElementById('detail-title').innerText = anime.title;
-            
-            let formatText = anime.type === 'film' ? 'Film' : 'Staffel';
-            
-            let metaDisplay = anime.meta.replace('STAFFEL|', '').replace('FILM|', '');
-            if(metaDisplay === 'Keine Info') {
-                if (anime.category === 'watchlist') metaDisplay = 'Auf der Watchlist';
-                else if (anime.category === 'current') metaDisplay = 'Wird aktuell geschaut';
-                else metaDisplay = 'Abgeschlossen';
-            }
-            
-            const metaBadge = document.getElementById('detail-meta');
-            const formatBadge = document.getElementById('detail-format');
-            const formatDot = document.getElementById('detail-format-dot');
-            const modalBox = document.querySelector('#detail-modal .modal');
-            
-            if (anime.isReleased) { 
-                formatBadge.style.display = 'none';
-                formatDot.style.display = 'none';
-                metaDisplay = anime.type === 'film' ? 'NEUER FILM IST DRAUßEN!' : 'NEUE STAFFEL IST DRAUßEN!';
-                metaBadge.style.color = 'var(--accent-orange)'; 
-                metaBadge.style.fontWeight = '800';
-                metaBadge.style.fontSize = '1.05rem';
-                modalBox.style.borderColor = 'rgba(255, 0, 85, 0.4)';
-            } else {
-                formatBadge.style.display = 'inline-block';
-                formatDot.style.display = 'inline-block';
-                formatBadge.innerText = formatText;
-                metaBadge.style.fontWeight = '700';
-                metaBadge.style.fontSize = '0.85rem';
-                
-                if (anime.category === 'watched') { 
-                    modalBox.style.borderColor = 'rgba(46, 204, 113, 0.4)'; 
-                    metaBadge.style.color = 'var(--accent-green)'; 
-                    formatBadge.style.color = 'var(--accent-green)';
-                } else if (anime.category === 'current') { 
-                    modalBox.style.borderColor = 'rgba(0, 245, 212, 0.4)'; 
-                    metaBadge.style.color = 'var(--accent-neon)'; 
-                    formatBadge.style.color = 'var(--accent-neon)';
-                } else if (anime.category === 'watchlist') { 
-                    modalBox.style.borderColor = 'rgba(58, 134, 255, 0.4)'; 
-                    metaBadge.style.color = 'var(--accent-blue)'; 
-                    formatBadge.style.color = 'var(--accent-blue)';
-                } else { 
-                    modalBox.style.borderColor = 'rgba(138, 43, 226, 0.4)'; 
-                    metaBadge.style.color = 'var(--accent-purple)'; 
-                    formatBadge.style.color = 'var(--accent-purple)';
-                }
-            }
-            metaBadge.innerText = metaDisplay;
-            
-            let modalActions = '';
-            
-            if (anime.category === 'watchlist' || (anime.category === 'next-season' && anime.isReleased)) {
-                modalActions += `<button type="button" class="btn-pop btn-pop-neon" onclick="modalActionMoveToCurrent('${anime.id}')"><i class="fa-solid fa-circle-play"></i> Schauen</button>`;
-            } 
-            if (anime.category === 'current') {
-                modalActions += `<button type="button" class="btn-pop btn-pop-green" onclick="modalActionFinishCurrent('${anime.id}', '${anime.title.replace(/'/g, "\\'")}')"><i class="fa-solid fa-circle-check"></i> Abschließen</button>`;
-            }
-            if (anime.category === 'next-season' && !anime.isReleased) {
-                modalActions += `<button type="button" class="btn-pop btn-pop-orange" onclick="modalActionToggleRelease('${anime.id}', true)"><i class="fa-solid fa-fire"></i> Ist draußen!</button>`;
-            }
-            if (anime.category === 'next-season') {
-                modalActions += `<button type="button" class="btn-pop btn-pop-blue" onclick="editAnime('${anime.id}')"><i class="fa-solid fa-pen"></i> Bearbeiten</button>`;
-            }
-            
-            modalActions += `<button type="button" class="btn-pop btn-pop-danger" onclick="modalActionDelete('${anime.id}')"><i class="fa-solid fa-trash"></i> Löschen</button>`;
-            
-            const actionContainer = document.getElementById('detail-action-container');
-            if(modalActions) { actionContainer.innerHTML = modalActions; actionContainer.style.display = 'flex'; } else { actionContainer.style.display = 'none'; }
-            document.getElementById('detail-modal').classList.add('active');
-        }
-
-        function closeDetailModal(event) { if (event) event.stopPropagation(); document.getElementById('detail-modal').classList.remove('active'); }
-
-        function modalActionMoveToCurrent(id) {
-            closeDetailModal();
-            setTimeout(async () => {
-                try {
-                    await db.from('animes').update({ category: 'current', meta: 'Keine Info' }).eq('id', id);
-                    await loadDataFromCloud(true); showToast("Verschoben zu 'Aktuell' ⚡");
-                } catch(e) { alert("Fehler"); }
-            }, 350);
-        }
-
-        function modalActionToggleRelease(id, newStatus) {
-            closeDetailModal();
-            setTimeout(async () => {
-                try {
-                    await db.from('animes').update({ is_released: newStatus }).eq('id', id);
-                    await loadDataFromCloud(true); showToast("Status aktualisiert! 🔥");
-                } catch(e) { alert("Fehler"); }
-            }, 350);
-        }
-
-        function modalActionFinishCurrent(id, title) { closeDetailModal(); setTimeout(() => finishCurrentAnime(id, title), 350); }
-        
-        function modalActionDelete(id) {
-            closeDetailModal();
-            setTimeout(async () => {
-                try {
-                    await db.from('animes').delete().eq('id', id);
-                    await loadDataFromCloud(true); showToast("Anime gelöscht 🗑️");
-                } catch(e) { alert("Fehler beim Löschen."); }
-            }, 350);
-        }
-
-        function openModal(pageContext) {
-            document.getElementById('modal-page-context').value = pageContext; document.getElementById('anime-edit-id').value = '';
-            document.getElementById('anime-title').value = ''; document.getElementById('anime-meta-input').value = '';
-            document.getElementById('anime-is-released').checked = false; document.getElementById('search-results').style.display = 'none';
-            document.getElementById('anime-type').value = 'staffel';
-            
-            if(pageContext === 'next-season') { document.getElementById('modal-title').innerText = 'Release-Info eintragen'; document.getElementById('type-field-group').style.display = 'block'; document.getElementById('meta-field-group').style.display = 'block'; document.getElementById('released-field-group').style.display = 'flex'; } 
-            else { document.getElementById('modal-title').innerText = 'Anime hinzufügen'; document.getElementById('type-field-group').style.display = 'none'; document.getElementById('meta-field-group').style.display = 'none'; document.getElementById('released-field-group').style.display = 'none'; }
+        function openModal(ctx) {
+            document.getElementById('modal-page-context').value=ctx; document.getElementById('anime-edit-id').value=''; document.getElementById('anime-title').value=''; document.getElementById('search-results').style.display='none';
+            document.getElementById('type-field-group').style.display = ctx==='next-season'?'block':'none'; document.getElementById('meta-field-group').style.display = ctx==='next-season'?'block':'none'; document.getElementById('released-field-group').style.display = ctx==='next-season'?'flex':'none';
             document.getElementById('modal').classList.add('active');
         }
-
-        function editAnime(id) {
-            closeDetailModal();
-            setTimeout(() => {
-                const anime = animeData.nextSeason.find(a => a.id == id); if (!anime) return;
-                document.getElementById('modal-page-context').value = 'next-season'; document.getElementById('anime-edit-id').value = anime.id;
-                document.getElementById('anime-title').value = anime.title; document.getElementById('anime-cover-url').value = anime.coverUrl || '';
-                document.getElementById('anime-mal-id').value = anime.malId || ''; document.getElementById('anime-type').value = anime.type;
-                document.getElementById('anime-meta-input').value = (anime.meta === 'Fortsetzung angekündigt' || anime.meta === 'Film angekündigt') ? '' : anime.meta;
-                document.getElementById('anime-is-released').checked = anime.isReleased;
-                
-                document.getElementById('modal-title').innerText = 'Info bearbeiten'; document.getElementById('type-field-group').style.display = 'block'; document.getElementById('meta-field-group').style.display = 'block'; document.getElementById('released-field-group').style.display = 'flex';
-                document.getElementById('modal').classList.add('active');
-            }, 350);
-        }
-
-        function finishCurrentAnime(id, title) {
-            const anime = animeData.current.find(a => a.id == id);
-            document.getElementById('modal-page-context').value = 'archive-pipeline'; document.getElementById('anime-edit-id').value = id;
-            document.getElementById('anime-title').value = title; document.getElementById('anime-is-released').checked = false;
-            document.getElementById('anime-cover-url').value = anime ? (anime.coverUrl || '') : ''; document.getElementById('anime-mal-id').value = anime ? (anime.malId || '') : '';
-            document.getElementById('anime-type').value = 'abgeschlossen'; handleTypeChange();
-            document.getElementById('modal-title').innerText = 'Anime abschließen'; document.getElementById('type-field-group').style.display = 'block';
-            document.getElementById('modal').classList.add('active');
-        }
-
         function closeModal() { document.getElementById('modal').classList.remove('active'); }
 
-        function showLoadingStates() {
-            const loading = '<div class="loading-notice"><i class="fa-solid fa-spinner fa-spin"></i> Lade...</div>';
-            ['list-watched-completed', 'list-watched-continuing', 'list-watched-released', 'list-next-waiting', 'list-next-released', 'list-watchlist', 'list-current', 'hp-current-list', 'hero-banner-container'].forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = loading; });
-            document.getElementById('hp-alerts-grid').innerHTML = loading;
-        }
-
-        function renderHeroBanner(currentAnimes) {
-            const container = document.getElementById('hero-banner-container');
-            if (currentAnimes && currentAnimes.length > 0) {
-                const hero = currentAnimes[0];
-                container.innerHTML = `
-                    <div class="hero-banner" onclick="openDetailModal('${hero.id}')" style="background-image: url('${hero.coverUrl || 'icon-192.png'}');">
-                        <div class="hero-overlay">
-                            <span class="hero-badge">Weiterschauen</span>
-                            <h2>${hero.title}</h2>
-                            <button class="btn-hero-play" onclick="event.stopPropagation(); openDetailModal('${hero.id}')"><i class="fa-solid fa-play"></i> Fortsetzen</button>
-                        </div>
-                    </div>
-                `;
-                return currentAnimes.slice(1); // Return the rest of the list
-            } else {
-                container.innerHTML = '';
-                return [];
-            }
-        }
-
-        async function loadDataFromCloud(silent = false) {
-            if(!silent) showLoadingStates();
-            try {
-                const { data, error } = await db.from('animes').select('*').order('created_at', { ascending: true });
-                if (error) throw error;
-                
-                animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
-
-                data.forEach(item => {
-                    let cleanMeta = item.meta || ''; let formatType = 'staffel';
-                    if (cleanMeta.startsWith('FILM|')) { formatType = 'film'; cleanMeta = cleanMeta.substring(5); if(cleanMeta === 'unangekündigt' || cleanMeta === '') cleanMeta = 'Film angekündigt'; } 
-                    else if (cleanMeta.startsWith('STAFFEL|')) { formatType = 'staffel'; cleanMeta = cleanMeta.substring(8); if(cleanMeta === 'unangekündigt' || cleanMeta === '') cleanMeta = 'Fortsetzung angekündigt'; }
-
-                    const formatted = { id: item.id, title: item.title, meta: cleanMeta, isReleased: item.is_released, type: formatType, coverUrl: item.cover_url, malId: item.mal_id, category: item.category };
-                    let categoryKey = item.category === 'next-season' ? 'nextSeason' : item.category;
-                    if(animeData[categoryKey]) animeData[categoryKey].push(formatted);
-                });
-                renderAll();
-            } catch (err) { console.error(err); }
+        async function loadDataFromCloud() {
+            const { data } = await db.from('animes').select('*').order('created_at');
+            animeData = { watched: [], nextSeason: [], watchlist: [], current: [] };
+            data.forEach(item => {
+                let cleanMeta = item.meta || ''; let formatType = 'staffel';
+                if (cleanMeta.startsWith('FILM|')) { formatType = 'film'; cleanMeta = cleanMeta.substring(5); } 
+                else if (cleanMeta.startsWith('STAFFEL|')) { formatType = 'staffel'; cleanMeta = cleanMeta.substring(8); }
+                const formatted = { id: item.id, title: item.title, meta: cleanMeta, isReleased: item.is_released, type: formatType, coverUrl: item.cover_url, category: item.category };
+                let cat = item.category === 'next-season' ? 'nextSeason' : item.category;
+                if(animeData[cat]) animeData[cat].push(formatted);
+            });
+            renderAll();
         }
 
         async function saveAnime() {
-            const title = document.getElementById('anime-title').value.trim(); const context = document.getElementById('modal-page-context').value; const editId = document.getElementById('anime-edit-id').value;
-            if(!title) return alert('Bitte Name eingeben!');
-
-            let targetCategory = context; let finalMeta = 'Keine Info'; let isReleasedStatus = false;
-
-            if (context === 'next-season') {
-                const formatType = document.getElementById('anime-type').value; let rawMeta = document.getElementById('anime-meta-input').value.trim();
-                finalMeta = (formatType === 'film' ? 'FILM|' : 'STAFFEL|') + rawMeta; isReleasedStatus = document.getElementById('anime-is-released').checked;
-            } 
-            else if (context === 'archive-pipeline') {
-                const endType = document.getElementById('anime-type').value;
-                if (endType === 'abgeschlossen') { targetCategory = 'watched'; finalMeta = 'Keine Info'; } 
-                else { targetCategory = 'next-season'; let rawMeta = document.getElementById('anime-meta-input').value.trim(); finalMeta = (endType === 'film' ? 'FILM|' : 'STAFFEL|') + rawMeta; isReleasedStatus = document.getElementById('anime-is-released').checked; }
-            }
-
-            const payload = { title: title, category: targetCategory, meta: finalMeta, is_released: isReleasedStatus, cover_url: document.getElementById('anime-cover-url').value || null, mal_id: parseInt(document.getElementById('anime-mal-id').value) || null };
-
-            try {
-                if (editId && (context === 'next-season' || context === 'archive-pipeline')) await db.from('animes').update(payload).eq('id', editId);
-                else await db.from('animes').insert([payload]);
-                closeModal(); await loadDataFromCloud(true); showToast("Gespeichert! ✨");
-            } catch(e) { alert("Fehler: " + e.message); }
+            const title = document.getElementById('anime-title').value; const ctx = document.getElementById('modal-page-context').value; const editId = document.getElementById('anime-edit-id').value;
+            let targetCategory = ctx; let finalMeta = 'Keine Info'; let isRel = false;
+            if (ctx === 'next-season') { finalMeta = (document.getElementById('anime-type').value === 'film' ? 'FILM|' : 'STAFFEL|') + document.getElementById('anime-meta-input').value; isRel = document.getElementById('anime-is-released').checked; }
+            const payload = { title: title, category: targetCategory, meta: finalMeta, is_released: isRel, cover_url: document.getElementById('anime-cover-url').value };
+            if (editId) await db.from('animes').update(payload).eq('id', editId); else await db.from('animes').insert([payload]);
+            closeModal(); loadDataFromCloud(); showToast("Gespeichert!");
         }
 
-        function createAnimeDOM(anime, context, listName, index = null) {
-            const uniqueId = `anime-${context}-${anime.id}-${listName}`;
-            let metaHTML = '', leadingIconHTML = '';
+        function openDetailModal(id) {
+            const anime = [...animeData.watched, ...animeData.nextSeason, ...animeData.watchlist, ...animeData.current].find(a => a.id == id);
+            document.getElementById('detail-cover').src = anime.coverUrl || ''; document.getElementById('detail-title').innerText = anime.title;
+            const metaBadge = document.getElementById('detail-meta'); const formatBadge = document.getElementById('detail-format'); const formatDot = document.getElementById('detail-format-dot');
+            if (anime.isReleased) { formatBadge.style.display='none'; formatDot.style.display='none'; metaBadge.innerText="🔥 DRAUßEN!"; metaBadge.style.color="var(--accent-orange)"; } 
+            else { formatBadge.style.display='inline-block'; formatDot.style.display='inline-block'; formatBadge.innerText = anime.type; metaBadge.innerText = anime.meta || 'Archiv'; metaBadge.style.color="var(--text-muted)"; }
             
-            if (context === 'watchlist') {
-                return `
-                <div class="watchlist-card" id="${uniqueId}" onclick="openDetailModal('${anime.id}')">
-                    ${anime.coverUrl ? `<img src="${anime.coverUrl}" class="wl-poster" onerror="this.style.display='none'">` : '<div class="wl-poster" style="background:#111320; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-image"></i></div>'}
-                    <div class="wl-overlay"><h4>${anime.title}</h4></div>
-                </div>`;
-            }
-
-            if (context === 'next-season') {
-                let borderClass = anime.isReleased ? 'item-released' : 'item-waiting';
-                const badgeLabel = anime.type === 'film' ? 'Film' : 'Staffel';
-                const badgeClass = anime.type === 'film' ? 'film-type' : 'staffel-type';
-                
-                let extraMeta = '';
-                if (!anime.isReleased) {
-                    extraMeta = `<span class="meta-dot">•</span> <span>${anime.meta}</span>`;
-                }
-
-                return `
-                <div class="next-card ${borderClass}" id="${uniqueId}" onclick="openDetailModal('${anime.id}')">
-                    ${anime.coverUrl ? `<img src="${anime.coverUrl}" class="nc-poster" onerror="this.style.display='none'">` : '<div class="nc-poster" style="background:#111320; display:flex; align-items:center; justify-content:center; aspect-ratio: 2/3;"><i class="fa-solid fa-image"></i></div>'}
-                    <div class="nc-info">
-                        <h4>${anime.title}</h4>
-                        <div class="anime-meta" style="margin-top:2px;">
-                            <span class="format-badge ${badgeClass}">${badgeLabel}</span>
-                            ${extraMeta}
-                        </div>
-                    </div>
-                </div>`;
-            }
-
-            let borderClass = 'item-' + context;
-            
-            if (context === 'watched' && anime.category === 'next-season') {
-                borderClass = anime.isReleased ? 'item-released' : 'item-waiting';
-            }
-
-            let numClass = borderClass === 'item-watched' ? 'num-watched' : (anime.isReleased ? 'num-released' : 'num-waiting');
-            if (index !== null) leadingIconHTML = `<div class="anime-number ${numClass}">${index}</div>`;
-            else {
-                let iconClass = context === 'current' ? 'fa-solid fa-circle-play' : 'fa-solid fa-bookmark';
-                leadingIconHTML = `<i class="${iconClass} anime-decor-icon color-${context}"></i>`;
-            }
-
-            let coverHTML = anime.coverUrl ? `<img src="${anime.coverUrl}" class="anime-cover" alt="Cover" onerror="this.style.display='none'">` : '';
-
-            return `
-                <div class="anime-item-list ${borderClass}" id="${uniqueId}" onclick="openDetailModal('${anime.id}')">
-                    <div class="anime-info-wrapper">
-                        ${leadingIconHTML}
-                        ${coverHTML}
-                        <div class="anime-info">
-                            <h4>${anime.title}</h4>
-                        </div>
-                    </div>
-                </div>`;
+            let html = '';
+            if(anime.category==='watchlist' || (anime.category==='next-season' && anime.isReleased)) html += `<button class="btn-pop btn-pop-neon" onclick="modalAction('${anime.id}', 'moveToCurrent')"><i class="fa-solid fa-play"></i> Schauen</button>`;
+            if(anime.category==='current') html += `<button class="btn-pop btn-pop-green" onclick="modalAction('${anime.id}', 'finish')"><i class="fa-solid fa-check"></i> Fertig</button>`;
+            html += `<button class="btn-pop btn-pop-danger" onclick="modalAction('${anime.id}', 'delete')"><i class="fa-solid fa-trash"></i> Löschen</button>`;
+            document.getElementById('detail-action-container').innerHTML = html; document.getElementById('detail-modal').classList.add('active');
+        }
+        function closeDetailModal(e) { if(e) e.stopPropagation(); document.getElementById('detail-modal').classList.remove('active'); }
+        async function modalAction(id, action) {
+            closeDetailModal();
+            if(action==='delete') await db.from('animes').delete().eq('id', id);
+            if(action==='moveToCurrent') await db.from('animes').update({category:'current'}).eq('id', id);
+            if(action==='finish') await db.from('animes').update({category:'watched'}).eq('id', id);
+            loadDataFromCloud();
         }
 
-        function renderGrouped(animes, context, prefix, isNumbered, counterObj = null) {
-            if (!animes || animes.length === 0) return '<div class="empty-state">Keine Einträge.</div>';
-            const groups = {};
-            animes.forEach(a => { let base = a.title.split(/[:\-]/)[0].trim(); if (base.length < 3) base = a.title; if (!groups[base]) groups[base] = []; groups[base].push(a); });
-            let html = ''; let localCounter = 0;
-            
-            for (const base in groups) {
-                if (groups[base].length > 1) {
-                    const groupHtml = groups[base].map(a => { 
-                        let num = null;
-                        if (isNumbered) { if (counterObj) { counterObj.val++; num = counterObj.val; } else { localCounter++; num = localCounter; } }
-                        return createAnimeDOM(a, context, prefix, num); 
-                    }).join('');
-                    
-                    const gridClass = context === 'next-season' ? 'grid-layout-next' : 'anime-list';
-                    html += `<div style="grid-column: 1 / -1; background: rgba(138, 43, 226, 0.05); border-radius: 16px; padding: 18px 5px; border: 1px solid rgba(138, 43, 226, 0.15); margin-bottom: 15px;"><h4 style="margin-bottom: 15px; color: var(--text-color); display: flex; align-items: center; gap: 10px; font-size: 1.05rem; padding-left: 10px;"><i class="fa-solid fa-folder-open" style="color: var(--accent-purple);"></i> ${base} Collection</h4><div class="${gridClass}" style="margin-bottom: 0;">${groupHtml}</div></div>`;
-                } else {
-                    let num = null;
-                    if (isNumbered) { if (counterObj) { counterObj.val++; num = counterObj.val; } else { localCounter++; num = localCounter; } }
-                    html += createAnimeDOM(groups[base][0], context, prefix, num);
-                }
-            }
-            return html;
+        function createDOM(a, ctx) {
+            if(ctx === 'watchlist') return `<div class="watchlist-card" onclick="openDetailModal('${a.id}')"><img src="${a.coverUrl}" class="wl-poster"><div class="wl-overlay"><h4>${a.title}</h4></div></div>`;
+            if(ctx === 'next-season') return `<div class="next-card ${a.isReleased?'item-released':'item-waiting'}" onclick="openDetailModal('${a.id}')"><img src="${a.coverUrl}" class="nc-poster"><div class="nc-info"><h4>${a.title}</h4></div></div>`;
+            return `<div class="anime-item-list ${ctx==='current'?'item-current':'item-watched'}" onclick="openDetailModal('${a.id}')"><div class="anime-info-wrapper"><img src="${a.coverUrl}" class="anime-cover"><div class="anime-info"><h4>${a.title}</h4></div></div></div>`;
         }
 
         function renderAll() {
-            let watchCounter = { val: 0 };
-            const totalWatched = animeData.watched.length + animeData.nextSeason.length;
-            const totalDisplay = document.getElementById('total-watched-count');
-            if(totalDisplay) totalDisplay.innerText = totalWatched;
-            
-            document.getElementById('list-watched-completed').innerHTML = animeData.watched.length ? animeData.watched.map(a => { watchCounter.val++; return createAnimeDOM(a, 'watched', 'p-w-c', watchCounter.val); }).join('') : '<div class="empty-state">Noch keine komplett geschauten Animes eingetragen.</div>';
-            
-            const waiting = animeData.nextSeason.filter(a => !a.isReleased);
+            document.getElementById('bento-watched-count').innerText = animeData.watched.length;
             const released = animeData.nextSeason.filter(a => a.isReleased);
-            
-            const totalWaitingDisplay = document.getElementById('total-waiting-count');
-            if(totalWaitingDisplay) totalWaitingDisplay.innerText = waiting.length;
-
-            document.getElementById('list-watched-continuing').innerHTML = renderGrouped(waiting, 'watched', 'p-w-cont', true, watchCounter);
-            document.getElementById('list-watched-released').innerHTML = renderGrouped(released, 'watched', 'p-w-rel', true, watchCounter);
-            
-            document.getElementById('list-next-waiting').innerHTML = renderGrouped(waiting, 'next-season', 'p-wait', false);
-            document.getElementById('list-next-released').innerHTML = renderGrouped(released, 'next-season', 'p-rel', false);
-            
-            document.getElementById('list-watchlist').innerHTML = animeData.watchlist.length ? animeData.watchlist.map(a => createAnimeDOM(a, 'watchlist', 'p-wl')).join('') : '<div class="empty-state">Deine Watchlist ist im Moment leer.</div>';
-            document.getElementById('list-current').innerHTML = animeData.current.length ? animeData.current.map(a => createAnimeDOM(a, 'current', 'p-curr')).join('') : '<div class="empty-state">Du schaust gerade nichts aktiv.</div>';
-            
-            // HERO BANNER LOGIK
-            document.querySelector('.grid-navigation').style.display = 'none'; // Altes Grid verstecken
-            const restCurrent = renderHeroBanner(animeData.current);
-            
-            document.getElementById('hp-current-list').innerHTML = restCurrent.length ? restCurrent.map(a => `
-                <div class="anime-item-list item-current" onclick="openDetailModal('${a.id}')">
-                    <div class="anime-info-wrapper">
-                        <i class="fa-solid fa-circle-play anime-decor-icon color-current"></i>
-                        ${a.coverUrl ? `<img src="${a.coverUrl}" class="anime-cover" onerror="this.style.display='none'">` : ''}
-                        <div class="anime-info"><h4>${a.title}</h4></div>
-                    </div>
-                </div>`).join('') : '<div class="empty-state" style="border:none;">Keine weiteren Serien.</div>';
-            
-            // --- DASHBOARD RELEASES IM WATCHLIST-MAGAZIN-STYLE ---
-            if (released.length > 0) {
-                let listHtml = released.map(a => `
-                    <div class="release-poster-card" onclick="openDetailModal('${a.id}')">
-                        <div class="rp-badge">NEU</div>
-                        ${a.coverUrl ? `<img src="${a.coverUrl}" class="wl-poster" onerror="this.style.display='none'">` : '<div class="wl-poster" style="background:#111320; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-image"></i></div>'}
-                        <div class="wl-overlay"><h4>${a.title}</h4></div>
-                    </div>
-                `).join('');
-                document.getElementById('hp-alerts-grid').innerHTML = `<div class="grid-layout-watchlist">${listHtml}</div>`;
-            } else {
-                document.getElementById('hp-alerts-grid').innerHTML = '<div class="empty-state" style="border:none;">Keine neuen Releases aktiv.</div>';
-            }
+            document.getElementById('list-watched-completed').innerHTML = animeData.watched.map(a => createDOM(a, 'watched')).join('');
+            document.getElementById('list-watchlist').innerHTML = animeData.watchlist.map(a => createDOM(a, 'watchlist')).join('');
+            document.getElementById('list-current').innerHTML = animeData.current.map(a => createDOM(a, 'current')).join('');
+            document.getElementById('hp-current-list').innerHTML = animeData.current.map(a => createDOM(a, 'current')).join('');
+            document.getElementById('list-next-waiting').innerHTML = animeData.nextSeason.filter(a=>!a.isReleased).map(a => createDOM(a, 'next-season')).join('');
+            document.getElementById('list-next-released').innerHTML = released.map(a => createDOM(a, 'next-season')).join('');
+            if (released.length > 0) document.getElementById('hp-alerts-grid').innerHTML = `<div class="grid-layout-watchlist">${released.map(a => `<div class="release-poster-card" onclick="openDetailModal('${a.id}')"><div class="rp-badge">NEU</div><img src="${a.coverUrl}" class="wl-poster"><div class="wl-overlay"><h4>${a.title}</h4></div></div>`).join('')}</div>`;
         }
     </script>
 </body>
